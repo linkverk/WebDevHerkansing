@@ -20,11 +20,6 @@ function Movie_detail() {
         { time: "2215", room: "Theater 1", total: 100, available: 47 }
     ];
 
-    function handleShowtimeClick(selectedShowTime: showtime)
-    {
-        setSelectedShowTime(selectedShowTime)
-    }
-
 return(
     <div className="container">
 
@@ -41,7 +36,7 @@ return(
 
         <div className="info showtimes">
             {showtimes.map((s) => (
-                <button key={s.time} onClick={() => handleShowtimeClick(s)}>
+                <button key={s.time} onClick={() => setSelectedShowTime(s)}>
                 {`${s.time.slice(0, 2)}:${s.time.slice(2)}`}
                 </button>
             ))}
