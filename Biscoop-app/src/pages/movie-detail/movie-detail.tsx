@@ -1,5 +1,6 @@
 import "./movie-detail.css";
-import psychPoster from "../images/Psych-the-Movie-poster.webp";
+import psychPoster from "../../images/Psych-the-Movie-poster.webp";
+import ReviewList from "./ReviewList";
 import { useState } from "react";
 
 function Movie_detail() {
@@ -18,6 +19,24 @@ function Movie_detail() {
         { time: "1700", room: "Theater 2", total: 150, available: 112 },
         { time: "1930", room: "Theater 3", total: 200, available: 90 },
         { time: "2215", room: "Theater 1", total: 100, available: 47 }
+    ];
+
+    const reviews = [
+        {
+            name: "Gee buternaps",
+            text: "Fun to watch, I recommend a pineapple as snack.",
+            rating: 4,
+        },
+        {
+            name: "Shawn",
+            text: "Just because you put syrup on something doesn't make it pancakes.",
+            rating: 5,
+        },
+        {
+            name: "Gurton buster",
+            text: "Perfect blend of comedy and mystery, exactly what I expected.",
+            rating: 5,
+        },
     ];
 
 return(
@@ -60,16 +79,8 @@ return(
         </div>
 
         <div className="reviews">
-        <h2>Reviews</h2>
-        <div className="review">
-            <p><span className="label">Gee buternaps:</span> Fun to watch, i recommend a pineapple as snack. ⭐⭐⭐⭐☆</p>
-        </div>
-        <div className="review">
-            <p><span className="label">Shawn:</span> Just because you put syrup on something doesn't make it pancakes. ⭐⭐⭐⭐⭐</p>
-        </div>
-        <div className="review">
-            <p><span className="label">Gurton buster:</span> Perfect blend of comedy and mystery, exactly what I expected. ⭐⭐⭐⭐⭐</p>
-        </div>
+            <h2>Reviews</h2>
+            <ReviewList reviews={reviews} />
         </div>
     </div>    
     )

@@ -1,4 +1,4 @@
-import Movie_detail from './pages/movie-detail'
+import Movie_detail from './pages/movie-detail/movie-detail'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css'
 
