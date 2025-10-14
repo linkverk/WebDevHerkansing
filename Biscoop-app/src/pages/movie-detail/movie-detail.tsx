@@ -1,7 +1,7 @@
 import "./movie-detail.css";
 import psychPoster from "../../images/Psych-the-Movie-poster.webp";
 import ReviewList from "./ReviewList";
-import ShowtimeSelector from "./showSelector";
+import ShowtimeSelector from "./ShowSelector";
 import MovieInfo from "./MovieInfo";
 
 function Movie_detail() {
