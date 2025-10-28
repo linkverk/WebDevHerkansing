@@ -5,8 +5,9 @@ import "./nav-balk.css"
 function NavBalk(){
 
     const navItems = [
-        { to: "/movie-detail", label: "Home", emoji: "🏠"},
-        { to: "/ScreeningRoom", label: "Home", emoji: "🏠"},
+        { to: "/home", label: "Profile", emoji: "👤"},
+        { to: "/movie-detail", label: "Movie details", emoji: "🎬"},
+        { to: "/ScreeningRoom", label: "ScreeningRoom", emoji: "🕶"},
     ];
 
     return (

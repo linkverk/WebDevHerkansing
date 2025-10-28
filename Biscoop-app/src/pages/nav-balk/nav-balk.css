@@ -33,6 +33,15 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+.logout-button {
+  background-color: #ff4d4d;
+  border: none;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .nav-emoji {
   font-size: 22px;
   width: 28px;

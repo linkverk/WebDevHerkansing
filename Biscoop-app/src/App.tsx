@@ -3,18 +3,24 @@ import NavBalk from './pages/nav-balk/nav-balk'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css'
 import ScreeningRoom from './pages/ScreeningRoom/ScreeningRoom';
+import LogedInUser from './pages/Loged-In/Loged-in-user';
+import Bookings from './pages/bookings/Bookings';
 
 function App() {
+  const isAuthenticated = Boolean(localStorage.getItem('token'));
+
   return (
     <BrowserRouter>
-    <NavBalk/>
+      <NavBalk />
       <Routes>
+        <Route path="/home" element={<LogedInUser />} />
+        <Route path="/bookings" element={<Bookings />} />
         <Route path="/movie-detail" element={<Movie_detail />} />
         <Route path="/ScreeningRoom" element={<ScreeningRoom />} />
-        <Route path="/" element={<Navigate to="/ScreeningRoom" replace />} />
+        <Route path="/" element={<Navigate to={isAuthenticated ? '/home' : '/ScreeningRoom'} replace />} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
 export default App
