@@ -6,6 +6,7 @@ function NavBalk(){
 
     const navItems = [
         { to: "/home", label: "Profile", emoji: "👤"},
+        { to: "/movies", label: "Movies", emoji: "🎟️"},
         { to: "/movie-detail", label: "Movie details", emoji: "🎬"},
         { to: "/ScreeningRoom", label: "ScreeningRoom", emoji: "🕶"},
     ];

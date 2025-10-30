@@ -22,7 +22,48 @@ const DUMMY_MOVIES: Movie[] = [
   { id: 'm3', title: 'Silent Streets', year: '2024', description: 'A quiet drama.' },
 ];
 
+// ReviewForm uses the logged-in username (localStorage 'username') or 'Guest'
+const ReviewForm: React.FC<{ onSubmit: (name: string, text: string, rating: number) => void | Promise<void> }> = ({ onSubmit }) => {
+  const [text, setText] = useState('');
+  const [rating, setRating] = useState(5);
 
+  // Use logged-in username when available, otherwise 'Guest'
+  const username = localStorage.getItem('username') ?? 'Guest';
+
+  async function submit(e?: React.FormEvent) {
+    e?.preventDefault();
+    if (!text.trim()) return;
+    await onSubmit(username, text.trim(), rating);
+    setText('');
+    setRating(5);
+  }
+
+  return (
+    <form className="review-form" onSubmit={submit}>
+      <div className="row">
+        <label>User</label>
+        <div>{username}</div>
+      </div>
+      <div className="row">
+        <label>Review</label>
+        <textarea value={text} onChange={(e) => setText(e.target.value)} />
+      </div>
+      <div className="row">
+        <label>Rating</label>
+        <select value={rating} onChange={(e) => setRating(Number(e.target.value))}>
+          <option value={5}>5</option>
+          <option value={4}>4</option>
+          <option value={3}>3</option>
+          <option value={2}>2</option>
+          <option value={1}>1</option>
+        </select>
+      </div>
+      <div className="row actions">
+        <button type="submit" className="btn">Submit review</button>
+      </div>
+    </form>
+  );
+};
 
 const MovieList: React.FC = () => {
   const [expanded, setExpanded] = useState<string | null>(null); // movieId showing reviews/form
@@ -84,45 +125,6 @@ const MovieList: React.FC = () => {
   );
 };
 
-const ReviewForm: React.FC<{ onSubmit: (name: string, text: string, rating: number) => void | Promise<void> }> = ({ onSubmit }) => {
-  const [name, setName] = useState('');
-  const [text, setText] = useState('');
-  const [rating, setRating] = useState(5);
 
-  async function submit(e?: React.FormEvent) {
-    e?.preventDefault();
-    if (!name.trim() || !text.trim()) return;
-    await onSubmit(name.trim(), text.trim(), rating);
-    setName('');
-    setText('');
-    setRating(5);
-  }
-
-  return (
-    <form className="review-form" onSubmit={submit}>
-      <div className="row">
-        <label>Name</label>
-        <input value={name} onChange={(e) => setName(e.target.value)} />
-      </div>
-      <div className="row">
-        <label>Review</label>
-        <textarea value={text} onChange={(e) => setText(e.target.value)} />
-      </div>
-      <div className="row">
-        <label>Rating</label>
-        <select value={rating} onChange={(e) => setRating(Number(e.target.value))}>
-          <option value={5}>5</option>
-          <option value={4}>4</option>
-          <option value={3}>3</option>
-          <option value={2}>2</option>
-          <option value={1}>1</option>
-        </select>
-      </div>
-      <div className="row actions">
-        <button type="submit" className="btn">Submit review</button>
-      </div>
-    </form>
-  );
-};
 
 export default MovieList;
