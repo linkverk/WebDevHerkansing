@@ -1,4 +1,8 @@
 import Movie_detail from './pages/movie-detail/movie-detail'
+import Movie_list from './pages/movie-list/movie-list'
+import Movie_panel from './pages/admin-movie-panel/movie-panel'
+import Zaal_panel from './pages/admin-zaal-panel/zaal-panel'
+import Show_panel from './pages/admin-show-panel/show-panel'
 import NavBalk from './pages/nav-balk/nav-balk'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -34,10 +38,14 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/movie-detail" element={<Movie_detail />} />
+          <Route path="movie_detail/:movieId" element={<Movie_detail />} />
+          <Route path="/movie_list" element={<Movie_list />} />
+          <Route path="/movie_panel" element={<Movie_panel />} />
+          <Route path="/zaal_panel" element={<Zaal_panel />} />
+          <Route path="/show_panel" element={<Show_panel />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/ScreeningRoom" element={<ScreeningRoom />} />
           <Route path="/profile" element={<Profile user={user} movies={movies} onLogout={handleLogout} />} />
-          <Route path="/" element={<Navigate to="/ScreeningRoom" replace />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/history" element={<History movies={movies} />} />
         </Routes>

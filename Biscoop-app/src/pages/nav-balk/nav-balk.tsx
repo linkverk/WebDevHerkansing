@@ -6,18 +6,21 @@ interface NavBalkProps {
 }
 
 function NavBalk({ isAuthenticated = false }: NavBalkProps) {
-  const navItems = [
-    { to: "/ScreeningRoom", label: "Screening Room", emoji: "🎬" },
-    { to: "/movie-detail", label: "Movie Details", emoji: "🎥" },
-  ];
 
   const authItems = isAuthenticated
-    ? [{ to: "/profile", label: "Profile", emoji: "👤" }]
+    ? [
+        { to: "/profile", label: "Profile", emoji: "👤" },
+        { to: "/movie_list", label: "movie-list", emoji: "🎥"},
+        { to: "/movie_panel", label: "manage-movies", emoji: "📎"},
+        { to: "/zaal_panel", label: "manage-rooms", emoji: "📎"},
+        { to: "/show_panel", label: "manage-shows", emoji: "📎"},
+        { to: "/ScreeningRoom", label: "room", emoji: "🏠"},
+    ]
     : [
         { to: "/login", label: "Login", emoji: "🔑" },
       ];
 
-  const allItems = [...navItems, ...authItems];
+  const allItems = [...authItems];
 
   return (
     <div className="nav-balk">
