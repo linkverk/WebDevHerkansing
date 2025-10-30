@@ -1,0 +1,40 @@
+.movies-page {
+  max-width: 1100px;
+  margin: 18px auto;
+  padding: 12px;
+}
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+.movie-card {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  align-items: flex-start;
+}
+.poster {
+  width: 90px;
+  height: 120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 30px;
+  background: #f6f6f6;
+  border-radius: 6px;
+}
+.movie-info h3 { margin: 0 0 6px 0; }
+.year { color: #666; font-weight: normal; font-size: 13px; }
+.desc { margin: 0 0 8px 0; color: #555; }
+.movie-actions { margin-bottom: 8px; }
+.reviews-panel { margin-top: 8px; border-top: 1px solid #eee; padding-top: 8px; }
+.review-form .row { margin-bottom: 8px; display:flex; gap:8px; align-items:center; }
+.review-form label { width: 70px; }
+.review-form input, .review-form textarea, .review-form select { flex:1; padding:6px 8px; border-radius:6px; border:1px solid #ddd; }
+.review-form textarea { min-height: 62px; resize: vertical; }
+.btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #e0e0e0; background: #fff; cursor: pointer; }
+.row.actions { display:flex; justify-content:flex-end; }

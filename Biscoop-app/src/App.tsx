@@ -5,6 +5,7 @@ import './App.css'
 import ScreeningRoom from './pages/ScreeningRoom/ScreeningRoom';
 import LogedInUser from './pages/Loged-In/Loged-in-user';
 import Bookings from './pages/bookings/Bookings';
+import MovieList from './pages/movies/MovieList';
 
 function App() {
   const isAuthenticated = Boolean(localStorage.getItem('token'));
@@ -14,6 +15,7 @@ function App() {
       <NavBalk />
       <Routes>
         <Route path="/home" element={<LogedInUser />} />
+        <Route path="/movies" element={<MovieList />} />
         <Route path="/bookings" element={<Bookings />} />
         <Route path="/movie-detail" element={<Movie_detail />} />
         <Route path="/ScreeningRoom" element={<ScreeningRoom />} />

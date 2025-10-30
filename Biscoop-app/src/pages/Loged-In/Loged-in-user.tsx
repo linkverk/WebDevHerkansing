@@ -14,7 +14,7 @@ const LogedInUser: React.FC<Props> = ({ username }) => {
   const name = username ?? localStorage.getItem('username') ?? 'User';
 
   function handleBrowse() {
-    navigate('/');
+    navigate('/movies');
   }
 
   function handleBookings() {
