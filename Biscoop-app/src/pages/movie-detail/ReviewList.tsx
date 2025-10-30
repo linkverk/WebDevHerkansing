@@ -18,13 +18,14 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
   };
 
   return (
-    <div>
+    <div className="review-list">
       {reviews.map((review, index) => (
-        <div key={index}>
-          <p>
-            <span className="label">{review.name}:</span>{" "}
-            {review.text} {renderStars(review.rating)}
-          </p>
+        <div className="review-item" key={index}>
+          <div className="review-meta">
+            <span className="label">{review.name}</span>
+            <span className="review-rating">{renderStars(review.rating)}</span>
+          </div>
+          <div className="review-text">{review.text}</div>
         </div>
       ))}
     </div>

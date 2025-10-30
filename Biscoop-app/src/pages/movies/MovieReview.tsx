@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './movies.css';
 import ReviewList from '../movie-detail/ReviewList';
 import { fetchReviews, postReview } from '../../api/reviews';
+import { fakeMovies } from '../../utils/fake-data';
 
 type Review = {
   id: string;
@@ -11,19 +12,6 @@ type Review = {
   user_id?: string | null;
   user_name?: string;
 };
-
-type Movie = {
-  id: string;
-  title: string;
-  year: string;
-  description?: string;
-};
-
-const DUMMY_MOVIES: Movie[] = [
-  { id: 'm1', title: 'The Grand Adventure', year: '2025', description: 'An epic road trip.' },
-  { id: 'm2', title: 'Space Between Worlds', year: '2025', description: 'A sci-fi mystery.' },
-  { id: 'm3', title: 'Silent Streets', year: '2024', description: 'A quiet drama.' },
-];
 
 // ReviewForm uses the logged-in username (localStorage 'username') or 'Guest'
 const ReviewForm: React.FC<{ onSubmit: (name: string, text: string, rating: number) => void | Promise<void> }> = ({ onSubmit }) => {
@@ -79,7 +67,7 @@ const MovieList: React.FC = () => {
       const token = localStorage.getItem('token') ?? undefined;
       const map: Record<string, Review[]> = {};
       await Promise.all(
-        DUMMY_MOVIES.map(async (m) => {
+        fakeMovies.map(async (m) => {
           map[m.id] = await fetchReviews(m.id, token);
         })
       );
@@ -107,11 +95,11 @@ const MovieList: React.FC = () => {
     <div className="movies-page">
       <h2>Movies</h2>
       <div className="movies-grid">
-        {DUMMY_MOVIES.map((m) => (
+        {fakeMovies.map((m) => (
           <div key={m.id} className="movie-card">
             <div className="poster">🎞️</div>
             <div className="movie-info">
-              <h3>{m.title} <span className="year">({m.year})</span></h3>
+              <h3>{m.title} <span className="year">({m.duration} min)</span></h3>
               <p className="desc">{m.description}</p>
               <div className="movie-actions">
                 <button onClick={() => setExpanded(expanded === m.id ? null : m.id)} className="btn">{expanded === m.id ? 'Hide reviews' : 'Reviews & Rate'}</button>

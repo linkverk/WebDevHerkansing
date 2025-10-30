@@ -15,7 +15,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     e.preventDefault();
     if (email && password) {
       onLogin(email, password);
-      navigate('/profile');
+      navigate('/home');
     }
   };
 

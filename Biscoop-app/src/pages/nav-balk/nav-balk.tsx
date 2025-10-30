@@ -15,6 +15,7 @@ function NavBalk({ isAuthenticated = false }: NavBalkProps) {
         { to: "/zaal_panel", label: "manage-rooms", emoji: "📎"},
         { to: "/show_panel", label: "manage-shows", emoji: "📎"},
         { to: "/ScreeningRoom", label: "room", emoji: "🏠"},
+        { to: "/home", label: "home", emoji: "🏠"},
     ]
     : [
         { to: "/login", label: "Login", emoji: "🔑" },
