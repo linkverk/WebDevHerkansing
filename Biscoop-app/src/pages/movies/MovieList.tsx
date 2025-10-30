@@ -4,9 +4,12 @@ import ReviewList from '../movie-detail/ReviewList';
 import { fetchReviews, postReview } from '../../api/reviews';
 
 type Review = {
-  name: string;
-  text: string;
+  id: string;
+  reservering_id?: string | null;
   rating: number;
+  description: string;
+  user_id?: string | null;
+  user_name?: string;
 };
 
 type Movie = {
@@ -87,9 +90,16 @@ const MovieList: React.FC = () => {
     };
   }, []);
   async function handleSubmit(movieId: string, name: string, text: string, rating: number) {
-    const next: Review = { name, text, rating };
     const token = localStorage.getItem('token') ?? undefined;
-    const updated = await postReview(movieId, next, token);
+    const user_id = localStorage.getItem('user_id') ?? null;
+    const payload = {
+      reservering_id: null,
+      rating,
+      description: text,
+      user_id,
+      user_name: name,
+    };
+    const updated = await postReview(movieId, payload, token);
     setReviewsMap((prev) => ({ ...prev, [movieId]: updated }));
   }
 
@@ -110,7 +120,12 @@ const MovieList: React.FC = () => {
               {expanded === m.id && (
                 <div className="reviews-panel">
                   <h4>Reviews</h4>
-                  <ReviewList reviews={reviewsMap[m.id] ?? []} />
+                  {/* Map internal review shape to ReviewList's expected {name,text,rating} */}
+                  <ReviewList reviews={(reviewsMap[m.id] ?? []).map((r) => ({
+                    name: r.user_name ?? (r.user_id === localStorage.getItem('user_id') ? (localStorage.getItem('username') ?? 'Guest') : 'Guest'),
+                    text: r.description,
+                    rating: r.rating,
+                  }))} />
 
                   <ReviewForm
                     onSubmit={(name, text, rating) => handleSubmit(m.id, name, text, rating)}

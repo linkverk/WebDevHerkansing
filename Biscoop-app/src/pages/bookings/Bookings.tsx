@@ -53,8 +53,8 @@ const Bookings: React.FC = () => {
     }
   function randomDate(): string 
   {
-    const day = Math.floor(Math.random() * 28) + 1;
-    const month = Math.floor(Math.random() * 12) + 1;
+    const day = Math.floor(Math.random() * 30);
+    const month = Math.floor(Math.random() * 12);
     const year = 2025;
     return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 }

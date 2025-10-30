@@ -1,10 +1,14 @@
 type Review = {
-  name: string;
-  text: string;
+  id: string;
+  reservering_id?: string | null;
   rating: number;
+  description: string;
+  user_id?: string | null;
+  user_name?: string;
 };
 
-const LOCAL_PREFIX = 'reviews:';
+// store reviews per film under this key + movieId
+const LOCAL_PREFIX = 'reviews:film:';
 
 async function tryFetch(url: string, options?: RequestInit) {
   const res = await fetch(url, options);
@@ -34,7 +38,7 @@ export async function fetchReviews(movieId: string, token?: string): Promise<Rev
   }
 }
 
-export async function postReview(movieId: string, review: Review, token?: string): Promise<Review[]> {
+export async function postReview(movieId: string, review: Omit<Review, 'id'>, token?: string): Promise<Review[]> {
   const url = `/api/movies/${movieId}/reviews`;
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -47,9 +51,10 @@ export async function postReview(movieId: string, review: Review, token?: string
     if (Array.isArray(data)) return data as Review[];
     if (data && Array.isArray(data.reviews)) return data.reviews as Review[];
     // If server returned only the new review, append it to client-local list
+    const created = data as Review;
     const existingRaw = localStorage.getItem(LOCAL_PREFIX + movieId);
     const existing = existingRaw ? (JSON.parse(existingRaw) as Review[]) : [];
-    const updated = [data as Review, ...existing];
+    const updated = [created, ...existing];
     localStorage.setItem(LOCAL_PREFIX + movieId, JSON.stringify(updated));
     return updated;
   } catch (err) {
@@ -57,20 +62,21 @@ export async function postReview(movieId: string, review: Review, token?: string
     const key = LOCAL_PREFIX + movieId;
     const existingRaw = localStorage.getItem(key);
     const existing = existingRaw ? (JSON.parse(existingRaw) as Review[]) : [];
-    const updated = [review, ...existing];
+    const created: Review = { id: String(Date.now()), ...review } as Review;
+    const updated = [created, ...existing];
     localStorage.setItem(key, JSON.stringify(updated));
     return updated;
   }
 }
 
-export async function deleteReview(movieId: string, reviewerName: string, token?: string): Promise<Review[]> {
-  // Generic helper to delete by reviewer name in fallback; server API depends on implementation
-  const url = `/api/movies/${movieId}/reviews`;
+export async function deleteReview(movieId: string, reviewId: string, token?: string): Promise<Review[]> {
+  // server should accept DELETE /api/movies/:movieId/reviews/:reviewId or similar
+  const url = `/api/movies/${movieId}/reviews/${reviewId}`;
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
   try {
-    const res = await fetch(url, { method: 'DELETE', headers, body: JSON.stringify({ name: reviewerName }) });
+    const res = await fetch(url, { method: 'DELETE', headers });
     if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
     const data = await res.json();
     if (Array.isArray(data)) return data as Review[];
@@ -80,7 +86,7 @@ export async function deleteReview(movieId: string, reviewerName: string, token?
     const key = LOCAL_PREFIX + movieId;
     const existingRaw = localStorage.getItem(key);
     const existing = existingRaw ? (JSON.parse(existingRaw) as Review[]) : [];
-    const updated = existing.filter((r) => r.name !== reviewerName);
+    const updated = existing.filter((r) => r.id !== reviewId);
     localStorage.setItem(key, JSON.stringify(updated));
     return updated;
   }
