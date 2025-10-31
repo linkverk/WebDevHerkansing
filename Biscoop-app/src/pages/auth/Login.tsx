@@ -27,8 +27,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     // Check for hardcoded admin account
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       onLogin(email, password);
-      navigate('/profile');
-      return;
+      navigate('/home');
     }
 
     // Check for registered user

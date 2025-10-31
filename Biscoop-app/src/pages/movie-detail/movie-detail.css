@@ -90,3 +90,85 @@ h2 {
   color: #fff;
 }
 
+/* Reviews styling improvements */
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-item {
+  background: linear-gradient(180deg, #0f1114, #131318);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #202025;
+  color: #e6eef6;
+}
+
+.review-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.review-meta .label {
+  font-weight: 700;
+  color: #9ab0c9;
+}
+
+.review-text {
+  color: #d6dbe3;
+  white-space: pre-wrap;
+}
+
+.review-form {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review-form-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-form-row.small {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-form textarea {
+  min-height: 80px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #2e2e38;
+  background: #0f1114;
+  color: #fff;
+}
+
+.review-form input,
+.review-form select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #2e2e38;
+  background: #0f1114;
+  color: #fff;
+}
+
+.review-form .btn {
+  align-self: flex-start;
+  padding: 8px 12px;
+  background: #4a6786;
+  border: none;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.review-form .btn:hover {
+  opacity: 0.95;
+}
+

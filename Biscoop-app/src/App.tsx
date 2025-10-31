@@ -11,10 +11,12 @@ import ScreeningRoom from './pages/ScreeningRoom/ScreeningRoom';
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import Profile from './pages/profile/Profile'
+import LogedInUser from './pages/Loged-In/Loged-in-user'
 import type { User, Movie } from './types'
 import EditProfile from './pages/profile/EditProfile';
 import History from './pages/profile/History';
 import UserContext from './context/UserContext'
+import Bookings from './pages/bookings/Bookings';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -36,6 +38,8 @@ function App() {
       <UserContext.Provider value={{ user, setUser, isAuthenticated, setIsAuthenticated }}>
         <NavBalk isAuthenticated={isAuthenticated} />
         <Routes>
+          <Route path="/bookings" element={<Bookings />} />
+          <Route path="/home" element={<LogedInUser />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/register" element={<Register />} />
           <Route path="movie_detail/:movieId" element={<Movie_detail />} />
