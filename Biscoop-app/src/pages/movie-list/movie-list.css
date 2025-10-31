@@ -74,3 +74,17 @@
   width: fit-content; 
   height: fit-content;
 }
+
+.button {
+  gap: 8px;
+  background: #1a1a20;
+  color: #9ab0c9;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 10px 16px;
+  border-radius: 10px;
+}
+
+.button:hover {
+  background-color: #475569;
+}

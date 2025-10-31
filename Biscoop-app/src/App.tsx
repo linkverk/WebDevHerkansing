@@ -49,6 +49,7 @@ function App() {
           <Route path="/show_panel" element={<Show_panel />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/ScreeningRoom" element={<ScreeningRoom />} />
+          <Route path="ScreeningRoom/:roomId" element={<ScreeningRoom />} />
           <Route path="/profile" element={<Profile user={user} movies={movies} onLogout={handleLogout} />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/history" element={<History movies={movies} />} />

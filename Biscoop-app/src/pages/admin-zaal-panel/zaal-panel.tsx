@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getAppData, deleteItem, addItem, updateItem } from "../../utils/storage";
+import Seats from '../../components/Seats';
 import "./zaal-panel.css";
 
 function Zaal_panel() {
@@ -64,7 +65,18 @@ function Zaal_panel() {
         <div className="movie-panel-container">
             <div className="movie-preview-side">
                 <div className="top"><h1>Preview</h1></div>
-
+                <div className="top"><h1>{naam}</h1></div>
+                <Seats
+                    zaal={
+                        {
+                            id: "temp",
+                            naam: "Default zaal",
+                            rijen: Number(rijen) ,
+                            stoelen_per_rij: Number(stoelenPerRij),
+                        }
+                    }
+                    button={false}
+                />
             </div>
 
             <div className="movie-form-side">
@@ -96,7 +108,7 @@ function Zaal_panel() {
                         <label>Seats per row:</label>
                         <input
                             type="number"
-                            value={rijen}
+                            value={stoelenPerRij}
                             onChange={(e) => setStoelenPerRij(e.target.value)}
                             placeholder="Enter amount seats per row"
                             min={0}
@@ -115,6 +127,8 @@ function Zaal_panel() {
                         onChange={(e) => {
                             const zaal = zalen.find((z) => z.id === e.target.value) || null;
                             setSelectedZaal(zaal);
+                            setRijen(zaal?.rijen as number)
+                            setStoelenPerRij(zaal?.stoelen_per_rij as number)
                             zaalChosen(zaal);
                         }}
                     >

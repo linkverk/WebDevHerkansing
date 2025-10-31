@@ -1,19 +1,29 @@
-// Seats.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Seats.css';
+import type { ZaalProp } from "./../utils/fake-data";
 
 type Seat = {
   id: number;
   reserved: boolean;
 };
 
-const Seats: React.FC = () => {
-  const [seats, setSeats] = useState<Seat[]>(() => {
-    const savedSeats = localStorage.getItem('seats');
-    return savedSeats ? JSON.parse(savedSeats) : Array.from({ length: 100 }, (_, i) => ({ id: i, reserved: false }));
-  });
+interface SeatsProps {
+  zaal: ZaalProp;
+  button: boolean;
+}
+
+const Seats: React.FC<SeatsProps> = ({ zaal, button }) => {
+  const [seats, setSeats] = useState<Seat[]>([]);
 
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+  useEffect(() => {
+    const totalSeats = Math.max(zaal.rijen * zaal.stoelen_per_rij, 0);
+    const newSeats = Array.from({ length: totalSeats }, (_, i) => ({
+      id: i,
+      reserved: false,
+    }));
+    setSeats(newSeats);
+  }, [zaal.rijen, zaal.stoelen_per_rij]);
 
   const toggleReservation = (id: number) => {
     setSeats(prevSeats => {
@@ -28,6 +38,7 @@ const Seats: React.FC = () => {
   return (
     <div className="screening-room-container">
       <h2 className="main-title">Select Your Seat</h2>
+
       <div className="legend">
         <div className="legend-item">
           <span className="box available"></span>Available
@@ -36,7 +47,13 @@ const Seats: React.FC = () => {
           <span className="box reserved"></span>Reserved
         </div>
       </div>
-      <div className="seat-grid">
+
+      <div
+        className="seat-grid"
+        style={{
+          gridTemplateColumns: `repeat(${zaal.stoelen_per_rij}, 44px)`,
+        }}
+      >
         {seats.map(seat => (
           <div
             key={seat.id}
@@ -45,17 +62,18 @@ const Seats: React.FC = () => {
             onMouseEnter={() => setHoveredId(seat.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
-            {100 - seat.id}
+            {zaal.rijen * zaal.stoelen_per_rij - seat.id}
             {hoveredId === seat.id && (
               <div className="tooltip">
-                Seat {100 - seat.id}<br />
+                Seat {zaal.rijen * zaal.stoelen_per_rij - seat.id}<br />
                 {seat.reserved ? 'Reserved' : 'Available'}
               </div>
             )}
           </div>
         ))}
       </div>
-      <div className="screen-indicator">Screen: Placeholder</div>
+
+      {button && <button className='button2'>Reserve</button>}
     </div>
   );
 };
