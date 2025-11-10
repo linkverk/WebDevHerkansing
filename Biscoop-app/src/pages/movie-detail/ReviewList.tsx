@@ -1,10 +1,5 @@
 import React from "react";
-
-type Review = {
-  name: string;
-  text: string;
-  rating: number;
-};
+import type { Review } from "../../utils/fake-data";
 
 type ReviewListProps = {
   reviews: Review[];

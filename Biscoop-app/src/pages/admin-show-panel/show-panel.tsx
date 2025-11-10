@@ -1,47 +1,47 @@
 import { useState } from "react";
 import { formatDateForShowing } from "../../utils/date-fromatter";
 import MovieInfo from "../movie-detail/MovieInfo";
+import type { ZaalProp, MovieProp, ShowProp } from "../../utils/fake-data";
+import GenericSelect from "../../components/generic-select";
 import "./show-panel.css";
-import { getAppData, deleteItem, addItem, updateItem} from "../../utils/storage";
+import { getAppData, deleteItem, addItem, updateItem } from "../../utils/storage";
 
 function Show_panel() {
     const { fakeMovies, fakeShows, fakeZalen } = getAppData();
-    interface ZaalProp {
-        id: string;
-        naam: string;
-        rijen: number;
-        stoelen_per_rij: number;
-    }
-
-    interface MovieProp {
-        id: string;
-        title: string;
-        duration: number;
-        rating: string;
-        genre: string;
-        description: string;
-    }
-
-    interface ShowProp {
-        id: string;
-        start_date: Date;
-        end_date: Date;
-        movieId: string;
-        zaalId: string;
-    }
 
     const [shows, setShows] = useState<ShowProp[]>(fakeShows);
     const [movies] = useState<MovieProp[]>(fakeMovies);
     const [rooms] = useState<ZaalProp[]>(fakeZalen);
 
-    const [selectedShow, setSelectedShow] = useState<ShowProp | null>(null);
-    const [selectedMovie, setSelectedMovie] = useState<MovieProp | null>(null);
-    const [selectedzaal, setSelectedZaal] = useState<ZaalProp | null>(null);
+    const emptyShow: ShowProp = {
+        id: '',
+        movieId: '',
+        zaalId: '',
+        start_date: new Date,
+        end_date: new Date,
+    };
+    const [selectedShow, setSelectedShow] = useState<ShowProp>();
+    const emptyMovie: MovieProp = {
+        id: '',
+        name: '',
+        duration: 0,
+        rating: '',
+        genre: '',
+        description: '',
+    };
+    const [selectedMovie, setSelectedMovie] = useState<MovieProp>(emptyMovie);
+    const emptyZaal: ZaalProp = {
+        id: '',
+        naam: '',
+        rijen: 0,
+        stoelen_per_rij: 0,
+    };
+    const [selectedzaal, setSelectedZaal] = useState<ZaalProp>(emptyZaal);
     const [startDate, setStartDate] = useState<Date | string>("");
     const [endDate, setEndDate] = useState<Date | string>("");
 
     const handleSave = () => {
-        if (!selectedMovie || !selectedzaal || !startDate || !endDate) {
+        if (!selectedzaal || !selectedShow || startDate === "" || endDate === "") {
             alert("Please enter all info.");
             return;
         }
@@ -69,7 +69,6 @@ function Show_panel() {
             updateItem("fakeShows", selectedShow);
             alert("Show updated!");
         } else {
-            // Add new show
             const newShow: ShowProp = {
                 id: crypto.randomUUID(),
                 movieId: selectedMovie.id,
@@ -91,28 +90,13 @@ function Show_panel() {
         return local.toISOString().slice(0, 16);
     }
 
-    const showChosen = (show: ShowProp | null) => {
-        if (!show) {
-            setSelectedMovie(null);
-            setSelectedZaal(null);
-            setStartDate('');
-            setEndDate('');
-            return;
-        }
-
-        setSelectedMovie(fakeMovies.find(m => m.id === show.movieId) ?? null);
-        setSelectedZaal(fakeZalen.find(z => z.id === show.zaalId) ?? null);
-        setStartDate(show.start_date);
-        setEndDate(show.end_date);
-    };
-
     return (
         <div className="movie-panel-container">
             <div className="movie-preview-side">
                 <div className="top"><h1>Preview</h1></div>
                 {selectedMovie != null && (
                     <MovieInfo
-                        title={selectedMovie?.title}
+                        name={selectedMovie?.name}
                         duration={selectedMovie.duration as number}
                         rating={selectedMovie.rating}
                         genre={selectedMovie.genre}
@@ -151,39 +135,25 @@ function Show_panel() {
 
             <div className="movie-form-side">
                 <div className="form-top">
-                    <h2>Add show Info</h2>
+                    <h2>{selectedShow?.id ? "Edit show info" : "Add show info"}</h2>
 
-                    <select
-                        value={selectedMovie?.id || ""}
-                        onChange={(e) => {
-                            const movie = movies.find((m) => m.id === e.target.value) || null;
-                            setSelectedMovie(movie);
-                            setSelectedShow(null);
-                        }}
-                    >
-                        <option value="">-- Pick a Movie --</option>
-                        {movies.map((movie) => (
-                            <option key={movie.id} value={movie.id}>
-                                {movie.title}
-                            </option>
-                        ))}
-                    </select>
+                    <GenericSelect<MovieProp>
+                        title="Select a Movie"
+                        items={movies}
+                        selectedItem={selectedMovie}
+                        setSelectedItem={setSelectedMovie}
+                        getLabel={(m) => m.name}
+                        emptyItem={emptyMovie}
+                    />
 
-                    <select
-                        value={selectedzaal?.id || ""}
-                        onChange={(e) => {
-                            const room = rooms.find((r) => r.id === e.target.value) || null;
-                            setSelectedZaal(room);
-                            setSelectedShow(null);
-                        }}
-                    >
-                        <option value="">-- Pick a Room --</option>
-                        {rooms.map((room) => (
-                            <option key={room.id} value={room.id}>
-                                {room.naam}
-                            </option>
-                        ))}
-                    </select>
+                    <GenericSelect<ZaalProp>
+                        title="Select a Room"
+                        items={rooms}
+                        selectedItem={selectedzaal}
+                        setSelectedItem={setSelectedZaal}
+                        getLabel={(z) => z.naam}
+                        emptyItem={emptyZaal}
+                    />
 
                     <div className="form-group">
                         <label>start date:</label>
@@ -213,15 +183,20 @@ function Show_panel() {
                     <select
                         value={selectedShow?.id || ""}
                         onChange={(e) => {
-                            const show = shows.find((s) => s.id === e.target.value) || null;
+                            const show = shows.find((s) => s.id === e.target.value) || emptyShow;
                             setSelectedShow(show);
-                            showChosen(show);
+                            setSelectedZaal(fakeZalen.find(z => z.id === show.zaalId) ?? emptyZaal);
+                            setSelectedMovie(fakeMovies.find(m => m.id === show.movieId) ?? emptyMovie);
+                            if(show.id !== ""){
+                                setStartDate(new Date(show.start_date));
+                                setEndDate(new Date(show.end_date));
+                            }
                         }}
                     >
                         <option value="">-- Pick a Show --</option>
                         {shows.map((show) => (
                             <option key={show.id} value={show.id}>
-                                {fakeMovies.find(m => m.id === show.movieId)?.title ?? "N/A"} - {fakeZalen.find(z => z.id === show.zaalId)?.naam ?? "N/A"}
+                                {fakeMovies.find(m => m.id === show.movieId)?.name ?? "N/A"} - {fakeZalen.find(z => z.id === show.zaalId)?.naam ?? "N/A"}
                             </option>
                         ))}
                     </select>
@@ -232,7 +207,7 @@ function Show_panel() {
                             if (!selectedShow) return;
                             const updatedShows = shows.filter(s => s.id !== selectedShow.id);
                             setShows(updatedShows);
-                            showChosen(null);
+                            setSelectedShow(emptyShow);
                             deleteItem("fakeShows", selectedShow.id)
                         }}
                     >
