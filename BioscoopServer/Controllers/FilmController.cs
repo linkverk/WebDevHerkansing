@@ -23,6 +23,13 @@ namespace Controllers
             return Ok(films);
         }
 
+        [HttpGet("GetAllFull")]
+        public async Task<IActionResult> GetAllFilmsFull()
+        {
+            var films = await _DBFilmService.GetFilmsFull();
+            return Ok(films);
+        }
+
         [HttpPost("AddOrUpdate")]
         public async Task<IActionResult> AddOrUpdateFilm([FromBody] FilmDTO filmModel)
         {

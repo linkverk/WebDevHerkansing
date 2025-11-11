@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { getAppData, deleteItem, addItem, updateItem } from "../../utils/storage";
 import GenericSelect from "../../components/generic-select";
 import type { MovieProp } from "../../utils/fake-data";
 import MovieInfo from "../movie-detail/MovieInfo";
