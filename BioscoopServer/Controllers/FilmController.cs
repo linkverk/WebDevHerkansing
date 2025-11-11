@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BioscoopServer.models;
 using BioscoopServer.DBServices;
+using BioscoopServer.Models.ModelsDTOs;
 
 namespace Controllers
 {
@@ -23,7 +24,7 @@ namespace Controllers
         }
 
         [HttpPost("AddOrUpdate")]
-        public async Task<IActionResult> AddOrUpdateFilm([FromBody] FilmModel filmModel)
+        public async Task<IActionResult> AddOrUpdateFilm([FromBody] FilmDTO filmModel)
         {
             if (filmModel == null)
                 return BadRequest("Film is required.");
@@ -45,14 +46,28 @@ namespace Controllers
             var addedFilm = await _DBFilmService.AddOrUpdateAsync(film);
             return Ok(addedFilm);
         }
-    }
-    public class FilmModel
-    {
-        public string? Id { get; set; }
-        public string? Name { get; set; }
-        public string? Rating { get; set; }
-        public string? Genre { get; set; }
-        public int? Duration { get; set; }
-        public string? Description { get; set; }
+        [HttpPost("Delete")]
+        public async Task<IActionResult> DeleteFilm([FromBody] FilmDTO filmModel)
+        {
+            if (filmModel == null)
+                return BadRequest("Film is required.");
+
+            Guid filmId;
+            if (string.IsNullOrWhiteSpace(filmModel.Id) || !Guid.TryParse(filmModel.Id, out filmId))
+                filmId = Guid.NewGuid();
+
+            var film = new Film
+            {
+                Id = filmId,
+                Name = filmModel.Name,
+                Rating = filmModel.Rating,
+                Genre = filmModel.Genre,
+                Duration = filmModel.Duration,
+                Description = filmModel.Description,
+            };
+
+            await _DBFilmService.DeleteAsync(film);
+            return Ok();
+        }
     }
 }
