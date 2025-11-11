@@ -1,46 +1,39 @@
 import { useState } from "react";
 import { getAppData, deleteItem, addItem, updateItem } from "../../utils/storage";
+import type { ZaalProp } from "../../utils/fake-data";
+import GenericSelect from "../../components/generic-select";
+import ZaalForm from "./zaal-form";
 import Seats from '../../components/Seats';
 import "./zaal-panel.css";
 
 function Zaal_panel() {
-    interface ZaalProp {
-        id: string;
-        naam: string;
-        rijen: number;
-        stoelen_per_rij: number;
-    }
+
     const { fakeZalen } = getAppData();
     const [zalen, setZalen] = useState<ZaalProp[]>(fakeZalen);
+    const emptyZaal: ZaalProp = {
+        id: '',
+        naam: '',
+        rijen: 0,
+        stoelen_per_rij: 0,
+    };
 
-    const [naam, setNaam] = useState("");
-    const [rijen, setRijen] = useState<number | string>("");
-    const [stoelenPerRij, setStoelenPerRij] = useState<number | string>("");
-    const [selectedZaal, setSelectedZaal] = useState<ZaalProp | null>(null);
-
+    const [selectedZaal, setSelectedZaal] = useState<ZaalProp>(emptyZaal);
 
     const handleSave = () => {
-        if (!naam || rijen === "" || stoelenPerRij === "") {
+        if (selectedZaal.naam === "" || selectedZaal.rijen === 0 || selectedZaal.stoelen_per_rij === 0) {
             alert("Please enter all info.");
             return;
         }
 
-        const rijenNum = Number(rijen);
-        const stoelenNum = Number(stoelenPerRij);
-
-        if (selectedZaal) {
-            selectedZaal.naam = naam;
-            selectedZaal.rijen = rijenNum;
-            selectedZaal.stoelen_per_rij = stoelenNum;
-
+        if (selectedZaal.id !== "") {
             updateItem("fakeZalen", selectedZaal);
             alert("Zaal updated!");
         } else {
             const newZaal: ZaalProp = {
                 id: crypto.randomUUID(),
-                naam,
-                rijen: rijenNum,
-                stoelen_per_rij: stoelenNum,
+                naam: selectedZaal.naam,
+                rijen: selectedZaal.rijen,
+                stoelen_per_rij: selectedZaal.stoelen_per_rij,
             };
             addItem("fakeZalen", newZaal);
             alert("Zaal saved!");
@@ -48,31 +41,19 @@ function Zaal_panel() {
 
     }
 
-    const zaalChosen = (zaal: ZaalProp | null) => {
-        if (!zaal) {
-            setNaam("")
-            setRijen("")
-            setStoelenPerRij("")
-            return;
-        }
-
-        setNaam(zaal.naam)
-        setRijen(zaal.rijen)
-        setStoelenPerRij(zaal.stoelen_per_rij)
-    };
 
     return (
         <div className="movie-panel-container">
             <div className="movie-preview-side">
                 <div className="top"><h1>Preview</h1></div>
-                <div className="top"><h1>{naam}</h1></div>
+                <div className="top"><h1>{selectedZaal.naam}</h1></div>
                 <Seats
                     zaal={
                         {
                             id: "temp",
-                            naam: "Default zaal",
-                            rijen: Number(rijen) ,
-                            stoelen_per_rij: Number(stoelenPerRij),
+                            naam: selectedZaal.naam,
+                            rijen: selectedZaal.rijen,
+                            stoelen_per_rij: selectedZaal.stoelen_per_rij,
                         }
                     }
                     button={false}
@@ -81,64 +62,22 @@ function Zaal_panel() {
 
             <div className="movie-form-side">
                 <div className="form-top">
-                    <h2>Add Movie Info</h2>
-
-                    <div className="form-group">
-                        <label>Room name:</label>
-                        <input
-                            type="text"
-                            value={naam}
-                            onChange={(e) => setNaam(e.target.value)}
-                            placeholder="Enter room name"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Rows:</label>
-                        <input
-                            type="number"
-                            value={rijen}
-                            onChange={(e) => setRijen(e.target.value)}
-                            placeholder="Enter amount of rows"
-                            min={0}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Seats per row:</label>
-                        <input
-                            type="number"
-                            value={stoelenPerRij}
-                            onChange={(e) => setStoelenPerRij(e.target.value)}
-                            placeholder="Enter amount seats per row"
-                            min={0}
-                        />
-                    </div>
-
-                    <button onClick={handleSave} className="save-button">
-                        {selectedZaal ? "Update Room" : "Save Room"}
-                    </button>
+                    <ZaalForm
+                        selectedZaal={selectedZaal}
+                        setSelectedZaal={setSelectedZaal}
+                        handleSave={handleSave}
+                    />
                 </div>
 
                 <div className="form-bottom">
-                    <h3>Select a Room</h3>
-                    <select
-                        value={selectedZaal?.id || ""}
-                        onChange={(e) => {
-                            const zaal = zalen.find((z) => z.id === e.target.value) || null;
-                            setSelectedZaal(zaal);
-                            setRijen(zaal?.rijen as number)
-                            setStoelenPerRij(zaal?.stoelen_per_rij as number)
-                            zaalChosen(zaal);
-                        }}
-                    >
-                        <option value="">-- Pick a Room --</option>
-                        {zalen.map((zaal) => (
-                            <option key={zaal.id} value={zaal.id}>
-                                {zaal.naam}
-                            </option>
-                        ))}
-                    </select>
+                    <GenericSelect<ZaalProp>
+                        title="Select a Room"
+                        items={zalen}
+                        selectedItem={selectedZaal}
+                        setSelectedItem={setSelectedZaal}
+                        Label={(z) => z.naam}
+                        emptyItem={emptyZaal}
+                    />
 
                     <button
                         className="delete-button"
@@ -146,8 +85,7 @@ function Zaal_panel() {
                             if (!selectedZaal) return;
                             const updatedZalen = zalen.filter(z => z.id !== selectedZaal.id);
                             setZalen(updatedZalen);
-                            setSelectedZaal(null);
-                            zaalChosen(null);
+                            setSelectedZaal(emptyZaal);
                             deleteItem("fakeZalen", selectedZaal.id)
                         }}
                     >

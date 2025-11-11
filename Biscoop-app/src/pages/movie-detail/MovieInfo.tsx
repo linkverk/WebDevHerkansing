@@ -2,7 +2,7 @@ import React from "react";
 import { hashCode } from "../../utils/image-hascode";
 interface MovieInfoProps {
   poster?: string;
-  title: string;
+  name: string;
   duration: number;
   rating: string;
   genre: string;
@@ -16,7 +16,7 @@ interface MovieInfoProps {
 
 const MovieInfo: React.FC<MovieInfoProps> = ({
   poster,
-  title,
+  name,
   duration,
   rating,
   genre,
@@ -27,17 +27,17 @@ const MovieInfo: React.FC<MovieInfoProps> = ({
   posterClass = "",
   textClass = "",
 }) => {
-  const posterPath = `/images/movie_${hashCode(title)}.png`;
+  const posterPath = `/images/movie_${hashCode(name)}.png`;
   return (
     <div className={`${className}`}>
       <img
         className={posterClass}
         src={poster ? poster : posterPath}
-        alt={title}
+        alt={name}
       />
 
       <div className={textClass}>
-        <h1>{title}</h1>
+        <h1>{name}</h1>
 
         <div><span className="label">Duration:</span> {duration} min</div>
         <div><span className="label">PG:</span> {rating}</div>

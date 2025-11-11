@@ -3,12 +3,7 @@ import { Link } from "react-router-dom";
 import ShowInfo from "./showInfo";
 import "./movie-list.css"
 import MovieInfo from "../movie-detail/MovieInfo";
-
-type Review = {
-    name: string;
-    text: string;
-    rating: number;
-};
+import type { Review } from "../../utils/fake-data";
 
 function MovieList() {
     const { fakeMovies, fakeReviews } = getAppData();
@@ -30,7 +25,7 @@ function MovieList() {
             {fakeMovies.map((item) => (
                 <div className="movie-list-part">
                     <MovieInfo
-                        title={item.title ?? "N/A"}
+                        name={item.name ?? "N/A"}
                         duration={item.duration ?? 0}
                         rating={item.rating ?? "N/A"}
                         genre={item.genre ?? "N/A"}

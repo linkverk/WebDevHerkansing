@@ -1,0 +1,14 @@
+using BioscoopServer.models;
+using Microsoft.EntityFrameworkCore;
+namespace BioscoopServer.DBServices
+{
+    public class DBFilmService : DBDefaultService<Film>
+    {
+        public DBFilmService(CinemaContext context) : base(context) { }
+        public override bool Exists(Film entity, out Film? existing)
+        {
+            existing = _dbSet.AsNoTracking().FirstOrDefault(f => f.Id == entity.Id);
+            return existing != null;
+        }
+    }
+}

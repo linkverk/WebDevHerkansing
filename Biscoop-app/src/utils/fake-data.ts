@@ -8,7 +8,7 @@ export interface ZaalProp {
 
 export interface MovieProp {
   id: string;
-  title: string;
+  name: string;
   duration: number;
   rating: string;
   genre: string;
@@ -41,7 +41,7 @@ export const fakeZalen: ZaalProp[] = [
 export const fakeMovies: MovieProp[] = [
   {
     id: "movie-1",
-    title: "The Time Traveler",
+    name: "The Time Traveler",
     duration: 120,
     rating: "PG-13",
     genre: "Sci-Fi",
@@ -49,7 +49,7 @@ export const fakeMovies: MovieProp[] = [
   },
   {
     id: "movie-2",
-    title: "Love in Paris",
+    name: "Love in Paris",
     duration: 105,
     rating: "PG",
     genre: "Romance",
@@ -57,7 +57,7 @@ export const fakeMovies: MovieProp[] = [
   },
   {
     id: "movie-3",
-    title: "The Silent Forest",
+    name: "The Silent Forest",
     duration: 130,
     rating: "R",
     genre: "Thriller",

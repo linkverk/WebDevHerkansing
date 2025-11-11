@@ -87,7 +87,7 @@ function Movie_detail() {
 
             <div>
                 <MovieInfo
-                    title={movie.title}
+                    name={movie.name}
                     duration={movie.duration}
                     rating={movie.rating}
                     genre={movie.genre}
