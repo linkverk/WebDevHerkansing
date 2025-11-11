@@ -48,12 +48,7 @@ const Seats: React.FC<SeatsProps> = ({ zaal, button }) => {
         </div>
       </div>
 
-      <div
-        className="seat-grid"
-        style={{
-          gridTemplateColumns: `repeat(${zaal.stoelen_per_rij}, 44px)`,
-        }}
-      >
+      <div className="seat-grid">
         {seats.map(seat => (
           <div
             key={seat.id}
