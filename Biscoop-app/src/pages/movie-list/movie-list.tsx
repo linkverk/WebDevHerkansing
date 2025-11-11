@@ -27,7 +27,6 @@ export interface MoviePropFull {
 
 
 function MovieList() {
-    // const { fakeMovies, fakeReviews } = getAppData();
     useEffect(() => {
         fetchAllMoviesFull();
     }, []);
