@@ -16,6 +16,17 @@ namespace Controllers
             _DBFilmService = DBFilmService;
         }
 
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetFilById([FromQuery] string id)
+        {
+            var film = await _DBFilmService.GetByIdAsync(Guid.Parse(id));
+            if(film == null)
+            {
+                return BadRequest($"Film with id {id} was not found");
+            }
+            return Ok(film);
+        }
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllFilms()
         {
