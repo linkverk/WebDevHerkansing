@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-// import { hashCode } from "../../utils/image-hascode";
+import { useState } from "react";
 import { getAppData, deleteItem, addItem, updateItem } from "../../utils/storage";
 import GenericSelect from "../../components/generic-select";
 import type { MovieProp } from "../../utils/fake-data";
