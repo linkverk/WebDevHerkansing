@@ -75,7 +75,7 @@ function Zaal_panel() {
                         items={zalen}
                         selectedItem={selectedZaal}
                         setSelectedItem={setSelectedZaal}
-                        getLabel={(z) => z.naam}
+                        Label={(z) => z.naam}
                         emptyItem={emptyZaal}
                     />
 

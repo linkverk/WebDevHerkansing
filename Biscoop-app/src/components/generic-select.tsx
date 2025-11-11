@@ -5,7 +5,7 @@ interface GenericSelectProps<T extends { id: string }> {
   items: T[];
   selectedItem: T;
   setSelectedItem: React.Dispatch<React.SetStateAction<T>>;
-  getLabel: (item: T) => string;
+  Label: (item: T) => string;
   emptyItem: T;
 }
 
@@ -14,7 +14,7 @@ function GenericSelect<T extends { id: string }>({
   items,
   selectedItem,
   setSelectedItem,
-  getLabel,
+  Label,
   emptyItem,
 }: GenericSelectProps<T>) {
   return (
@@ -30,7 +30,7 @@ function GenericSelect<T extends { id: string }>({
         <option value="">-- Select --</option>
         {items.map((item) => (
           <option key={item.id} value={item.id}>
-            {getLabel(item)}
+            {Label(item)}
           </option>
         ))}
       </select>

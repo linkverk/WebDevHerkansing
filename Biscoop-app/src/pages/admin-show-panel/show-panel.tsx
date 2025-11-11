@@ -142,7 +142,7 @@ function Show_panel() {
                         items={movies}
                         selectedItem={selectedMovie}
                         setSelectedItem={setSelectedMovie}
-                        getLabel={(m) => m.name}
+                        Label={(m) => m.name}
                         emptyItem={emptyMovie}
                     />
 
@@ -151,7 +151,7 @@ function Show_panel() {
                         items={rooms}
                         selectedItem={selectedzaal}
                         setSelectedItem={setSelectedZaal}
-                        getLabel={(z) => z.naam}
+                        Label={(z) => z.naam}
                         emptyItem={emptyZaal}
                     />
 

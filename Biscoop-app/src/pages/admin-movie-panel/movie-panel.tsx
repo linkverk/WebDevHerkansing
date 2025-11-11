@@ -91,7 +91,7 @@ function Movie_panel() {
                         items={movies}
                         selectedItem={selectedMovie}
                         setSelectedItem={setSelectedMovie}
-                        getLabel={(m) => m.name}
+                        Label={(m) => m.name}
                         emptyItem={emptyMovie}
                     />
                     <button
