@@ -10,6 +10,7 @@ builder.Services.AddDbContext<CinemaContext>(options =>
     options.UseSqlite("Data Source=cinema.db"));
 
 builder.Services.AddScoped<DBFilmService>();
+builder.Services.AddScoped<DBUserService>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
