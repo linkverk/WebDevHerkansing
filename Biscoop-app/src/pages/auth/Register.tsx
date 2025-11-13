@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { saveCurrentUserId, createOrGetUser } from '../../api/users';
 import './auth.css';
 
 const Register: React.FC = () => {
@@ -8,39 +9,60 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (name && email && password) {
+    if (!name || !email || !password) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Split name into first and last name
+      const nameParts = name.trim().split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ') || 'User';
+
+      // Create user in database
+      const user = await createOrGetUser({
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: lastName
+      });
+
+      // Save to localStorage as backup
       const userData = {
+        id: user.id,
         name: name,
         email: email,
         password: password,
         registeredAt: new Date().toISOString()
       };
-
-      try {
-        localStorage.setItem('registeredUser', JSON.stringify(userData));
-        localStorage.setItem('userName', name);
-        
-        localStorage.setItem('isLoggedIn', 'true');
-        
-        console.log('User registered:', name);
-        
-        navigate('/login', { 
-          state: { 
-            message: 'Account successfully created! Please log in.',
-            registeredName: name 
-          } 
-        });
-      } catch (err) {
-        setError('Error saving registration. Please try again.');
-        console.error('Registration error:', err);
-      }
-    } else {
-      setError('Please fill in all fields.');
+      localStorage.setItem('registeredUser', JSON.stringify(userData));
+      localStorage.setItem('userName', name);
+      
+      // Save the userId
+      saveCurrentUserId(user.id);
+      
+      console.log('User registered in database with ID:', user.id);
+      
+      navigate('/login', { 
+        state: { 
+          message: 'Account successfully created! Please log in.',
+          registeredName: name 
+        } 
+      });
+    } catch (err) {
+      console.error('Registration error:', err);
+      setError('Failed to create account. Please make sure the backend is running.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,12 +118,13 @@ const Register: React.FC = () => {
                 placeholder={field.placeholder}
                 className="form-input"
                 required
+                disabled={loading}
               />
             </div>
           ))}
           
-          <button type="submit" className="btn-primary">
-            Create Account
+          <button type="submit" className="btn-primary" disabled={loading}>
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
         
@@ -110,6 +133,7 @@ const Register: React.FC = () => {
           <button 
             onClick={() => navigate('/login')} 
             className="link-button"
+            disabled={loading}
           >
             Sign in
           </button>

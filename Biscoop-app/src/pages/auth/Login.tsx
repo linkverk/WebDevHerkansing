@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { saveCurrentUserId } from '../../api/users';
+import { saveCurrentUserId, createOrGetUser } from '../../api/users';
 import './auth.css';
 
 export interface LoginProps {
@@ -9,7 +9,6 @@ export interface LoginProps {
 
 const ADMIN_EMAIL = 'johndoe@test.test';
 const ADMIN_PASSWORD = '123456';
-const ADMIN_USER_ID = '00000000-0000-0000-0000-000000000001'; // Default admin ID
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const navigate = useNavigate();
@@ -32,31 +31,58 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     try {
       // Check for hardcoded admin account
       if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-        saveCurrentUserId(ADMIN_USER_ID);
-        localStorage.setItem('username', 'John Doe');
-        onLogin(email, password);
-        navigate('/home');
-        return;
+        try {
+          // Create or get admin user from database
+          const user = await createOrGetUser({
+            email: ADMIN_EMAIL,
+            password: ADMIN_PASSWORD,
+            firstName: 'John',
+            lastName: 'Doe'
+          });
+          
+          saveCurrentUserId(user.id);
+          localStorage.setItem('username', `${user.firstName} ${user.lastName}`);
+          onLogin(email, password);
+          navigate('/home');
+          return;
+        } catch (err) {
+          console.error('Failed to create/get admin user:', err);
+          setError('Failed to connect to server. Please make sure the backend is running.');
+          setLoading(false);
+          return;
+        }
       }
 
-      // Check for registered user
+      // Check for registered user in localStorage
       const registeredUser = localStorage.getItem('registeredUser');
       if (registeredUser) {
         try {
           const userData = JSON.parse(registeredUser);
           if (userData.email === email && userData.password === password) {
-            // Save user ID (use stored ID or generate one)
-            const userId = userData.id || `user-${Date.now()}`;
-            if (!userData.id) {
-              userData.id = userId;
-              localStorage.setItem('registeredUser', JSON.stringify(userData));
+            // Try to get/create user in database
+            try {
+              const user = await createOrGetUser({
+                email: userData.email,
+                password: userData.password,
+                firstName: userData.name.split(' ')[0],
+                lastName: userData.name.split(' ').slice(1).join(' ') || 'User'
+              });
+              
+              saveCurrentUserId(user.id);
+              localStorage.setItem('username', userData.name);
+              onLogin(email, password);
+              navigate('/profile');
+              return;
+            } catch (err) {
+              console.error('Failed to create user in database:', err);
+              // Continue with localStorage only
+              const userId = userData.id || crypto.randomUUID();
+              saveCurrentUserId(userId);
+              localStorage.setItem('username', userData.name);
+              onLogin(email, password);
+              navigate('/profile');
+              return;
             }
-            
-            saveCurrentUserId(userId);
-            localStorage.setItem('username', userData.name);
-            onLogin(email, password);
-            navigate('/profile');
-            return;
           }
         } catch (error) {
           console.error('Error parsing user data:', error);

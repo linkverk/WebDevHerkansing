@@ -1,5 +1,5 @@
-// User API Service
-const API_BASE_URL = 'http://localhost:5275/api/users';
+// User API Service - Films Style with Database Support
+const API_BASE_URL = 'http://localhost:5275/api/Users';
 
 export interface UserDTO {
   id?: string;
@@ -56,67 +56,140 @@ export interface FilmHistory {
   description: string;
 }
 
-// Helper function for fetch with error handling
-async function fetchWithError(url: string, options?: RequestInit): Promise<Response> {
+// NEW: Create or get user from database
+export async function createOrGetUser(userData: UserDTO): Promise<UserProfile> {
   try {
-    const response = await fetch(url, options);
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    // First, try to find user by email
+    const response = await fetch(`${API_BASE_URL}/GetByEmail?email=${encodeURIComponent(userData.email)}`);
+    
+    if (response.ok) {
+      // User exists, return it
+      const user = await response.json();
+      console.log('User found in database:', user.id);
+      return user;
     }
-    return response;
+    
+    // User doesn't exist, create new one
+    console.log('Creating new user in database...');
+    const createResponse = await fetch(`${API_BASE_URL}/AddOrUpdate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+    
+    if (!createResponse.ok) {
+      throw new Error(`Failed to create user: ${createResponse.status}`);
+    }
+    
+    const newUser = await createResponse.json();
+    console.log('User created in database:', newUser.id);
+    return newUser;
   } catch (error) {
-    console.error('Fetch error:', error);
+    console.error("Failed to create/get user:", error);
     throw error;
   }
 }
 
 // GET user profile by ID
 export async function getUserProfile(userId: string): Promise<UserProfile> {
-  const response = await fetchWithError(`${API_BASE_URL}/${userId}`);
-  return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/GetById?id=${userId}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch user: ${response.status}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Failed to fetch user:", error);
+    throw error;
+  }
 }
 
 // UPDATE user profile
 export async function updateUserProfile(userId: string, userData: UserDTO): Promise<UserProfile> {
-  const response = await fetchWithError(`${API_BASE_URL}/${userId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-  });
-  return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/AddOrUpdate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...userData, id: userId }),
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to update user: ${response.status}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Failed to update user:", error);
+    throw error;
+  }
 }
 
 // DELETE user account
-export async function deleteUserAccount(userId: string): Promise<void> {
-  await fetchWithError(`${API_BASE_URL}/${userId}`, {
-    method: 'DELETE',
-  });
+export async function deleteUserAccount(userId: string, userData: UserDTO): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/Delete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...userData, id: userId }),
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to delete user: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Failed to delete user:", error);
+    throw error;
+  }
 }
 
 // GET user film history
 export async function getUserHistory(userId: string): Promise<FilmHistory[]> {
-  const response = await fetchWithError(`${API_BASE_URL}/${userId}/history`);
-  return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/GetHistory?id=${userId}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch history: ${response.status}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Failed to fetch history:", error);
+    throw error;
+  }
 }
 
 // ADD film to user history
 export async function addToUserHistory(userId: string, filmId: string): Promise<void> {
-  await fetchWithError(`${API_BASE_URL}/${userId}/history`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ filmId }),
-  });
+  try {
+    const response = await fetch(`${API_BASE_URL}/AddToHistory`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId, filmId }),
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to add to history: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Failed to add to history:", error);
+    throw error;
+  }
 }
 
 // GET user bookings
 export async function getUserBookings(userId: string): Promise<UserBooking[]> {
-  const response = await fetchWithError(`${API_BASE_URL}/${userId}/bookings`);
-  return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/GetBookings?id=${userId}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch bookings: ${response.status}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Failed to fetch bookings:", error);
+    throw error;
+  }
 }
 
 // Helper to get current user ID from localStorage

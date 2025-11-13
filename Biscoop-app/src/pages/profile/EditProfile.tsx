@@ -8,6 +8,7 @@ interface ExtendedUserData {
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
   bio: string;
   genre: string;
 }
@@ -20,6 +21,7 @@ const EditProfile: React.FC = () => {
     firstName: '',
     lastName: '',
     email: user.email,
+    password: '',
     bio: '',
     genre: ''
   });
@@ -60,16 +62,29 @@ const EditProfile: React.FC = () => {
         }
       }
 
+      // Get password from localStorage (for updating)
+      const registeredUser = localStorage.getItem('registeredUser');
+      let password = '';
+      if (registeredUser) {
+        try {
+          const userData = JSON.parse(registeredUser);
+          password = userData.password || '';
+        } catch (e) {
+          console.error('Error loading password:', e);
+        }
+      }
+
       setFormData({
         firstName: profile.firstName || '',
         lastName: profile.lastName || '',
         email: profile.email,
+        password: password,
         bio: extendedData.bio,
         genre: extendedData.genre
       });
     } catch (error) {
       console.error('Error loading profile:', error);
-      setErrorMessage('Failed to load profile. Using local data.');
+      setErrorMessage('Failed to load profile from database.');
       
       // Fallback to localStorage
       const savedProfile = localStorage.getItem('userProfile');
@@ -80,6 +95,7 @@ const EditProfile: React.FC = () => {
             firstName: user.name.split(' ')[0] || '',
             lastName: user.name.split(' ').slice(1).join(' ') || '',
             email: user.email,
+            password: '',
             bio: profileData.bio || '',
             genre: profileData.genre || ''
           });
@@ -132,12 +148,16 @@ const EditProfile: React.FC = () => {
     try {
       setLoading(true);
 
-      // Update via API
+      // Update via API - SEND COMPLETE USER DATA INCLUDING PASSWORD
       const updatedProfile = await updateUserProfile(userId, {
+        id: userId,
         firstName: formData.firstName,
         lastName: formData.lastName,
-        email: formData.email
+        email: formData.email,
+        password: formData.password // IMPORTANT: Send password to database!
       });
+
+      console.log('Profile updated in database:', updatedProfile);
 
       // Update the user context
       setUser({
@@ -146,7 +166,7 @@ const EditProfile: React.FC = () => {
         email: updatedProfile.email
       });
 
-      // Save extended profile data to localStorage
+      // Save extended profile data to localStorage (bio and genre only)
       const profileData = {
         bio: formData.bio,
         genre: formData.genre,
@@ -154,23 +174,25 @@ const EditProfile: React.FC = () => {
       };
       localStorage.setItem('userProfile', JSON.stringify(profileData));
 
-      // Update registered user data if it exists
+      // Update registered user data in localStorage (for login persistence)
       const registeredUser = localStorage.getItem('registeredUser');
       if (registeredUser) {
         const userData = JSON.parse(registeredUser);
+        userData.id = userId;
         userData.name = `${formData.firstName} ${formData.lastName}`;
         userData.email = formData.email;
+        userData.password = formData.password;
         localStorage.setItem('registeredUser', JSON.stringify(userData));
       }
 
-      setSuccessMessage('Profile updated successfully!');
+      setSuccessMessage('Profile updated successfully in database!');
       
       setTimeout(() => {
         navigate('/profile');
       }, 1500);
     } catch (error) {
       console.error('Save error:', error);
-      setErrorMessage('Error saving profile. Please try again.');
+      setErrorMessage('Error saving profile to database. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -184,7 +206,7 @@ const EditProfile: React.FC = () => {
     return (
       <div className="profile-container">
         <div className="profile-card">
-          <p style={{ textAlign: 'center', color: '#9ab0c9' }}>Loading profile...</p>
+          <p style={{ textAlign: 'center', color: '#9ab0c9' }}>Loading profile from database...</p>
         </div>
       </div>
     );
@@ -268,7 +290,7 @@ const EditProfile: React.FC = () => {
             className="btn-success"
             disabled={loading || !!successMessage}
           >
-            {loading ? 'Saving...' : successMessage ? 'Saved!' : 'Save Changes'}
+            {loading ? 'Saving to Database...' : successMessage ? 'Saved!' : 'Save Changes'}
           </button>
           <button 
             onClick={handleCancel} 
