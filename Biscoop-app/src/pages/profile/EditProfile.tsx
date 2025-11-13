@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../context/UserContext';
+import { getUserProfile, updateUserProfile, getCurrentUserId } from '../../api/users';
 import './profile.css';
 
 interface ExtendedUserData {
-  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  fullName: string;
   bio: string;
   genre: string;
 }
@@ -16,91 +17,137 @@ const EditProfile: React.FC = () => {
   const { user, setUser } = useUserContext();
   
   const [formData, setFormData] = useState<ExtendedUserData>({
-    username: '',
+    firstName: '',
+    lastName: '',
     email: user.email,
-    fullName: user.name,
     bio: '',
     genre: ''
   });
 
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Load extended profile data from localStorage
-    const savedProfile = localStorage.getItem('userProfile');
-    if (savedProfile) {
-      try {
-        const profileData = JSON.parse(savedProfile);
-        setFormData({
-          username: profileData.username || '',
-          email: user.email,
-          fullName: user.name,
-          bio: profileData.bio || '',
-          genre: profileData.genre || ''
-        });
-      } catch (error) {
-        console.error('Error loading profile:', error);
-      }
-    } else {
-      // Initialize with user data from context
-      setFormData({
-        username: user.name.toLowerCase().replace(/\s+/g, '_'),
-        email: user.email,
-        fullName: user.name,
-        bio: '',
-        genre: ''
-      });
+    loadUserProfile();
+  }, []);
+
+  const loadUserProfile = async () => {
+    const userId = getCurrentUserId();
+    if (!userId) {
+      setErrorMessage('User not logged in');
+      return;
     }
-  }, [user]);
+
+    try {
+      setLoading(true);
+      // Load from API
+      const profile = await getUserProfile(userId);
+      
+      // Load extended profile data from localStorage
+      const savedProfile = localStorage.getItem('userProfile');
+      let extendedData = { bio: '', genre: '' };
+      
+      if (savedProfile) {
+        try {
+          const profileData = JSON.parse(savedProfile);
+          extendedData = {
+            bio: profileData.bio || '',
+            genre: profileData.genre || ''
+          };
+        } catch (e) {
+          console.error('Error loading extended profile:', e);
+        }
+      }
+
+      setFormData({
+        firstName: profile.firstName || '',
+        lastName: profile.lastName || '',
+        email: profile.email,
+        bio: extendedData.bio,
+        genre: extendedData.genre
+      });
+    } catch (error) {
+      console.error('Error loading profile:', error);
+      setErrorMessage('Failed to load profile. Using local data.');
+      
+      // Fallback to localStorage
+      const savedProfile = localStorage.getItem('userProfile');
+      if (savedProfile) {
+        try {
+          const profileData = JSON.parse(savedProfile);
+          setFormData({
+            firstName: user.name.split(' ')[0] || '',
+            lastName: user.name.split(' ').slice(1).join(' ') || '',
+            email: user.email,
+            bio: profileData.bio || '',
+            genre: profileData.genre || ''
+          });
+        } catch (e) {
+          console.error('Error loading from localStorage:', e);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const textFields = [
-    { key: 'username', label: 'Username', placeholder: 'Enter username' },
-    { key: 'email', label: 'Email', type: 'email', placeholder: 'Enter email' },
-    { key: 'fullName', label: 'Full Name', placeholder: 'Enter full name' }
+    { key: 'firstName', label: 'First Name', placeholder: 'Enter first name' },
+    { key: 'lastName', label: 'Last Name', placeholder: 'Enter last name' },
+    { key: 'email', label: 'Email', type: 'email', placeholder: 'Enter email' }
   ];
 
   const updateField = (key: string, value: string) => {
     setFormData(prev => ({ ...prev, [key]: value }));
-    // Clear messages when user types
     setSuccessMessage('');
     setErrorMessage('');
   };
 
   const validateForm = (): boolean => {
-    if (!formData.fullName.trim()) {
-      setErrorMessage('Full name is required');
+    if (!formData.firstName.trim() || !formData.lastName.trim()) {
+      setErrorMessage('First and last name are required');
       return false;
     }
     if (!formData.email.trim() || !formData.email.includes('@')) {
       setErrorMessage('Valid email is required');
       return false;
     }
-    if (!formData.username.trim()) {
-      setErrorMessage('Username is required');
-      return false;
-    }
     return true;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setErrorMessage('');
     
     if (!validateForm()) {
       return;
     }
 
+    const userId = getCurrentUserId();
+    if (!userId) {
+      setErrorMessage('User not logged in');
+      return;
+    }
+
     try {
-      // Update the user context with new name and email
+      setLoading(true);
+
+      // Update via API
+      const updatedProfile = await updateUserProfile(userId, {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email
+      });
+
+      // Update the user context
       setUser({
         ...user,
-        name: formData.fullName,
-        email: formData.email
+        name: `${updatedProfile.firstName} ${updatedProfile.lastName}`,
+        email: updatedProfile.email
       });
 
       // Save extended profile data to localStorage
       const profileData = {
-        username: formData.username,
         bio: formData.bio,
         genre: formData.genre,
         lastUpdated: new Date().toISOString()
@@ -111,27 +158,37 @@ const EditProfile: React.FC = () => {
       const registeredUser = localStorage.getItem('registeredUser');
       if (registeredUser) {
         const userData = JSON.parse(registeredUser);
-        userData.name = formData.fullName;
+        userData.name = `${formData.firstName} ${formData.lastName}`;
         userData.email = formData.email;
         localStorage.setItem('registeredUser', JSON.stringify(userData));
       }
 
-      // Show success message
       setSuccessMessage('Profile updated successfully!');
       
-      // Navigate back to profile after a short delay
       setTimeout(() => {
         navigate('/profile');
       }, 1500);
     } catch (error) {
-      setErrorMessage('Error saving profile. Please try again.');
       console.error('Save error:', error);
+      setErrorMessage('Error saving profile. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleCancel = () => {
     navigate('/profile');
   };
+
+  if (loading && !formData.email) {
+    return (
+      <div className="profile-container">
+        <div className="profile-card">
+          <p style={{ textAlign: 'center', color: '#9ab0c9' }}>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="profile-container">
@@ -146,28 +203,13 @@ const EditProfile: React.FC = () => {
         <h2 className="edit-title">Edit Profile</h2>
         
         {successMessage && (
-          <div className="success-message" style={{ 
-            color: '#2c5f2d', 
-            marginBottom: '1rem', 
-            padding: '0.75rem',
-            backgroundColor: '#d4edda',
-            borderRadius: '8px',
-            textAlign: 'center',
-            fontWeight: '500'
-          }}>
+          <div className="success-message">
             ✓ {successMessage}
           </div>
         )}
         
         {errorMessage && (
-          <div className="error-message" style={{ 
-            color: '#e74c3c', 
-            marginBottom: '1rem', 
-            padding: '0.75rem',
-            backgroundColor: '#fee',
-            borderRadius: '8px',
-            textAlign: 'center'
-          }}>
+          <div className="error-message">
             {errorMessage}
           </div>
         )}
@@ -224,13 +266,14 @@ const EditProfile: React.FC = () => {
           <button 
             onClick={handleSave} 
             className="btn-success"
-            disabled={!!successMessage}
+            disabled={loading || !!successMessage}
           >
-            {successMessage ? 'Saved!' : 'Save Changes'}
+            {loading ? 'Saving...' : successMessage ? 'Saved!' : 'Save Changes'}
           </button>
           <button 
             onClick={handleCancel} 
             className="btn-secondary"
+            disabled={loading}
           >
             Cancel
           </button>

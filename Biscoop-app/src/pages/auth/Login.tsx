@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { saveCurrentUserId } from '../../api/users';
 import './auth.css';
 
 export interface LoginProps {
@@ -8,45 +9,65 @@ export interface LoginProps {
 
 const ADMIN_EMAIL = 'johndoe@test.test';
 const ADMIN_PASSWORD = '123456';
+const ADMIN_USER_ID = '00000000-0000-0000-0000-000000000001'; // Default admin ID
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
     if (!email || !password) {
       setError('Please fill in all fields.');
+      setLoading(false);
       return;
     }
 
-    // Check for hardcoded admin account
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      onLogin(email, password);
-      navigate('/home');
-    }
-
-    // Check for registered user
-    const registeredUser = localStorage.getItem('registeredUser');
-    if (registeredUser) {
-      try {
-        const userData = JSON.parse(registeredUser);
-        if (userData.email === email && userData.password === password) {
-          onLogin(email, password);
-          navigate('/profile');
-          return;
-        }
-      } catch (error) {
-        console.error('Error parsing user data:', error);
+    try {
+      // Check for hardcoded admin account
+      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        saveCurrentUserId(ADMIN_USER_ID);
+        localStorage.setItem('username', 'John Doe');
+        onLogin(email, password);
+        navigate('/home');
+        return;
       }
-    }
 
-    // If we get here, credentials are invalid
-    setError('Invalid email or password. Please try again or register a new account.');
+      // Check for registered user
+      const registeredUser = localStorage.getItem('registeredUser');
+      if (registeredUser) {
+        try {
+          const userData = JSON.parse(registeredUser);
+          if (userData.email === email && userData.password === password) {
+            // Save user ID (use stored ID or generate one)
+            const userId = userData.id || `user-${Date.now()}`;
+            if (!userData.id) {
+              userData.id = userId;
+              localStorage.setItem('registeredUser', JSON.stringify(userData));
+            }
+            
+            saveCurrentUserId(userId);
+            localStorage.setItem('username', userData.name);
+            onLogin(email, password);
+            navigate('/profile');
+            return;
+          }
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+
+      // If we get here, credentials are invalid
+      setError('Invalid email or password. Please try again or register a new account.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -77,6 +98,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               placeholder="Enter your email"
               className="form-input"
               required
+              disabled={loading}
             />
           </div>
           
@@ -90,11 +112,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               onKeyPress={(e) => e.key === 'Enter' && handleSubmit(e)}
               className="form-input"
               required
+              disabled={loading}
             />
           </div>
           
-          <button type="submit" className="btn-primary">
-            Sign In
+          <button type="submit" className="btn-primary" disabled={loading}>
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
         
@@ -104,6 +127,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             type="button"
             onClick={() => navigate('/register')}
             className="link-button"
+            disabled={loading}
           >
             Sign up
           </button>
