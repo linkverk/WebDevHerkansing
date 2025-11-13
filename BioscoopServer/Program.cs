@@ -11,6 +11,7 @@ builder.Services.AddDbContext<CinemaContext>(options =>
 
 builder.Services.AddScoped<DBFilmService>();
 builder.Services.AddScoped<DBUserService>();
+builder.Services.AddScoped<ReviewServices>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
