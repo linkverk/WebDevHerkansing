@@ -99,3 +99,4 @@ desktop.ini
 coverage/
 *.lcov
 test-results.xml
+cinema.db
