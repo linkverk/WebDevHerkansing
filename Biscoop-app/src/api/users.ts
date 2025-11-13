@@ -40,6 +40,7 @@ export interface UserBooking {
       stoelenPerRij: number;
     };
   };
+  seats: Array<{
     id: string;
     reservationId: string;
     stoelnummer: string;

@@ -9,62 +9,16 @@ namespace BioscoopServer.DBServices
 
         public override bool Exists(User entity, out User? existing)
         {
-            // Check by ID first
-            existing = _dbSet.FirstOrDefault(u => u.Id == entity.Id);
-            
-            // If not found by ID, check by email
-            if (existing == null)
-            {
-                existing = _dbSet.FirstOrDefault(u => u.Email == entity.Email);
-            }
-            
+            existing = _dbSet.AsNoTracking().FirstOrDefault(u => u.Id == entity.Id);
             return existing != null;
         }
 
-        // Get user by email
+        // NEW: Get user by email
         public async Task<User?> GetByEmailAsync(string email)
         {
             return await _dbSet
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == email);
-        }
-
-        // OVERRIDE: Custom AddOrUpdate with proper update logic
-        public override async Task<User?> AddOrUpdateAsync(User entity)
-        {
-            if (entity == null) return entity;
-
-            // Try to find existing user by ID or Email
-            var existing = await _dbSet.FirstOrDefaultAsync(u => u.Id == entity.Id);
-            
-            if (existing == null)
-            {
-                existing = await _dbSet.FirstOrDefaultAsync(u => u.Email == entity.Email);
-            }
-
-            if (existing != null)
-            {
-                // UPDATE existing user - manually update all properties
-                existing.Email = entity.Email;
-                existing.Password = entity.Password;
-                existing.FirstName = entity.FirstName;
-                existing.LastName = entity.LastName;
-
-                _context.Entry(existing).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                
-                Console.WriteLine($"✅ User updated: {existing.Id} - {existing.FirstName} {existing.LastName}");
-                return existing;
-            }
-            else
-            {
-                // ADD new user
-                await _dbSet.AddAsync(entity);
-                await _context.SaveChangesAsync();
-                
-                Console.WriteLine($"✅ User created: {entity.Id} - {entity.FirstName} {entity.LastName}");
-                return entity;
-            }
         }
 
         public async Task<List<Film>?> GetUserHistoryAsync(Guid userId)
