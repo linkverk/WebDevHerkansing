@@ -10,5 +10,15 @@ namespace BioscoopServer.DBServices
             existing = _dbSet.AsNoTracking().FirstOrDefault(f => f.Id == entity.Id);
             return existing != null;
         }
+
+        public async Task<List<Film>> GetFilmsFull()
+        {
+            return await _dbSet
+            .AsNoTracking()
+            .Include(f => f.Shows)
+            .ThenInclude(s => s.Zaal)
+            .Include(f => f.Reviews)
+            .ToListAsync();
+        }
     }
 }

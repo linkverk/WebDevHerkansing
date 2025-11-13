@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BioscoopServer.models;
 using BioscoopServer.DBServices;
+using BioscoopServer.Models.ModelsDTOs;
 
 namespace Controllers
 {
@@ -15,6 +16,17 @@ namespace Controllers
             _DBFilmService = DBFilmService;
         }
 
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetFilById([FromQuery] string id)
+        {
+            var film = await _DBFilmService.GetByIdAsync(Guid.Parse(id));
+            if(film == null)
+            {
+                return BadRequest($"Film with id {id} was not found");
+            }
+            return Ok(film);
+        }
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllFilms()
         {
@@ -22,8 +34,15 @@ namespace Controllers
             return Ok(films);
         }
 
+        [HttpGet("GetAllFull")]
+        public async Task<IActionResult> GetAllFilmsFull()
+        {
+            var films = await _DBFilmService.GetFilmsFull();
+            return Ok(films);
+        }
+
         [HttpPost("AddOrUpdate")]
-        public async Task<IActionResult> AddOrUpdateFilm([FromBody] FilmModel filmModel)
+        public async Task<IActionResult> AddOrUpdateFilm([FromBody] FilmDTO filmModel)
         {
             if (filmModel == null)
                 return BadRequest("Film is required.");
@@ -45,14 +64,32 @@ namespace Controllers
             var addedFilm = await _DBFilmService.AddOrUpdateAsync(film);
             return Ok(addedFilm);
         }
-    }
-    public class FilmModel
-    {
-        public string? Id { get; set; }
-        public string? Name { get; set; }
-        public string? Rating { get; set; }
-        public string? Genre { get; set; }
-        public int? Duration { get; set; }
-        public string? Description { get; set; }
+        [HttpPost("Delete")]
+        public async Task<IActionResult> DeleteFilm([FromBody] FilmDTO filmModel)
+        {
+            if (filmModel == null)
+                return BadRequest("Film is required.");
+
+            Guid filmId;
+            if(Guid.TryParse(filmModel.Id, out filmId))
+            {
+                var film = new Film
+                {
+                    Id = filmId,
+                    Name = filmModel.Name,
+                    Rating = filmModel.Rating,
+                    Genre = filmModel.Genre,
+                    Duration = filmModel.Duration,
+                    Description = filmModel.Description,
+                };
+
+                await _DBFilmService.DeleteAsync(film);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("film Id is invalid");
+            }
+        }
     }
 }

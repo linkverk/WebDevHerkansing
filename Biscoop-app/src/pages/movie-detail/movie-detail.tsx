@@ -1,10 +1,31 @@
 import "./movie-detail.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReviewList from "./ReviewList";
 import MovieInfo from "./MovieInfo";
 import ShowInfo from "../movie-list/showInfo";
 import { getAppData, setAppData } from "../../utils/storage";
+import type { Review, ZaalProp } from "../../utils/fake-data";
 import { useParams } from "react-router-dom";
+
+export interface ShowPropWithZaal {
+    id: string;
+    start_date: Date;
+    end_date: Date;
+    movieId: string;
+    zaalId: string;
+    zaal: ZaalProp;
+}
+
+export interface MoviePropFull {
+    id: string;
+    name: string;
+    duration: number;
+    rating: string;
+    genre: string;
+    description: string;
+    shows: ShowPropWithZaal[];
+    reviews: Review[];
+}
 
 
 const getStoredUsername = () => {
@@ -67,44 +88,58 @@ const ReviewForm: React.FC<{ movieId: string; onAdded: () => void }> = ({ movieI
 
 function Movie_detail() {
     const { movieId } = useParams();
-    const { fakeMovies } = getAppData();
-    const movie = fakeMovies.find((m) => m.id === movieId) ?? fakeMovies[0];
+    useEffect(() => {
+        fetchAllMoviesFull();
+    }, []);
 
-    // local state for reviews so the UI updates immediately when a review is added
-    const [reviews, setReviews] = useState(() => getAppData().fakeReviews.filter(r => r.movieId === movie.id));
+    const [movieFull, setMovieFull] = useState<MoviePropFull>();
+
+    const fetchAllMoviesFull = async () => {
+        try {
+            const response = await fetch(`http://localhost:5275/api/Films/GetById?id=${movieId}`)
+            const data: MoviePropFull = await response.json();
+            setMovieFull(data);
+        } catch (error) {
+            console.error("Failed to fetch movies:", error);
+        }
+    };
+
 
     const reloadReviews = () => {
-        setReviews(getAppData().fakeReviews.filter(r => r.movieId === movie.id));
+        return
     };
 
     return (
         <div className="container">
+            {movieFull && (
+                <>
+                    <div className="room-info">
+                        <h2>Room & Showtime Information</h2>
+                        <ShowInfo shows={movieFull.shows} button={true} />
+                    </div>
 
-            <div className="room-info">
-                <h2>Room & Showtime Information</h2>
-                <ShowInfo movieId={movie.id} button={true} />
-            </div>
+                    <div>
+                        <MovieInfo
+                            name={movieFull.name}
+                            duration={movieFull.duration}
+                            rating={movieFull.rating}
+                            genre={movieFull.genre}
+                            includeDescription={true}
+                            description={movieFull.description}
+                            className="movie-info"
+                            posterClass="poster"
+                            textClass="info"
+                        />
+                    </div>
 
-            <div>
-                <MovieInfo
-                    name={movie.name}
-                    duration={movie.duration}
-                    rating={movie.rating}
-                    genre={movie.genre}
-                    includeDescription={true}
-                    description={movie.description}
-                    className="movie-info"
-                    posterClass="poster"
-                    textClass="info"
-                />
-            </div>
-
-            <div className="reviews">
-                <h2>Reviews</h2>
-                <ReviewList reviews={reviews} />
-                <h3>Add a review</h3>
-                <ReviewForm movieId={movie.id} onAdded={reloadReviews} />
-            </div>
+                    <div className="reviews">
+                        <h2>Reviews</h2>
+                        <ReviewList reviews={movieFull.reviews} />
+                        <h3>Add a review</h3>
+                        <ReviewForm movieId={movieFull.id} onAdded={reloadReviews} />
+                    </div>
+                </>
+            )}
         </div>
     )
 }

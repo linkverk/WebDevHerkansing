@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { getAppData, deleteItem, addItem, updateItem } from "../../utils/storage";
+import { useState, useEffect } from "react";
 import GenericSelect from "../../components/generic-select";
 import type { MovieProp } from "../../utils/fake-data";
 import MovieInfo from "../movie-detail/MovieInfo";
@@ -7,9 +6,12 @@ import MovieForm from "./movie-form";
 import "./movie-panel.css";
 
 function Movie_panel() {
-    const { fakeMovies } = getAppData();
+    // const { fakeMovies } = getAppData();
+    useEffect(() => {
+        fetchAllMovies();
+    }, []);
 
-    const [movies, setMovies] = useState<MovieProp[]>(fakeMovies);
+    const [movies, setMovies] = useState<MovieProp[]>([]);
     const emptyMovie: MovieProp = {
         id: '',
         name: '',
@@ -29,28 +31,76 @@ function Movie_panel() {
     //     }
     // };
 
-    const handleSave = () => {
+    const fetchAllMovies = async () => {
+        try {
+            const response = await fetch("http://localhost:5275/api/Films/GetAll")
+            const data: MovieProp[] = await response.json();
+            setMovies(data);
+        } catch (error) {
+            console.error("Failed to fetch movies:", error);
+        }
+    };
+
+    const handleSave = async () => {
         if (!poster || selectedMovie.name === "" || selectedMovie.genre === "" || selectedMovie.description === "" || selectedMovie.rating === "" || selectedMovie.duration === 0) {
             alert("Please enter all info.");
             return;
         }
 
-        if (selectedMovie.id !== "") {
-            updateItem("fakeMovies", selectedMovie);
-            alert("Movie updated!");
-        } else {
-            const newMovie: MovieProp = {
-                id: crypto.randomUUID(),
-                name: selectedMovie.name,
-                description: selectedMovie.description,
-                rating: selectedMovie.rating,
-                genre: selectedMovie.genre,
-                duration: selectedMovie.duration as number,
-            };
-            addItem("fakeMovies", newMovie);
-            alert("Movie saved!");
+        const requestOptions: RequestInit = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(selectedMovie),
+        };
+
+        try {
+            const response = await fetch("http://localhost:5275/api/Films/AddOrUpdate",
+                requestOptions
+            );
+            if (response.ok) {
+                alert("Film added or updated succesfully.");
+                const data: MovieProp = await response.json();
+                if (movies.find((m) => m.id === data.id)) {
+                    setMovies(movies.map((m) => (m.id === data.id ? data : m)));
+                } else {
+                    setMovies([...movies, data]);
+                }
+            }
+            else {
+                alert("Film not saved, something went wrong.");
+            }
+        } catch (err) {
+            console.error("Failed to add or update movie:", err);
+        };
+    };
+
+    const handleDelete = async () => {
+        if (selectedMovie.id === "") {
+            alert("Please select a movie.");
+            return;
         }
 
+        const requestOptions: RequestInit = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(selectedMovie),
+        };
+
+        try {
+            const response = await fetch("http://localhost:5275/api/Films/Delete",
+                requestOptions
+            );
+            if (response.ok) {
+                const updatedMovies = movies.filter(m => m.id !== selectedMovie.id);
+                setMovies(updatedMovies);
+                setSelectedMovie(emptyMovie);
+            }
+            else {
+                alert("Film not delete, something went wrong.");
+            }
+        } catch (err) {
+            console.error("Failed to delete movie:", err);
+        };
     };
 
     return (
@@ -96,12 +146,7 @@ function Movie_panel() {
                     <button
                         className="delete-button"
                         onClick={() => {
-                            if (!selectedMovie) return;
-                            const updatedMovies = movies.filter(m => m.id !== selectedMovie.id);
-                            setMovies(updatedMovies);
-                            setSelectedMovie(emptyMovie);
-                            deleteItem("fakeMovies", selectedMovie.id);
-
+                            handleDelete()
                         }}
                     >
                         Delete Movie
