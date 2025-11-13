@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { getUserProfile, getCurrentUserId } from '../../api/users';
 import type { User, Movie } from '../../types';
 import './profile.css';
@@ -18,6 +18,7 @@ interface ExtendedProfile {
 
 const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [profileData, setProfileData] = useState({
     firstName: '',
     lastName: '',
@@ -31,8 +32,9 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
+    // Always reload from database when component mounts or location changes
     loadProfile();
-  }, []);
+  }, [location]); // Re-load when returning from edit-profile
 
   const loadProfile = async () => {
     const userId = getCurrentUserId();
@@ -43,9 +45,10 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
     }
 
     try {
-      // Load from database
+      setLoading(true);
+      // ALWAYS load from database - this is the source of truth
       const profile = await getUserProfile(userId);
-      console.log('Profile loaded from database:', profile);
+      console.log('✅ Profile loaded from database:', profile);
       
       setProfileData({
         firstName: profile.firstName || '',
@@ -68,9 +71,9 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
         }
       }
     } catch (error) {
-      console.error('Error loading profile from database:', error);
+      console.error('❌ Error loading profile from database:', error);
       
-      // Fallback to localStorage/context
+      // Fallback to localStorage/context ONLY if database fails
       const savedProfile = localStorage.getItem('userProfile');
       if (savedProfile) {
         try {
@@ -85,6 +88,7 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
         }
       }
       
+      // Use context as absolute fallback
       setProfileData({
         firstName: user.name.split(' ')[0] || '',
         lastName: user.name.split(' ').slice(1).join(' ') || '',

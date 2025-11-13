@@ -45,6 +45,7 @@ const EditProfile: React.FC = () => {
       setLoading(true);
       // Load from API
       const profile = await getUserProfile(userId);
+      console.log('📋 Loading profile for edit:', profile);
       
       // Load extended profile data from localStorage
       const savedProfile = localStorage.getItem('userProfile');
@@ -157,12 +158,13 @@ const EditProfile: React.FC = () => {
         password: formData.password // IMPORTANT: Send password to database!
       });
 
-      console.log('Profile updated in database:', updatedProfile);
+      console.log('✅ Profile updated in database:', updatedProfile);
 
-      // Update the user context
+      // IMPORTANT: Update the user context so Profile component shows correct data
+      const fullName = `${updatedProfile.firstName} ${updatedProfile.lastName}`;
       setUser({
         ...user,
-        name: `${updatedProfile.firstName} ${updatedProfile.lastName}`,
+        name: fullName,
         email: updatedProfile.email
       });
 
@@ -179,19 +181,24 @@ const EditProfile: React.FC = () => {
       if (registeredUser) {
         const userData = JSON.parse(registeredUser);
         userData.id = userId;
-        userData.name = `${formData.firstName} ${formData.lastName}`;
+        userData.name = fullName;
         userData.email = formData.email;
         userData.password = formData.password;
         localStorage.setItem('registeredUser', JSON.stringify(userData));
+        console.log('✅ localStorage updated');
       }
+
+      // Also update username in simple storage
+      localStorage.setItem('username', fullName);
 
       setSuccessMessage('Profile updated successfully in database!');
       
+      // Navigate back after short delay
       setTimeout(() => {
         navigate('/profile');
       }, 1500);
     } catch (error) {
-      console.error('Save error:', error);
+      console.error('❌ Save error:', error);
       setErrorMessage('Error saving profile to database. Please try again.');
     } finally {
       setLoading(false);

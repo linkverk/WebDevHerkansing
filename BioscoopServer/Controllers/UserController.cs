@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using BioscoopServer.models;
 using BioscoopServer.DBServices;
 using BioscoopServer.Models.ModelsDTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace Controllers
 {
@@ -10,10 +11,12 @@ namespace Controllers
     public class UserController : ControllerBase
     {
         private readonly DBUserService _DBUserService;
+        private readonly CinemaContext _context;
 
-        public UserController(DBUserService DBUserService)
+        public UserController(DBUserService DBUserService, CinemaContext context)
         {
             _DBUserService = DBUserService;
+            _context = context;
         }
 
         [HttpGet("GetById")]
@@ -30,7 +33,6 @@ namespace Controllers
                 return NotFound($"User with id {id} was not found");
             }
 
-            // Return user without password
             var userDto = new UserDTO
             {
                 Id = user.Id.ToString(),
@@ -42,7 +44,6 @@ namespace Controllers
             return Ok(userDto);
         }
 
-        // NEW: Get user by email
         [HttpGet("GetByEmail")]
         public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
         {
@@ -57,7 +58,6 @@ namespace Controllers
                 return NotFound($"User with email {email} was not found");
             }
 
-            // Return user without password
             var userDto = new UserDTO
             {
                 Id = user.Id.ToString(),
@@ -79,26 +79,70 @@ namespace Controllers
             if (string.IsNullOrWhiteSpace(userModel.Id) || !Guid.TryParse(userModel.Id, out userId))
                 userId = Guid.NewGuid();
 
-            var user = new User
+            // Check if user exists
+            var existingUser = await _context.Users.FindAsync(userId);
+
+            if (existingUser != null)
             {
-                Id = userId,
-                Email = userModel.Email,
-                Password = userModel.Password ?? "", // In production, hash this!
-                FirstName = userModel.FirstName,
-                LastName = userModel.LastName
-            };
+                // UPDATE existing user
+                Console.WriteLine($"Updating user: {userId}");
+                Console.WriteLine($"Old: {existingUser.FirstName} {existingUser.LastName}");
+                Console.WriteLine($"New: {userModel.FirstName} {userModel.LastName}");
 
-            var savedUser = await _DBUserService.AddOrUpdateAsync(user);
+                existingUser.Email = userModel.Email;
+                existingUser.FirstName = userModel.FirstName;
+                existingUser.LastName = userModel.LastName;
+                
+                // Only update password if provided
+                if (!string.IsNullOrWhiteSpace(userModel.Password))
+                {
+                    existingUser.Password = userModel.Password;
+                }
 
-            var responseDto = new UserDTO
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+
+                Console.WriteLine($"✅ User updated successfully!");
+
+                var responseDto = new UserDTO
+                {
+                    Id = existingUser.Id.ToString(),
+                    Email = existingUser.Email,
+                    FirstName = existingUser.FirstName,
+                    LastName = existingUser.LastName
+                };
+
+                return Ok(responseDto);
+            }
+            else
             {
-                Id = savedUser.Id.ToString(),
-                Email = savedUser.Email,
-                FirstName = savedUser.FirstName,
-                LastName = savedUser.LastName
-            };
+                // ADD new user
+                Console.WriteLine($"Creating new user: {userId}");
 
-            return Ok(responseDto);
+                var user = new User
+                {
+                    Id = userId,
+                    Email = userModel.Email,
+                    Password = userModel.Password ?? "",
+                    FirstName = userModel.FirstName,
+                    LastName = userModel.LastName
+                };
+
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
+
+                Console.WriteLine($"✅ User created successfully!");
+
+                var responseDto = new UserDTO
+                {
+                    Id = user.Id.ToString(),
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
+
+                return Ok(responseDto);
+            }
         }
 
         [HttpPost("Delete")]
