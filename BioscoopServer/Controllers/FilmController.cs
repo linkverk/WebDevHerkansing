@@ -71,21 +71,25 @@ namespace Controllers
                 return BadRequest("Film is required.");
 
             Guid filmId;
-            if (string.IsNullOrWhiteSpace(filmModel.Id) || !Guid.TryParse(filmModel.Id, out filmId))
-                filmId = Guid.NewGuid();
-
-            var film = new Film
+            if(Guid.TryParse(filmModel.Id, out filmId))
             {
-                Id = filmId,
-                Name = filmModel.Name,
-                Rating = filmModel.Rating,
-                Genre = filmModel.Genre,
-                Duration = filmModel.Duration,
-                Description = filmModel.Description,
-            };
+                var film = new Film
+                {
+                    Id = filmId,
+                    Name = filmModel.Name,
+                    Rating = filmModel.Rating,
+                    Genre = filmModel.Genre,
+                    Duration = filmModel.Duration,
+                    Description = filmModel.Description,
+                };
 
-            await _DBFilmService.DeleteAsync(film);
-            return Ok();
+                await _DBFilmService.DeleteAsync(film);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("film Id is invalid");
+            }
         }
     }
 }
