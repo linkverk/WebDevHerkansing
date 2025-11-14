@@ -27,4 +27,14 @@ public class ReviewServices : DBDefaultService<Review>
         return review;
     }
 
+    public override async Task<List<Review>> GetAllAsync()
+    {
+        return await _dbSet.AsNoTracking().ToListAsync();
+    }
+    public override async Task<Review?> GetByIdAsync(object id)
+    {
+        if(id != null);
+        return await _dbSet.FindAsync(id);
+    }
+
 }
