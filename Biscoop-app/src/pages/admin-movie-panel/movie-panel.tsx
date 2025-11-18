@@ -6,7 +6,6 @@ import MovieForm from "./movie-form";
 import "./movie-panel.css";
 
 function Movie_panel() {
-    // const { fakeMovies } = getAppData();
     useEffect(() => {
         fetchAllMovies();
     }, []);

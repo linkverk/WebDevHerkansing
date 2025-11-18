@@ -23,7 +23,7 @@ const ShowInfo: React.FC<ShowInfoProps> = ({ shows, button }) => {
   return (
     <div className="voorstelling-info">
       {shows.map((show) => {
-        const totalSeats = (show.zaal?.rijen ?? 0) * (show.zaal?.stoelen_per_rij ?? 0);
+        const totalSeats = (show.zaal?.rijen ?? 0) * (show.zaal?.stoelenPerRij ?? 0);
 
         return (
           <div key={show.id} className="voorstelling-card">

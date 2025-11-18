@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { getAppData, deleteItem, addItem, updateItem } from "../../utils/storage";
+import { useState, useEffect } from "react";
 import type { ZaalProp } from "../../utils/fake-data";
 import GenericSelect from "../../components/generic-select";
 import ZaalForm from "./zaal-form";
@@ -7,39 +6,91 @@ import Seats from '../../components/Seats';
 import "./zaal-panel.css";
 
 function Zaal_panel() {
+    useEffect(() => {
+        fetchAllRooms();
+    }, []);
 
-    const { fakeZalen } = getAppData();
-    const [zalen, setZalen] = useState<ZaalProp[]>(fakeZalen);
+    const fetchAllRooms = async () => {
+        try {
+            const response = await fetch("http://localhost:5275/api/Rooms/GetAll")
+            const data: ZaalProp[] = await response.json();
+            setZalen(data);
+        } catch (error) {
+            console.error("Failed to fetch movies:", error);
+        }
+    };
+
+    const [zalen, setZalen] = useState<ZaalProp[]>([]);
     const emptyZaal: ZaalProp = {
         id: '',
         naam: '',
         rijen: 0,
-        stoelen_per_rij: 0,
+        stoelenPerRij: 0,
     };
 
     const [selectedZaal, setSelectedZaal] = useState<ZaalProp>(emptyZaal);
 
-    const handleSave = () => {
-        if (selectedZaal.naam === "" || selectedZaal.rijen === 0 || selectedZaal.stoelen_per_rij === 0) {
+    const handleSave = async () => {
+        if (selectedZaal.naam === "" || selectedZaal.rijen === 0 || selectedZaal.stoelenPerRij === 0) {
             alert("Please enter all info.");
             return;
         }
 
-        if (selectedZaal.id !== "") {
-            updateItem("fakeZalen", selectedZaal);
-            alert("Zaal updated!");
-        } else {
-            const newZaal: ZaalProp = {
-                id: crypto.randomUUID(),
-                naam: selectedZaal.naam,
-                rijen: selectedZaal.rijen,
-                stoelen_per_rij: selectedZaal.stoelen_per_rij,
-            };
-            addItem("fakeZalen", newZaal);
-            alert("Zaal saved!");
+        const requestOptions: RequestInit = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(selectedZaal),
+        };
+
+        try {
+            const response = await fetch("http://localhost:5275/api/Rooms/AddOrUpdate",
+                requestOptions
+            );
+            if (response.ok) {
+                alert("Room added or updated succesfully.");
+                const data: ZaalProp = await response.json();
+                if (zalen.find((z) => z.id === data.id)) {
+                    setZalen(zalen.map((z) => (z.id === data.id ? data : z)));
+                } else {
+                    setZalen([...zalen, data]);
+                }
+            }
+            else {
+                alert("Room not saved, something went wrong.");
+            }
+        } catch (err) {
+            console.error("Failed to add or update Room:", err);
+        };
+    };
+
+    const handleDelete = async () => {
+        if (selectedZaal.id === "") {
+            alert("Please select a Room.");
+            return;
         }
 
-    }
+        const requestOptions: RequestInit = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(selectedZaal),
+        };
+
+        try {
+            const response = await fetch("http://localhost:5275/api/Rooms/Delete",
+                requestOptions
+            );
+            if (response.ok) {
+                const updatedZalen = zalen.filter(z => z.id !== selectedZaal.id);
+                setZalen(updatedZalen);
+                setSelectedZaal(emptyZaal);
+            }
+            else {
+                alert("Room not delete, something went wrong.");
+            }
+        } catch (err) {
+            console.error("Failed to delete Room:", err);
+        };
+    };
 
 
     return (
@@ -50,10 +101,10 @@ function Zaal_panel() {
                 <Seats
                     zaal={
                         {
-                            id: "temp",
+                            id: "",
                             naam: selectedZaal.naam,
                             rijen: selectedZaal.rijen,
-                            stoelen_per_rij: selectedZaal.stoelen_per_rij,
+                            stoelenPerRij: selectedZaal.stoelenPerRij,
                         }
                     }
                     button={false}
@@ -82,11 +133,7 @@ function Zaal_panel() {
                     <button
                         className="delete-button"
                         onClick={() => {
-                            if (!selectedZaal) return;
-                            const updatedZalen = zalen.filter(z => z.id !== selectedZaal.id);
-                            setZalen(updatedZalen);
-                            setSelectedZaal(emptyZaal);
-                            deleteItem("fakeZalen", selectedZaal.id)
+                            handleDelete()
                         }}
                     >
                         Delete Room

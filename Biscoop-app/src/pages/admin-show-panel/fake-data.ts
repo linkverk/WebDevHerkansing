@@ -2,7 +2,7 @@ interface ZaalProp {
   id: string;
   naam: string;
   rijen: number;
-  stoelen_per_rij: number;
+  StoelenPerRij: number;
 }
 
 interface MovieProp {
@@ -39,7 +39,7 @@ export const fakeShows: ShowProp[] = [
       id: "zaal-1",
       naam: "Zaal 1",
       rijen: 10,
-      stoelen_per_rij: 15,
+      StoelenPerRij: 15,
     },
   },
   {
@@ -58,7 +58,7 @@ export const fakeShows: ShowProp[] = [
       id: "zaal-2",
       naam: "Zaal 2",
       rijen: 8,
-      stoelen_per_rij: 12,
+      StoelenPerRij: 12,
     },
   },
   {
@@ -77,7 +77,7 @@ export const fakeShows: ShowProp[] = [
       id: "zaal-3",
       naam: "Zaal 3",
       rijen: 12,
-      stoelen_per_rij: 18,
+      StoelenPerRij: 18,
     },
   },
   {
@@ -96,7 +96,7 @@ export const fakeShows: ShowProp[] = [
       id: "zaal-1",
       naam: "Zaal 1",
       rijen: 10,
-      stoelen_per_rij: 15,
+      StoelenPerRij: 15,
     },
   },
   {
@@ -115,7 +115,7 @@ export const fakeShows: ShowProp[] = [
       id: "zaal-2",
       naam: "Zaal 2",
       rijen: 8,
-      stoelen_per_rij: 12,
+      StoelenPerRij: 12,
     },
   },
 ];
@@ -164,9 +164,9 @@ export const fakeMovies: MovieProp[] = [
 ];
 
 export const fakeRooms: ZaalProp[] = [
-  { id: "zaal-1", naam: "Zaal 1 - Grote Zaal", rijen: 15, stoelen_per_rij: 20 },
-  { id: "zaal-2", naam: "Zaal 2 - Middenzaal", rijen: 10, stoelen_per_rij: 15 },
-  { id: "zaal-3", naam: "Zaal 3 - Kleine Zaal", rijen: 8, stoelen_per_rij: 12 },
-  { id: "zaal-4", naam: "Zaal 4 - VIP Lounge", rijen: 5, stoelen_per_rij: 10 },
-  { id: "zaal-5", naam: "Zaal 5 - IMAX", rijen: 20, stoelen_per_rij: 25 },
+  { id: "zaal-1", naam: "Zaal 1 - Grote Zaal", rijen: 15, StoelenPerRij: 20 },
+  { id: "zaal-2", naam: "Zaal 2 - Middenzaal", rijen: 10, StoelenPerRij: 15 },
+  { id: "zaal-3", naam: "Zaal 3 - Kleine Zaal", rijen: 8, StoelenPerRij: 12 },
+  { id: "zaal-4", naam: "Zaal 4 - VIP Lounge", rijen: 5, StoelenPerRij: 10 },
+  { id: "zaal-5", naam: "Zaal 5 - IMAX", rijen: 20, StoelenPerRij: 25 },
 ];

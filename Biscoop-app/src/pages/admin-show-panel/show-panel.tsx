@@ -34,7 +34,7 @@ function Show_panel() {
         id: '',
         naam: '',
         rijen: 0,
-        stoelen_per_rij: 0,
+        stoelenPerRij: 0,
     };
     const [selectedzaal, setSelectedZaal] = useState<ZaalProp>(emptyZaal);
     const [startDate, setStartDate] = useState<Date | string>("");
@@ -113,7 +113,7 @@ function Show_panel() {
                             <span className="label">Room name:</span> {selectedzaal?.naam}
                         </div>
                         <div>
-                            <span className="label">Total Seats:</span> {selectedzaal?.stoelen_per_rij * selectedzaal.rijen}
+                            <span className="label">Total Seats:</span> {selectedzaal?.stoelenPerRij * selectedzaal.rijen}
                         </div>
                     </div>
                 }
