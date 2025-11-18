@@ -17,7 +17,7 @@ namespace Controllers
         }
 
         [HttpGet("GetById")]
-        public async Task<IActionResult> GetFilById([FromQuery] string id)
+        public async Task<IActionResult> GetFilmById([FromQuery] string id)
         {
             var film = await _DBFilmService.GetByIdAsync(Guid.Parse(id));
             if(film == null)
