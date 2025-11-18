@@ -13,12 +13,12 @@ const ZaalForm: React.FC<ZaalFormProps> = ({ selectedZaal, setSelectedZaal, hand
             <h2>{selectedZaal.id !== "" ? "Edit zaal" : "Add zaal Info"}</h2>
 
             <div className="form-group">
-                <label>zaal Name:</label>
+                <label>Name:</label>
                 <input
                     type="text"
                     value={selectedZaal?.naam || ""}
                     onChange={(e) => setSelectedZaal({ ...selectedZaal, naam: e.target.value })}
-                    placeholder="Enter zaal name"
+                    placeholder="Enter name"
                 />
             </div>
 
@@ -39,11 +39,10 @@ const ZaalForm: React.FC<ZaalFormProps> = ({ selectedZaal, setSelectedZaal, hand
                 <label>Seats per Row:</label>
                 <input
                     type="number"
-                    value={selectedZaal?.stoelen_per_rij || ""}
+                    value={selectedZaal.stoelenPerRij || ""}
                     onChange={(e) =>
                         setSelectedZaal({
-                            ...selectedZaal,
-                            stoelen_per_rij: Number(e.target.value),
+                            ...selectedZaal, stoelenPerRij: Number(e.target.value),
                         })
                     }
                     placeholder="Enter seats per row"

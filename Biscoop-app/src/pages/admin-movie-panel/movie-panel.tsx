@@ -6,7 +6,6 @@ import MovieForm from "./movie-form";
 import "./movie-panel.css";
 
 function Movie_panel() {
-    // const { fakeMovies } = getAppData();
     useEffect(() => {
         fetchAllMovies();
     }, []);
@@ -62,8 +61,10 @@ function Movie_panel() {
                 const data: MovieProp = await response.json();
                 if (movies.find((m) => m.id === data.id)) {
                     setMovies(movies.map((m) => (m.id === data.id ? data : m)));
+                    setSelectedMovie(data);
                 } else {
                     setMovies([...movies, data]);
+                    setSelectedMovie(data);
                 }
             }
             else {

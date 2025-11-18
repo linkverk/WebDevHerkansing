@@ -3,7 +3,7 @@ export interface ZaalProp {
   id: string;
   naam: string;
   rijen: number;
-  stoelen_per_rij: number;
+  stoelenPerRij: number;
 }
 
 export interface MovieProp {
@@ -32,9 +32,9 @@ export interface ShowProp {
 
 // ----- Fake Zalen -----
 export const fakeZalen: ZaalProp[] = [
-  { id: "zaal-1", naam: "Grote Zaal", rijen: 12, stoelen_per_rij: 20 },
-  { id: "zaal-2", naam: "Middelgrote Zaal", rijen: 10, stoelen_per_rij: 15 },
-  { id: "zaal-3", naam: "Kleine Zaal", rijen: 8, stoelen_per_rij: 10 },
+  { id: "zaal-1", naam: "Grote Zaal", rijen: 12, stoelenPerRij: 20 },
+  { id: "zaal-2", naam: "Middelgrote Zaal", rijen: 10, stoelenPerRij: 15 },
+  { id: "zaal-3", naam: "Kleine Zaal", rijen: 8, stoelenPerRij: 10 },
 ];
 
 // ----- Fake Movies -----
