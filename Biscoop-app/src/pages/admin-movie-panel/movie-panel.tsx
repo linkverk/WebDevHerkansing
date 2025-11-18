@@ -61,8 +61,10 @@ function Movie_panel() {
                 const data: MovieProp = await response.json();
                 if (movies.find((m) => m.id === data.id)) {
                     setMovies(movies.map((m) => (m.id === data.id ? data : m)));
+                    setSelectedMovie(data);
                 } else {
                     setMovies([...movies, data]);
+                    setSelectedMovie(data);
                 }
             }
             else {

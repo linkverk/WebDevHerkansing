@@ -48,8 +48,7 @@ namespace Controllers
                 return BadRequest("Film is required.");
 
             Guid filmId;
-            if (string.IsNullOrWhiteSpace(filmModel.Id) || !Guid.TryParse(filmModel.Id, out filmId))
-                filmId = Guid.NewGuid();
+            Guid.TryParse(filmModel.Id, out filmId);
 
             var film = new Film
             {

@@ -41,8 +41,7 @@ namespace Controllers
                 return BadRequest("Room is required.");
 
             Guid RoomId;
-            if (string.IsNullOrWhiteSpace(RoomModel.Id) || !Guid.TryParse(RoomModel.Id, out RoomId))
-                RoomId = Guid.NewGuid();
+            Guid.TryParse(RoomModel.Id, out RoomId);
 
             var Room = new Room
             {

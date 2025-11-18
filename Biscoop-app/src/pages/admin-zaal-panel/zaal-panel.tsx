@@ -49,10 +49,13 @@ function Zaal_panel() {
             if (response.ok) {
                 alert("Room added or updated succesfully.");
                 const data: ZaalProp = await response.json();
+                console.log(data)
                 if (zalen.find((z) => z.id === data.id)) {
                     setZalen(zalen.map((z) => (z.id === data.id ? data : z)));
+                    setSelectedZaal(data);
                 } else {
                     setZalen([...zalen, data]);
+                    setSelectedZaal(data);
                 }
             }
             else {
