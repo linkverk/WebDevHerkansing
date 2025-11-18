@@ -13,6 +13,7 @@ builder.Services.AddScoped<DBFilmService>();
 builder.Services.AddScoped<DBUserService>();
 // builder.Services.AddScoped<ReviewServices>();
 builder.Services.AddScoped<DBRoomService>();
+builder.Services.AddScoped<DBShowService>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();

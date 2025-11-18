@@ -17,7 +17,7 @@ namespace Controllers
         }
 
         [HttpGet("GetById")]
-        public async Task<IActionResult> GetFilById([FromQuery] string id)
+        public async Task<IActionResult> GetRoomById([FromQuery] string id)
         {
             var Room = await _DBRoomService.GetByIdAsync(Guid.Parse(id));
             if (Room == null)
