@@ -24,10 +24,10 @@ export type Review = {
 
 export interface ShowProp {
   id: string;
-  start_date: Date;
-  end_date: Date;
-  movieId: string;
-  zaalId: string;
+  startDate: Date;
+  endDate: Date;
+  filmId: string;
+  roomId: string;
 }
 
 // ----- Fake Zalen -----
@@ -79,30 +79,30 @@ export const fakeReviews: Review[] = [
 export const fakeShows: ShowProp[] = [
   {
     id: "show-1",
-    start_date: new Date("2025-10-28T14:00:00"),
-    end_date: new Date("2025-10-28T16:00:00"),
-    movieId: "movie-1",
-    zaalId: "zaal-1",
+    startDate: new Date("2025-10-28T14:00:00"),
+    endDate: new Date("2025-10-28T16:00:00"),
+    filmId: "movie-1",
+    roomId: "zaal-1",
   },
   {
     id: "show-2",
-    start_date: new Date("2025-10-28T17:00:00"),
-    end_date: new Date("2025-10-28T19:00:00"),
-    movieId: "movie-2",
-    zaalId: "zaal-2",
+    startDate: new Date("2025-10-28T17:00:00"),
+    endDate: new Date("2025-10-28T19:00:00"),
+    filmId: "movie-2",
+    roomId: "zaal-2",
   },
   {
     id: "show-3",
-    start_date: new Date("2025-10-28T20:00:00"),
-    end_date: new Date("2025-10-28T22:10:00"),
-    movieId: "movie-3",
-    zaalId: "zaal-3",
+    startDate: new Date("2025-10-28T20:00:00"),
+    endDate: new Date("2025-10-28T22:10:00"),
+    filmId: "movie-3",
+    roomId: "zaal-3",
   },
   {
     id: "show-4",
-    start_date: new Date("2025-10-29T14:00:00"),
-    end_date: new Date("2025-10-29T16:00:00"),
-    movieId: "movie-2",
-    zaalId: "zaal-1",
+    startDate: new Date("2025-10-29T14:00:00"),
+    endDate: new Date("2025-10-29T16:00:00"),
+    filmId: "movie-2",
+    roomId: "zaal-1",
   },
 ];

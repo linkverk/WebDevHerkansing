@@ -1,26 +1,58 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { formatDateForShowing } from "../../utils/date-fromatter";
 import MovieInfo from "../movie-detail/MovieInfo";
-import type { ZaalProp, MovieProp, ShowProp } from "../../utils/fake-data";
+import { type ZaalProp, type MovieProp, type ShowProp } from "../../utils/fake-data";
 import GenericSelect from "../../components/generic-select";
 import "./show-panel.css";
-import { getAppData, deleteItem, addItem, updateItem } from "../../utils/storage";
-
 function Show_panel() {
-    const { fakeMovies, fakeShows, fakeZalen } = getAppData();
+    useEffect(() => {
+        fetchAllMovies();
+        fetchAllShows();
+        fetchAllRooms();
+    }, []);
 
-    const [shows, setShows] = useState<ShowProp[]>(fakeShows);
-    const [movies] = useState<MovieProp[]>(fakeMovies);
-    const [rooms] = useState<ZaalProp[]>(fakeZalen);
+    const [shows, setShows] = useState<ShowProp[]>([]);
+    const [movies, setMovies] = useState<MovieProp[]>([]);
+    const [rooms, setRooms] = useState<ZaalProp[]>([]);
+
+    const fetchAllMovies = async () => {
+        try {
+            const response = await fetch("http://localhost:5275/api/Films/GetAll")
+            const data: MovieProp[] = await response.json();
+            setMovies(data);
+        } catch (error) {
+            console.error("Failed to fetch movies:", error);
+        }
+    };
+
+    const fetchAllRooms = async () => {
+        try {
+            const response = await fetch("http://localhost:5275/api/Rooms/GetAll")
+            const data: ZaalProp[] = await response.json();
+            setRooms(data);
+        } catch (error) {
+            console.error("Failed to fetch movies:", error);
+        }
+    };
+
+    const fetchAllShows = async () => {
+        try {
+            const response = await fetch("http://localhost:5275/api/Shows/GetAll")
+            const data: ShowProp[] = await response.json();
+            setShows(data);
+        } catch (error) {
+            console.error("Failed to fetch movies:", error);
+        }
+    };
 
     const emptyShow: ShowProp = {
         id: '',
-        movieId: '',
-        zaalId: '',
-        start_date: new Date,
-        end_date: new Date,
+        filmId: '',
+        roomId: '',
+        startDate: new Date,
+        endDate: new Date,
     };
-    const [selectedShow, setSelectedShow] = useState<ShowProp>();
+    const [selectedShow, setSelectedShow] = useState<ShowProp>(emptyShow);
     const emptyMovie: MovieProp = {
         id: '',
         name: '',
@@ -37,49 +69,84 @@ function Show_panel() {
         stoelenPerRij: 0,
     };
     const [selectedzaal, setSelectedZaal] = useState<ZaalProp>(emptyZaal);
-    const [startDate, setStartDate] = useState<Date | string>("");
-    const [endDate, setEndDate] = useState<Date | string>("");
 
-    const handleSave = () => {
-        if (!selectedzaal || !selectedShow || startDate === "" || endDate === "") {
+    const handleSave = async () => {
+        if (!selectedzaal || !selectedShow) {
             alert("Please enter all info.");
             return;
         }
 
-        const start = new Date(startDate);
-        const end = new Date(endDate);
+        selectedShow.filmId = selectedMovie.id;
+        selectedShow.roomId = selectedzaal.id;
 
-        if (start > end) {
+        if (selectedShow.startDate > selectedShow.endDate) {
             alert("Start date can't be after end date.");
             return;
         }
 
-        const showEnd = new Date(start.getTime() + selectedMovie.duration * 60000);
-        if (showEnd > end) {
+        const showEnd = new Date(selectedShow.startDate.getTime() + selectedMovie.duration * 60000);
+        if (showEnd > selectedShow.endDate) {
             alert("Show isn't long enough.");
             return;
         }
 
-        if (selectedShow) {
-            selectedShow.movieId = selectedMovie.id;
-            selectedShow.zaalId = selectedzaal.id;
-            selectedShow.start_date = start;
-            selectedShow.end_date = end;
+        const requestOptions: RequestInit = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(selectedShow),
+        };
 
-            updateItem("fakeShows", selectedShow);
-            alert("Show updated!");
-        } else {
-            const newShow: ShowProp = {
-                id: crypto.randomUUID(),
-                movieId: selectedMovie.id,
-                zaalId: selectedzaal.id,
-                start_date: start,
-                end_date: end,
-            };
-            addItem("fakeShows", newShow);
-            alert("Show saved!");
+        try {
+            const response = await fetch("http://localhost:5275/api/Shows/AddOrUpdate",
+                requestOptions
+            );
+            if (response.ok) {
+                alert("Show added or updated succesfully.");
+                const data: ShowProp = await response.json();
+                if (shows.find((s) => s.id === data.id)) {
+                    setShows(shows.map((s) => (s.id === data.id ? data : s)));
+                    setSelectedShow(data);
+                } else {
+                    setShows([...shows, data]);
+                    setSelectedShow(data);
+                }
+            }
+            else {
+                alert("Show not saved, something went wrong.");
+            }
+        } catch (err) {
+            console.error("Failed to add or update movie:", err);
+        };
+
+    };
+
+    const handleDelete = async () => {
+        if (selectedShow.id === "") {
+            alert("Please select a Show.");
+            return;
         }
 
+        const requestOptions: RequestInit = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(selectedShow),
+        };
+
+        try {
+            const response = await fetch("http://localhost:5275/api/Shows/Delete",
+                requestOptions
+            );
+            if (response.ok) {
+                const updatedZalen = shows.filter(s => s.id !== selectedShow.id);
+                setShows(updatedZalen);
+                setSelectedShow(emptyShow);
+            }
+            else {
+                alert("Show not delete, something went wrong.");
+            }
+        } catch (err) {
+            console.error("Failed to delete Show:", err);
+        };
     };
 
     function formatDateForInput(date: Date | string): string {
@@ -110,24 +177,24 @@ function Show_panel() {
                 {selectedzaal != null &&
                     <div id="info">
                         <div>
-                            <span className="label">Room name:</span> {selectedzaal?.naam}
+                            <span className="label">Show name:</span> {selectedzaal?.naam}
                         </div>
                         <div>
                             <span className="label">Total Seats:</span> {selectedzaal?.stoelenPerRij * selectedzaal.rijen}
                         </div>
                     </div>
                 }
-                {startDate != "" &&
+                {selectedShow.startDate &&
                     <div id="info">
                         <div>
-                            <span className="label">Start date:</span> {formatDateForShowing(startDate)}
+                            <span className="label">Start date:</span> {formatDateForShowing(selectedShow.startDate)}
                         </div>
                     </div>
                 }
-                {endDate != "" &&
+                {selectedShow.endDate &&
                     <div id="info">
                         <div>
-                            <span className="label">End date:</span> {formatDateForShowing(endDate)}
+                            <span className="label">End date:</span> {formatDateForShowing(selectedShow.startDate)}
                         </div>
                     </div>
                 }
@@ -147,7 +214,7 @@ function Show_panel() {
                     />
 
                     <GenericSelect<ZaalProp>
-                        title="Select a Room"
+                        title="Select a Show"
                         items={rooms}
                         selectedItem={selectedzaal}
                         setSelectedItem={setSelectedZaal}
@@ -159,8 +226,8 @@ function Show_panel() {
                         <label>start date:</label>
                         <input
                             type="datetime-local"
-                            value={formatDateForInput(startDate)}
-                            onChange={(e) => setStartDate(e.target.value)}
+                            value={formatDateForInput(selectedShow.startDate)}
+                            onChange={(e) => setSelectedShow({ ...selectedShow, startDate: new Date(e.target.value)})}
                         />
                     </div>
 
@@ -168,13 +235,13 @@ function Show_panel() {
                         <label>end date:</label>
                         <input
                             type="datetime-local"
-                            value={formatDateForInput(endDate)}
-                            onChange={(e) => setEndDate(e.target.value)}
+                            value={formatDateForInput(selectedShow.endDate)}
+                            onChange={(e) => setSelectedShow({ ...selectedShow, endDate: new Date(e.target.value)})}
                         />
                     </div>
 
                     <button onClick={handleSave} className="save-button">
-                        {selectedShow ? "Update Show" : "Save Show"}
+                        {selectedShow?.id ? "Update Show" : "Save Show"}
                     </button>
                 </div>
 
@@ -185,18 +252,14 @@ function Show_panel() {
                         onChange={(e) => {
                             const show = shows.find((s) => s.id === e.target.value) || emptyShow;
                             setSelectedShow(show);
-                            setSelectedZaal(fakeZalen.find(z => z.id === show.zaalId) ?? emptyZaal);
-                            setSelectedMovie(fakeMovies.find(m => m.id === show.movieId) ?? emptyMovie);
-                            if(show.id !== ""){
-                                setStartDate(new Date(show.start_date));
-                                setEndDate(new Date(show.end_date));
-                            }
+                            setSelectedZaal(rooms.find(r => r.id === show.roomId) ?? emptyZaal);
+                            setSelectedMovie(movies.find(m => m.id === show.filmId) ?? emptyMovie);
                         }}
                     >
                         <option value="">-- Pick a Show --</option>
                         {shows.map((show) => (
                             <option key={show.id} value={show.id}>
-                                {fakeMovies.find(m => m.id === show.movieId)?.name ?? "N/A"} - {fakeZalen.find(z => z.id === show.zaalId)?.naam ?? "N/A"}
+                                {movies.find(m => m.id === show.filmId)?.name ?? "N/A"} - {rooms.find(z => z.id === show.roomId)?.naam ?? "N/A"}
                             </option>
                         ))}
                     </select>
@@ -204,11 +267,7 @@ function Show_panel() {
                     <button
                         className="delete-button"
                         onClick={() => {
-                            if (!selectedShow) return;
-                            const updatedShows = shows.filter(s => s.id !== selectedShow.id);
-                            setShows(updatedShows);
-                            setSelectedShow(emptyShow);
-                            deleteItem("fakeShows", selectedShow.id)
+                            handleDelete()
                         }}
                     >
                         Delete Show

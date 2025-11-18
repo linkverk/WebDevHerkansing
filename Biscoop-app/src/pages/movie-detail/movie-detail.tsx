@@ -9,8 +9,8 @@ import { useParams } from "react-router-dom";
 
 export interface ShowPropWithZaal {
     id: string;
-    start_date: Date;
-    end_date: Date;
+    startDate: Date;
+    endDate: Date;
     movieId: string;
     zaalId: string;
     zaal: ZaalProp;

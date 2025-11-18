@@ -40,20 +40,24 @@ namespace Controllers
             if (ShowModel == null)
                 return BadRequest("Show is required.");
 
+            Console.WriteLine(ShowModel.FilmId);
+            Console.WriteLine(ShowModel.RoomId);
+
             Guid ShowId;
             Guid.TryParse(ShowModel.Id, out ShowId);
             Guid FilmId;
             Guid.TryParse(ShowModel.FilmId, out FilmId);
             Guid RoomId;
             Guid.TryParse(ShowModel.RoomId, out RoomId);
-
+            Console.WriteLine(FilmId);
+            Console.WriteLine(RoomId);
             var Show = new Show
             {
                 Id = ShowId,
                 FilmId = FilmId,
                 RoomId = RoomId,
-                Begintijd = ShowModel.Begintijd,
-                Eindtijd = ShowModel.Eindtijd
+                Begintijd = ShowModel.startDate,
+                Eindtijd = ShowModel.endDate
 
             };
 
@@ -77,8 +81,8 @@ namespace Controllers
                     Id = ShowId,
                     FilmId = FilmId,
                     RoomId = RoomId,
-                    Begintijd = ShowModel.Begintijd,
-                    Eindtijd = ShowModel.Eindtijd
+                    Begintijd = ShowModel.startDate,
+                    Eindtijd = ShowModel.endDate
                 };
                 await _DBShowService.DeleteAsync(Show);
                 return Ok();

@@ -93,13 +93,13 @@ export function deleteItem<K extends keyof AppData>(key: K, id: string) {
   switch (key) {
     case "fakeMovies":
       data.fakeMovies = data.fakeMovies.filter(m => m.id !== id);
-      data.fakeShows = data.fakeShows.filter(s => s.movieId !== id);
+      data.fakeShows = data.fakeShows.filter(s => s.filmId !== id);
       data.fakeReviews = data.fakeReviews.filter(r => r.movieId !== id);
       break;
 
     case "fakeZalen":
       data.fakeZalen = data.fakeZalen.filter(z => z.id !== id);
-      data.fakeShows = data.fakeShows.filter(s => s.zaalId !== id);
+      data.fakeShows = data.fakeShows.filter(s => s.filmId !== id);
       break;
 
     case "fakeShows":
