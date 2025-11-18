@@ -51,7 +51,7 @@ public abstract class DBDefaultService<TEntity> where TEntity : class
         {
             if (existing == null) return existing;
 
-            _context.Entry(existing).CurrentValues.SetValues(entity);
+            _dbSet.Update(entity);
             await _context.SaveChangesAsync();
             return existing;
         }
