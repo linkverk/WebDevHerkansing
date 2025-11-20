@@ -61,6 +61,7 @@ function MovieList() {
             {moviesFull.map((item) => (
                 <div className="movie-list-part">
                     <MovieInfo
+                        id={item.id}
                         name={item.name ?? "N/A"}
                         duration={item.duration ?? 0}
                         rating={item.rating ?? "N/A"}

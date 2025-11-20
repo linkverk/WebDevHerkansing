@@ -22,13 +22,28 @@ function Movie_panel() {
 
     const [selectedMovie, setSelectedMovie] = useState<MovieProp>(emptyMovie);
     const [poster, setPoster] = useState<string | undefined>(undefined);
+    const [posterObject, setPosterObject] = useState<React.ChangeEvent<HTMLInputElement> | undefined>(undefined);
 
-    // const handlePosterUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const file = e.target.files?.[0];
-    //     if (file) {
-    //         setPoster(URL.createObjectURL(file));
-    //     }
-    // };
+    const handlePosterUpload = async (e: React.ChangeEvent<HTMLInputElement>, movieId: string) => {
+
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setPoster(URL.createObjectURL(file));
+
+        if (movieId === "") {
+            setPosterObject(e)
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("poster", file);
+
+        await fetch(`http://localhost:5275/api/Films/UploadPoster?id=${movieId}`, {
+            method: "POST",
+            body: formData
+        });
+    };
 
     const fetchAllMovies = async () => {
         try {
@@ -65,6 +80,9 @@ function Movie_panel() {
                 } else {
                     setMovies([...movies, data]);
                     setSelectedMovie(data);
+                    if (posterObject) {
+                        handlePosterUpload(posterObject, data.id)
+                    }
                 }
             }
             else {
@@ -111,6 +129,7 @@ function Movie_panel() {
                 {(
                     <MovieInfo
                         poster={poster}
+                        id={selectedMovie.id}
                         name={selectedMovie.name}
                         duration={selectedMovie.duration as number}
                         rating={selectedMovie.rating}
@@ -129,8 +148,7 @@ function Movie_panel() {
                     <MovieForm
                         selectedMovie={selectedMovie}
                         setSelectedMovie={setSelectedMovie}
-                        poster={poster}
-                        setPoster={setPoster}
+                        handlePosterUpload={handlePosterUpload}
                         handleSave={handleSave}
                     />
                 </div>
