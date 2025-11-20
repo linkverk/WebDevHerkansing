@@ -1,0 +1,39 @@
+using BioscoopServer.models;
+using Microsoft.EntityFrameworkCore;
+
+public class DBReviewServices : DBDefaultService<Review>
+{
+    protected readonly CinemaContext _context;
+    protected readonly DbSet<Review> _dbSet;
+
+    public DBReviewServices(CinemaContext context) : base(context)
+    {
+        _context = context;
+        _dbSet = _context.Set<Review>();
+    }
+
+    public override bool Exists(Review entity, out Review? existing)
+    {
+        existing = _dbSet.AsNoTracking().FirstOrDefault(f => f.Id == entity.Id);
+        return existing != null;
+    }
+
+    public override async Task<Review?> AddAsync(Review review)
+    {
+        if (review == null)
+            throw new ArgumentNullException(nameof(review), "Nothing was filled in");
+
+        var film = await _context.Films.FindAsync(review.FilmId);
+        if (film == null)
+            throw new ArgumentException("The FilmId is invalid or does not exist.");
+
+        var user = await _context.Users.FindAsync(review.UserId);
+        if (user == null)
+            throw new ArgumentException("The UserId is invalid or does not exist.");
+
+        await _dbSet.AddAsync(review);
+        await _context.SaveChangesAsync();
+        return review;
+    }
+
+}
