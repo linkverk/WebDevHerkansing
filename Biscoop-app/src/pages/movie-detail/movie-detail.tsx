@@ -46,7 +46,7 @@ const getStoredUsername = () => {
     //This needs to be fixed later, so that it fetches the correct username from localStorage
 };
 
-const ReviewForm: React.FC<{ movieId: string; onAdded: () => void }> = ({ movieId, onAdded }) => {
+const ReviewForm: React.FC<{ filmId: string; onAdded: () => void }> = ({ filmId, onAdded }) => {
     const username = getStoredUsername();
     const [text, setText] = useState("");
     const [rating, setRating] = useState<number>(5);
@@ -55,7 +55,7 @@ const ReviewForm: React.FC<{ movieId: string; onAdded: () => void }> = ({ movieI
         e?.preventDefault();
         if (!text.trim()) return;
         const data = getAppData();
-        const newReview = { name: username, text: text.trim(), rating, movieId };
+        const newReview = { name: username, description: text.trim(), rating, filmId };
         data.fakeReviews.push(newReview);
         setAppData(data);
         setText("");
@@ -96,7 +96,7 @@ function Movie_detail() {
 
     const fetchAllMoviesFull = async () => {
         try {
-            const response = await fetch(`http://localhost:5275/api/Films/GetById?id=${movieId}`)
+            const response = await fetch(`http://localhost:5275/api/Films/GetById/Full?id=${movieId}`)
             const data: MoviePropFull = await response.json();
             setMovieFull(data);
         } catch (error) {
@@ -136,7 +136,7 @@ function Movie_detail() {
                         <h2>Reviews</h2>
                         <ReviewList reviews={movieFull.reviews} />
                         <h3>Add a review</h3>
-                        <ReviewForm movieId={movieFull.id} onAdded={reloadReviews} />
+                        <ReviewForm filmId={movieFull.id} onAdded={reloadReviews} />
                     </div>
                 </>
             )}

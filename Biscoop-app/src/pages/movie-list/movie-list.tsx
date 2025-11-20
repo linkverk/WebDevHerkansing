@@ -65,7 +65,7 @@ function MovieList() {
                         duration={item.duration ?? 0}
                         rating={item.rating ?? "N/A"}
                         genre={item.genre ?? "N/A"}
-                        stars={renderStars(averageRating(item.reviews.filter(r => r.movieId === item.id)))}
+                        stars={renderStars(averageRating(item.reviews.filter(r => r.filmId === item.id)))}
                         includeDescription={false}
                         className="movie-info-list"
                         posterClass="poster-movielist"

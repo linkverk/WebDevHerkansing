@@ -17,9 +17,9 @@ export interface MovieProp {
 
 export type Review = {
   name: string;
-  text: string;
+  description: string;
   rating: number;
-  movieId: string;
+  filmId: string;
 };
 
 export interface ShowProp {
@@ -67,12 +67,12 @@ export const fakeMovies: MovieProp[] = [
 
 // ----- Fake Reviews -----
 export const fakeReviews: Review[] = [
-  { name: "Sophie", text: "Incredible story with great visuals!", rating: 5, movieId: "movie-1" },
-  { name: "Mark", text: "A bit confusing, but very entertaining.", rating: 4, movieId: "movie-1" },
-  { name: "Emma", text: "So romantic and beautifully shot.", rating: 5, movieId: "movie-2" },
-  { name: "Liam", text: "Predictable, but still enjoyable.", rating: 3, movieId: "movie-2" },
-  { name: "Noah", text: "Suspenseful and chilling!", rating: 5, movieId: "movie-3" },
-  { name: "Ava", text: "Too dark for my taste, but well made.", rating: 4, movieId: "movie-3" },
+  { name: "Sophie", description: "Incredible story with great visuals!", rating: 5, filmId: "movie-1" },
+  { name: "Mark", description: "A bit confusing, but very entertaining.", rating: 4, filmId: "movie-1" },
+  { name: "Emma", description: "So romantic and beautifully shot.", rating: 5, filmId: "movie-2" },
+  { name: "Liam", description: "Predictable, but still enjoyable.", rating: 3, filmId: "movie-2" },
+  { name: "Noah", description: "Suspenseful and chilling!", rating: 5, filmId: "movie-3" },
+  { name: "Ava", description: "Too dark for my taste, but well made.", rating: 4, filmId: "movie-3" },
 ];
 
 // ----- Fake Shows -----
