@@ -120,6 +120,7 @@ function Movie_detail() {
 
                     <div>
                         <MovieInfo
+                            id={movieFull.id}
                             name={movieFull.name}
                             duration={movieFull.duration}
                             rating={movieFull.rating}

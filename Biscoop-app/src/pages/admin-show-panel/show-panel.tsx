@@ -96,6 +96,7 @@ function Show_panel() {
                 <div className="top"><h1>Preview</h1></div>
                 {selectedMovie != null && (
                     <MovieInfo
+                        id={selectedMovie.id}
                         name={selectedMovie?.name}
                         duration={selectedMovie.duration as number}
                         rating={selectedMovie.rating}

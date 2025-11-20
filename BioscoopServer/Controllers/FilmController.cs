@@ -20,7 +20,7 @@ namespace Controllers
         public async Task<IActionResult> GetFilmById([FromQuery] string id)
         {
             var film = await _DBFilmService.GetByIdAsync(Guid.Parse(id));
-            if(film == null)
+            if (film == null)
             {
                 return BadRequest($"Film with id {id} was not found");
             }
@@ -39,6 +39,27 @@ namespace Controllers
         {
             var films = await _DBFilmService.GetFilmsFull();
             return Ok(films);
+        }
+
+        [HttpPost("UploadPoster")]
+        public async Task<IActionResult> UploadPoster([FromQuery] string id, IFormFile poster)
+        {
+            if (poster == null || poster.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            var rootPath = Path.Combine(Directory.GetCurrentDirectory(), "../Biscoop-app/public/images");
+
+            if (!Directory.Exists(rootPath))
+                Directory.CreateDirectory(rootPath);
+
+            var fileName = $"movie_{id}{Path.GetExtension(poster.FileName)}";
+
+            var filePath = Path.Combine(rootPath, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+                await poster.CopyToAsync(stream);
+
+            return Ok("Uploaded");
         }
 
         [HttpPost("AddOrUpdate")]
@@ -69,26 +90,35 @@ namespace Controllers
             if (filmModel == null)
                 return BadRequest("Film is required.");
 
-            Guid filmId;
-            if(Guid.TryParse(filmModel.Id, out filmId))
-            {
-                var film = new Film
-                {
-                    Id = filmId,
-                    Name = filmModel.Name,
-                    Rating = filmModel.Rating,
-                    Genre = filmModel.Genre,
-                    Duration = filmModel.Duration,
-                    Description = filmModel.Description,
-                };
+            if (!Guid.TryParse(filmModel.Id, out Guid filmId))
+                return BadRequest("Film Id is invalid");
 
-                await _DBFilmService.DeleteAsync(film);
-                return Ok();
-            }
-            else
+            var extensions = new[] { ".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".avif" };
+            var basePath = Path.Combine(Directory.GetCurrentDirectory(), "../Biscoop-app/public/images");
+
+            foreach (var ext in extensions)
             {
-                return BadRequest("film Id is invalid");
+                var posterPath = Path.Combine(basePath, $"movie_{filmModel.Id}{ext}");
+                if (System.IO.File.Exists(posterPath))
+                {
+                    System.IO.File.Delete(posterPath);
+                    break;
+                }
             }
+
+            var film = new Film
+            {
+                Id = filmId,
+                Name = filmModel.Name,
+                Rating = filmModel.Rating,
+                Genre = filmModel.Genre,
+                Duration = filmModel.Duration,
+                Description = filmModel.Description,
+            };
+
+            await _DBFilmService.DeleteAsync(film);
+
+            return Ok();
         }
     }
 }

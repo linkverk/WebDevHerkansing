@@ -1,7 +1,8 @@
-import React from "react";
-import { hashCode } from "../../utils/image-hascode";
+import React, { useState } from "react";
+
 interface MovieInfoProps {
   poster?: string;
+  id: string;
   name: string;
   duration: number;
   rating: string;
@@ -14,8 +15,11 @@ interface MovieInfoProps {
   textClass?: string;
 }
 
+const extensions = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".avif"];
+
 const MovieInfo: React.FC<MovieInfoProps> = ({
   poster,
+  id,
   name,
   duration,
   rating,
@@ -27,29 +31,45 @@ const MovieInfo: React.FC<MovieInfoProps> = ({
   posterClass = "",
   textClass = "",
 }) => {
-  const posterPath = `/images/movie_${hashCode(name)}.png`;
+  const [currentExtensionIndex, setCurrentExtensionIndex] = useState(0);
+
+  const handleError = () => {
+    if (currentExtensionIndex < extensions.length - 1) {
+      setCurrentExtensionIndex(currentExtensionIndex + 1);
+    }
+  };
+
+  const posterPath =
+    poster || `/images/movie_${id}${extensions[currentExtensionIndex]}`;
+
   return (
     <div className={`${className}`}>
       <img
         className={posterClass}
-        src={poster ? poster : posterPath}
+        src={posterPath}
         alt={name}
+        onError={poster ? undefined : handleError}
       />
 
       <div className={textClass}>
         <h1>{name}</h1>
-
-        <div><span className="label">Duration:</span> {duration} min</div>
-        <div><span className="label">PG:</span> {rating}</div>
-        <div><span className="label">Genre:</span> {genre}</div>
-        {includeDescription == true && (
+        <div>
+          <span className="label">Duration:</span> {duration} min
+        </div>
+        <div>
+          <span className="label">PG:</span> {rating}
+        </div>
+        <div>
+          <span className="label">Genre:</span> {genre}
+        </div>
+        {includeDescription && (
           <div>
             <span className="label">Description:</span> {description}
           </div>
         )}
         {stars && (
           <div>
-            <span className="label">rating:</span> {stars}
+            <span className="label">Rating:</span> {stars}
           </div>
         )}
       </div>
