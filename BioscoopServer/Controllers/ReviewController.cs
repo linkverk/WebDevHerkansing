@@ -33,18 +33,18 @@ namespace Controllers
             if (user == null)
                 return BadRequest($"there is not user with this id:{reviewDTO.UserId}");
 
-            Guid ReviewId;
-            Guid.TryParse(reviewDTO.Id, out ReviewId);
+            Guid reviewId;
+            Guid.TryParse(reviewDTO.Id, out reviewId);
 
             Guid userId;
             Guid.TryParse(reviewDTO.UserId, out userId);
 
             Guid filmId;
             Guid.TryParse(reviewDTO.FilmId, out filmId);
-            
+
             var review = new Review
             {
-                Id = ReviewId,
+                Id = reviewId,
                 UserId = userId,
                 FilmId = filmId,
                 Rating = reviewDTO.Rating,
