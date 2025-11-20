@@ -17,13 +17,13 @@ const Seats: React.FC<SeatsProps> = ({ zaal, button }) => {
 
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   useEffect(() => {
-    const totalSeats = Math.max(zaal.rijen * zaal.stoelen_per_rij, 0);
+    const totalSeats = Math.max(zaal.rijen * zaal.stoelenPerRij, 0);
     const newSeats = Array.from({ length: totalSeats }, (_, i) => ({
       id: i,
       reserved: false,
     }));
     setSeats(newSeats);
-  }, [zaal.rijen, zaal.stoelen_per_rij]);
+  }, [zaal.rijen, zaal.stoelenPerRij]);
 
   const toggleReservation = (id: number) => {
     setSeats(prevSeats => {
@@ -51,7 +51,7 @@ const Seats: React.FC<SeatsProps> = ({ zaal, button }) => {
       <div
         className="seat-grid"
         style={{
-          gridTemplateColumns: `repeat(${zaal.stoelen_per_rij}, 44px)`,
+          gridTemplateColumns: `repeat(${zaal.stoelenPerRij}, 44px)`,
         }}
       >
         {seats.map(seat => (
@@ -62,10 +62,10 @@ const Seats: React.FC<SeatsProps> = ({ zaal, button }) => {
             onMouseEnter={() => setHoveredId(seat.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
-            {zaal.rijen * zaal.stoelen_per_rij - seat.id}
+            {zaal.rijen * zaal.stoelenPerRij - seat.id}
             {hoveredId === seat.id && (
               <div className="tooltip">
-                Seat {zaal.rijen * zaal.stoelen_per_rij - seat.id}<br />
+                Seat {zaal.rijen * zaal.stoelenPerRij - seat.id}<br />
                 {seat.reserved ? 'Reserved' : 'Available'}
               </div>
             )}
