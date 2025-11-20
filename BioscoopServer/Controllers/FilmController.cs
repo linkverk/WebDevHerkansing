@@ -93,12 +93,17 @@ namespace Controllers
             if (!Guid.TryParse(filmModel.Id, out Guid filmId))
                 return BadRequest("Film Id is invalid");
 
-            var posterPath = Path.Combine(Directory.GetCurrentDirectory(),
-                "../Biscoop-app/public/images", $"movie_{filmModel.Id}.png");
+            var extensions = new[] { ".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".avif" };
+            var basePath = Path.Combine(Directory.GetCurrentDirectory(), "../Biscoop-app/public/images");
 
-            if (System.IO.File.Exists(posterPath))
+            foreach (var ext in extensions)
             {
-                System.IO.File.Delete(posterPath);
+                var posterPath = Path.Combine(basePath, $"movie_{filmModel.Id}{ext}");
+                if (System.IO.File.Exists(posterPath))
+                {
+                    System.IO.File.Delete(posterPath);
+                    break;
+                }
             }
 
             var film = new Film
@@ -115,6 +120,5 @@ namespace Controllers
 
             return Ok();
         }
-
     }
 }

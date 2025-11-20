@@ -113,6 +113,8 @@ function Movie_panel() {
                 const updatedMovies = movies.filter(m => m.id !== selectedMovie.id);
                 setMovies(updatedMovies);
                 setSelectedMovie(emptyMovie);
+                setPoster(undefined);
+                setPosterObject(undefined);
             }
             else {
                 alert("Film not delete, something went wrong.");
