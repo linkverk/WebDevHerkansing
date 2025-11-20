@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { saveCurrentUserId, createOrGetUser } from '../../api/users';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { saveCurrentUserId } from '../../api/users';
 import './auth.css';
 
 export interface LoginProps {
   onLogin: (email: string, password: string) => void;
 }
 
-const ADMIN_EMAIL = 'johndoe@test.test';
-const ADMIN_PASSWORD = '123456';
+const API_BASE_URL = 'http://localhost:5275/api/auth';
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Check for success message from registration
+  const successMessage = location.state?.message;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,68 +32,49 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     }
 
     try {
-      // Check for hardcoded admin account
-      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-        try {
-          // Create or get admin user from database
-          const user = await createOrGetUser({
-            email: ADMIN_EMAIL,
-            password: ADMIN_PASSWORD,
-            firstName: 'John',
-            lastName: 'Doe'
-          });
-          
-          saveCurrentUserId(user.id);
-          localStorage.setItem('username', `${user.firstName} ${user.lastName}`);
-          onLogin(email, password);
-          navigate('/home');
-          return;
-        } catch (err) {
-          console.error('Failed to create/get admin user:', err);
-          setError('Failed to connect to server. Please make sure the backend is running.');
-          setLoading(false);
-          return;
-        }
+      // Call backend API for login with BCrypt password verification
+      const response = await fetch(`${API_BASE_URL}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
       }
 
-      // Check for registered user in localStorage
-      const registeredUser = localStorage.getItem('registeredUser');
-      if (registeredUser) {
-        try {
-          const userData = JSON.parse(registeredUser);
-          if (userData.email === email && userData.password === password) {
-            // Try to get/create user in database
-            try {
-              const user = await createOrGetUser({
-                email: userData.email,
-                password: userData.password,
-                firstName: userData.name.split(' ')[0],
-                lastName: userData.name.split(' ').slice(1).join(' ') || 'User'
-              });
-              
-              saveCurrentUserId(user.id);
-              localStorage.setItem('username', userData.name);
-              onLogin(email, password);
-              navigate('/profile');
-              return;
-            } catch (err) {
-              console.error('Failed to create user in database:', err);
-              // Continue with localStorage only
-              const userId = userData.id || crypto.randomUUID();
-              saveCurrentUserId(userId);
-              localStorage.setItem('username', userData.name);
-              onLogin(email, password);
-              navigate('/profile');
-              return;
-            }
-          }
-        } catch (error) {
-          console.error('Error parsing user data:', error);
-        }
-      }
+      console.log('✅ User logged in successfully:', data);
 
-      // If we get here, credentials are invalid
-      setError('Invalid email or password. Please try again or register a new account.');
+      // Save user data
+      saveCurrentUserId(data.id);
+      
+      const fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'User';
+      localStorage.setItem('username', fullName);
+      
+      // Also update registeredUser for consistency
+      localStorage.setItem('registeredUser', JSON.stringify({
+        id: data.id,
+        name: fullName,
+        email: data.email,
+        password: password, // Keep for future reference
+      }));
+
+      onLogin(email, password);
+      navigate('/home');
+    } catch (err) {
+      console.error('❌ Login error:', err);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Invalid email or password. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -100,6 +84,19 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     <div className="auth-container">
       <div className="auth-card">
         <h2 className="auth-title">Welcome Back</h2>
+        
+        {successMessage && (
+          <div className="success-message" style={{ 
+            color: '#2c5f2d', 
+            marginBottom: '1rem', 
+            padding: '0.75rem',
+            backgroundColor: '#d4edda',
+            borderRadius: '8px',
+            textAlign: 'center'
+          }}>
+            ✓ {successMessage}
+          </div>
+        )}
         
         {error && (
           <div className="error-message" style={{ 
