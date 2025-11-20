@@ -93,7 +93,7 @@ namespace Controllers
             if (!Guid.TryParse(filmModel.Id, out Guid filmId))
                 return BadRequest("Film Id is invalid");
 
-            var extensions = new[] { ".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".avif" };
+            var extensions = new[] { ".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".avif", ".PNG", ".JPG", ".JPEG", ".GIF", "WEBP", ".BMP", ".TIFF", ".AVIF" };
             var basePath = Path.Combine(Directory.GetCurrentDirectory(), "../Biscoop-app/public/images");
 
             foreach (var ext in extensions)

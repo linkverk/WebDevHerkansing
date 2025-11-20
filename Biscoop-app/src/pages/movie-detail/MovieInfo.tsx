@@ -15,7 +15,7 @@ interface MovieInfoProps {
   textClass?: string;
 }
 
-const extensions = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".avif"];
+const extensions = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".avif", ".PNG", ".JPG", ".JPEG", ".GIF", "WEBP", ".BMP", ".TIFF", ".AVIF"];
 
 const MovieInfo: React.FC<MovieInfoProps> = ({
   poster,
