@@ -4,7 +4,7 @@ import { saveCurrentUserId, createOrGetUser } from '../../api/users';
 import './auth.css';
 
 export interface LoginProps {
-  onLogin: (email: string, password: string) => void;
+  onLogin: (userId: string, email: string, firstName: string, lastName: string) => void;
 }
 
 const ADMIN_EMAIL = 'johndoe@test.test';
@@ -42,7 +42,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           
           saveCurrentUserId(user.id);
           localStorage.setItem('username', `${user.firstName} ${user.lastName}`);
-          onLogin(email, password);
+          
+          // Call onLogin with full user data
+          onLogin(user.id, user.email, user.firstName || 'John', user.lastName || 'Doe');
           navigate('/home');
           return;
         } catch (err) {
@@ -61,17 +63,23 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           if (userData.email === email && userData.password === password) {
             // Try to get/create user in database
             try {
+              const nameParts = userData.name.split(' ');
+              const firstName = nameParts[0];
+              const lastName = nameParts.slice(1).join(' ') || 'User';
+              
               const user = await createOrGetUser({
                 email: userData.email,
                 password: userData.password,
-                firstName: userData.name.split(' ')[0],
-                lastName: userData.name.split(' ').slice(1).join(' ') || 'User'
+                firstName: firstName,
+                lastName: lastName
               });
               
               saveCurrentUserId(user.id);
               localStorage.setItem('username', userData.name);
-              onLogin(email, password);
-              navigate('/profile');
+              
+              // Call onLogin with full user data
+              onLogin(user.id, user.email, user.firstName || firstName, user.lastName || lastName);
+              navigate('/home');
               return;
             } catch (err) {
               console.error('Failed to create user in database:', err);
@@ -79,8 +87,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               const userId = userData.id || crypto.randomUUID();
               saveCurrentUserId(userId);
               localStorage.setItem('username', userData.name);
-              onLogin(email, password);
-              navigate('/profile');
+              
+              const nameParts = userData.name.split(' ');
+              onLogin(userId, email, nameParts[0], nameParts.slice(1).join(' ') || '');
+              navigate('/home');
               return;
             }
           }
@@ -114,7 +124,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
         )}
         
-        <form onSubmit={handleSubmit}>
+        <div>
           <div className="form-group">
             <label className="form-label">Email</label>
             <input
@@ -142,10 +152,15 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             />
           </div>
           
-          <button type="submit" className="btn-primary" disabled={loading}>
+          <button 
+            type="button" 
+            className="btn-primary" 
+            disabled={loading}
+            onClick={handleSubmit}
+          >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
-        </form>
+        </div>
         
         <div className="auth-footer">
           <span className="auth-text">Don't have an account? </span>

@@ -5,7 +5,7 @@ import Zaal_panel from './pages/admin-zaal-panel/zaal-panel'
 import Show_panel from './pages/admin-show-panel/show-panel'
 import NavBalk from './pages/nav-balk/nav-balk'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css'
 import ScreeningRoom from './pages/ScreeningRoom/ScreeningRoom';
 import Login from './pages/auth/Login'
@@ -17,20 +17,75 @@ import EditProfile from './pages/profile/EditProfile';
 import History from './pages/profile/History';
 import UserContext from './context/UserContext'
 import Bookings from './pages/bookings/Bookings';
+import { getCurrentUserId, getUserProfile } from './api/users';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState<User>({ id: '1', name: 'John Doe', email: 'john.doe@example.com', points: 0 })
+  const [user, setUser] = useState<User>({ id: '', name: '', email: '', points: 0 })
   const [movies] = useState<Movie[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const handleLogin = (email: string, password: string) => {
-    console.log('login', email, password)
-    setIsAuthenticated(true)
-    setUser({ ...user, email })
+  // Check for existing session on app load
+  useEffect(() => {
+    const checkExistingSession = async () => {
+      const userId = getCurrentUserId();
+      if (userId) {
+        try {
+          const profile = await getUserProfile(userId);
+          const fullName = `${profile.firstName} ${profile.lastName}`.trim();
+          setUser({
+            id: profile.id,
+            name: fullName,
+            email: profile.email,
+            points: 0
+          });
+          setIsAuthenticated(true);
+          console.log('✅ Session restored for user:', fullName);
+        } catch (error) {
+          console.error('Failed to restore session:', error);
+          // Clear invalid session
+          localStorage.removeItem('userId');
+        }
+      }
+      setLoading(false);
+    };
+
+    checkExistingSession();
+  }, []);
+
+  const handleLogin = (userId: string, email: string, firstName: string, lastName: string) => {
+    const fullName = `${firstName} ${lastName}`.trim();
+    setUser({
+      id: userId,
+      name: fullName,
+      email: email,
+      points: 0
+    });
+    setIsAuthenticated(true);
+    console.log('✅ User logged in:', fullName, 'ID:', userId);
   }
 
   const handleLogout = () => {
-    setIsAuthenticated(false)
+    setIsAuthenticated(false);
+    setUser({ id: '', name: '', email: '', points: 0 });
+    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userProfile');
+    console.log('✅ User logged out');
+  }
+
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        color: '#9ab0c9'
+      }}>
+        Loading...
+      </div>
+    );
   }
 
   return (
@@ -39,7 +94,7 @@ function App() {
         <NavBalk isAuthenticated={isAuthenticated} />
         <Routes>
           <Route path="/bookings" element={<Bookings />} />
-          <Route path="/home" element={<LogedInUser />} />
+          <Route path="/home" element={<LogedInUser username={user.name} />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/register" element={<Register />} />
           <Route path="movie_detail/:movieId" element={<Movie_detail />} />
@@ -52,7 +107,7 @@ function App() {
           <Route path="ScreeningRoom/:roomId" element={<ScreeningRoom />} />
           <Route path="/profile" element={<Profile user={user} movies={movies} onLogout={handleLogout} />} />
           <Route path="/edit-profile" element={<EditProfile />} />
-          <Route path="/history" element={<History movies={movies} />} />
+          <Route path="/history" element={<History />} />
         </Routes>
       </UserContext.Provider>
     </BrowserRouter>

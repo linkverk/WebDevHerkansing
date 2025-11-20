@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getUserProfile, getCurrentUserId } from '../../api/users';
+import { useUserContext } from '../../context/UserContext';
 import type { User, Movie } from '../../types';
 import './profile.css';
 
@@ -16,9 +17,11 @@ interface ExtendedProfile {
   genre: string;
 }
 
-const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
+const Profile: React.FC<ProfileProps> = ({ movies, onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, setUser, setIsAuthenticated } = useUserContext();
+  
   const [profileData, setProfileData] = useState({
     firstName: '',
     lastName: '',
@@ -32,12 +35,12 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    // Always reload from database when component mounts or location changes
     loadProfile();
-  }, [location]); // Re-load when returning from edit-profile
+  }, [location]);
 
   const loadProfile = async () => {
-    const userId = getCurrentUserId();
+    // Use user ID from context first, then localStorage
+    const userId = user.id || getCurrentUserId();
     if (!userId) {
       console.log('No userId found');
       setLoading(false);
@@ -46,7 +49,6 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
 
     try {
       setLoading(true);
-      // ALWAYS load from database - this is the source of truth
       const profile = await getUserProfile(userId);
       console.log('✅ Profile loaded from database:', profile);
       
@@ -56,7 +58,18 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
         email: profile.email,
       });
 
-      // Load extended profile data from localStorage (bio, genre)
+      // Update context with latest data from database
+      const fullName = `${profile.firstName} ${profile.lastName}`.trim();
+      if (fullName !== user.name || profile.email !== user.email) {
+        setUser({
+          ...user,
+          id: profile.id,
+          name: fullName,
+          email: profile.email
+        });
+      }
+
+      // Load extended profile data from localStorage
       const savedProfile = localStorage.getItem('userProfile');
       if (savedProfile) {
         try {
@@ -73,7 +86,7 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
     } catch (error) {
       console.error('❌ Error loading profile from database:', error);
       
-      // Fallback to localStorage/context ONLY if database fails
+      // Fallback to context/localStorage
       const savedProfile = localStorage.getItem('userProfile');
       if (savedProfile) {
         try {
@@ -88,7 +101,7 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
         }
       }
       
-      // Use context as absolute fallback
+      // Use context as fallback
       setProfileData({
         firstName: user.name.split(' ')[0] || '',
         lastName: user.name.split(' ').slice(1).join(' ') || '',
@@ -109,6 +122,8 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
   ];
 
   const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUser({ id: '', name: '', email: '', points: 0 });
     onLogout();
     navigate('/login');
   };
@@ -137,6 +152,11 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
             <div className="profile-username">@{extendedProfile.username}</div>
           )}
           <div className="profile-email">{profileData.email}</div>
+          {user.id && (
+            <div style={{ fontSize: '0.75rem', color: '#666', marginBottom: '8px' }}>
+              ID: {user.id}
+            </div>
+          )}
           {extendedProfile.bio && (
             <div className="profile-bio">{extendedProfile.bio}</div>
           )}
