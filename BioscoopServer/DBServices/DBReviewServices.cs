@@ -20,16 +20,6 @@ public class DBReviewServices : DBDefaultService<Review>
 
     public override async Task<Review?> AddAsync(Review review)
     {
-        if (review == null)
-            throw new ArgumentNullException(nameof(review), "Nothing was filled in");
-
-        var film = await _context.Films.FindAsync(review.FilmId);
-        if (film == null)
-            throw new ArgumentException("The FilmId is invalid or does not exist.");
-
-        var user = await _context.Users.FindAsync(review.UserId);
-        if (user == null)
-            throw new ArgumentException("The UserId is invalid or does not exist.");
 
         await _dbSet.AddAsync(review);
         await _context.SaveChangesAsync();

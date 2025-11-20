@@ -22,11 +22,31 @@ namespace Controllers
         [HttpPost("Post")]
         public async Task<IActionResult> AddReview([FromBody] ReviewDTO reviewDTO)
         {
+            if (reviewDTO == null)
+                return BadRequest("Nothing was filled in");
+
+            var film = await _context.Films.FindAsync(reviewDTO.FilmId);
+            if (film == null)
+                return BadRequest($"There is no film with this id:{reviewDTO.FilmId}");
+
+            var user = await _context.Users.FindAsync(reviewDTO.UserId);
+            if (user == null)
+                return BadRequest($"there is not user with this id:{reviewDTO.UserId}");
+
+            Guid ReviewId;
+            Guid.TryParse(reviewDTO.Id, out ReviewId);
+
+            Guid userId;
+            Guid.TryParse(reviewDTO.UserId, out userId);
+
+            Guid filmId;
+            Guid.TryParse(reviewDTO.FilmId, out filmId);
+            
             var review = new Review
             {
-                Id = reviewDTO.Id,
-                UserId = reviewDTO.UserId,
-                FilmId = reviewDTO.FilmId,
+                Id = ReviewId,
+                UserId = userId,
+                FilmId = filmId,
                 Rating = reviewDTO.Rating,
                 Description = reviewDTO.Description
             };
