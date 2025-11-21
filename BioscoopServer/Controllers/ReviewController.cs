@@ -25,33 +25,41 @@ namespace Controllers
             if (reviewDTO == null)
                 return BadRequest("Nothing was filled in");
 
-            var film = await _context.Films.FindAsync(reviewDTO.FilmId);
+            if (!Guid.TryParse(reviewDTO.UserId, out Guid userId))
+                return BadRequest("Invalid UserId GUID format");
+
+            if (!Guid.TryParse(reviewDTO.FilmId, out Guid filmId))
+                return BadRequest("Invalid FilmId GUID format");
+
+            var film = await _context.Films.FindAsync(filmId);
             if (film == null)
-                return BadRequest($"There is no film with this id:{reviewDTO.FilmId}");
+                return BadRequest($"There is no film with this id: {filmId}");
 
-            var user = await _context.Users.FindAsync(reviewDTO.UserId);
+            var user = await _context.Users.FindAsync(userId);
             if (user == null)
-                return BadRequest($"there is not user with this id:{reviewDTO.UserId}");
-
-            Guid reviewId;
-            Guid.TryParse(reviewDTO.Id, out reviewId);
-
-            Guid userId;
-            Guid.TryParse(reviewDTO.UserId, out userId);
-
-            Guid filmId;
-            Guid.TryParse(reviewDTO.FilmId, out filmId);
+                return BadRequest($"There is no user with this id: {userId}");
 
             var review = new Review
             {
-                Id = reviewId,
+                Id = Guid.NewGuid(), 
                 UserId = userId,
                 FilmId = filmId,
                 Rating = reviewDTO.Rating,
                 Description = reviewDTO.Description
             };
-            var AddReview = await _DBReviewService.AddAsync(review);
-            return Ok(AddReview);
+
+            var addedReview = await _DBReviewService.AddAsync(review);
+
+            var responseDTO = new ReviewDTO
+            {
+                Id = addedReview.Id.ToString(),
+                UserId = addedReview.UserId.ToString(),
+                FilmId = addedReview.FilmId.ToString(),
+                Rating = addedReview.Rating,
+                Description = addedReview.Description
+            };
+
+            return Ok(responseDTO);
         }
 
     }
