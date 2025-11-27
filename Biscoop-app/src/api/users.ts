@@ -16,6 +16,11 @@ export interface UserProfile {
   lastName: string;
 }
 
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
 export interface UserBooking {
   id: string;
   userId: string;
@@ -54,6 +59,33 @@ export interface FilmHistory {
   genre: string;
   duration: number;
   description: string;
+}
+
+// NEW: Login user via database
+export async function loginUser(credentials: LoginCredentials): Promise<UserProfile> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/Login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    });
+    
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('Invalid email or password');
+      }
+      throw new Error(`Login failed: ${response.status}`);
+    }
+    
+    const user = await response.json();
+    console.log('✅ Login successful:', user.id);
+    return user;
+  } catch (error) {
+    console.error("Login failed:", error);
+    throw error;
+  }
 }
 
 // NEW: Create or get user from database

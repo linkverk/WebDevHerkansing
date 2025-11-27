@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using BioscoopServer.DBServices;
+using BioscoopServer.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,18 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Seed demo account on startup
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<CinemaContext>();
+    
+    // Ensure database is created
+    context.Database.EnsureCreated();
+    
+    // Seed demo account
+    DatabaseSeeder.SeedDemoAccount(context);
+}
 
 if (app.Environment.IsDevelopment())
 {
