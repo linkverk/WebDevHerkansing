@@ -41,7 +41,7 @@ namespace Controllers
 
             var review = new Review
             {
-                Id = Guid.NewGuid(), 
+                Id = Guid.NewGuid(),
                 UserId = userId,
                 FilmId = filmId,
                 Rating = reviewDTO.Rating,
@@ -60,6 +60,31 @@ namespace Controllers
             };
 
             return Ok(responseDTO);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteReview(Guid id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+            if (review == null)
+                return NotFound($"No review found with id: {id}");
+
+            var responseDTO = new ReviewDTO
+            {
+                Id = review.Id.ToString(),
+                UserId = review.UserId.ToString(),
+                FilmId = review.FilmId.ToString(),
+                Rating = review.Rating,
+                Description = review.Description
+            };
+
+            await _DBReviewService.DeleteAsync(review);
+
+            return Ok(new
+            {
+                message = $"Review with id: {id} has been deleted.",
+                deletedReview = responseDTO
+            });
         }
 
     }
