@@ -24,8 +24,8 @@ export type Review = {
 
 export interface ShowProp {
   id: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | undefined;
+  endDate: Date |undefined;
   filmId: string;
   roomId: string;
 }

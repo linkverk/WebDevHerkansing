@@ -5,8 +5,8 @@ namespace BioscoopServer.models
         public Guid Id { get; set; }
         public Guid FilmId { get; set; }
         public Guid RoomId { get; set; }
-        public DateTime? Begintijd { get; set; }
-        public DateTime? Eindtijd { get; set; }
+        public DateTimeOffset? StartDate { get; set; }
+        public DateTimeOffset? EndDate { get; set; }
 
         public Film Film { get; set; } = null!;
         public Room Zaal { get; set; } = null!;

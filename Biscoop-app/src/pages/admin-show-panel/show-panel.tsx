@@ -39,7 +39,15 @@ function Show_panel() {
         try {
             const response = await fetch("http://localhost:5275/api/Shows/GetAll")
             const data: ShowProp[] = await response.json();
-            setShows(data);
+
+            const mappedData = data.map(s => ({
+                ...s,
+                startDate: s.startDate ? new Date(s.startDate) : undefined,
+                endDate: s.endDate ? new Date(s.endDate) : undefined
+            }));
+
+            setShows(mappedData);
+
         } catch (error) {
             console.error("Failed to fetch movies:", error);
         }
@@ -49,8 +57,8 @@ function Show_panel() {
         id: '',
         filmId: '',
         roomId: '',
-        startDate: new Date,
-        endDate: new Date,
+        startDate: undefined,
+        endDate: undefined,
     };
     const [selectedShow, setSelectedShow] = useState<ShowProp>(emptyShow);
     const emptyMovie: MovieProp = {
@@ -71,7 +79,7 @@ function Show_panel() {
     const [selectedzaal, setSelectedZaal] = useState<ZaalProp>(emptyZaal);
 
     const handleSave = async () => {
-        if (!selectedzaal || !selectedShow) {
+        if (selectedzaal.id == "" || !selectedShow || selectedMovie.id == "" || !selectedShow.endDate || !selectedShow.startDate) {
             alert("Please enter all info.");
             return;
         }
@@ -103,6 +111,9 @@ function Show_panel() {
             if (response.ok) {
                 alert("Show added or updated succesfully.");
                 const data: ShowProp = await response.json();
+                console.log(data)
+                data.startDate = data.startDate ? new Date(data.startDate) : undefined;
+                data.endDate = data.endDate ? new Date(data.endDate) : undefined;
                 if (shows.find((s) => s.id === data.id)) {
                     setShows(shows.map((s) => (s.id === data.id ? data : s)));
                     setSelectedShow(data);
@@ -137,9 +148,11 @@ function Show_panel() {
                 requestOptions
             );
             if (response.ok) {
-                const updatedZalen = shows.filter(s => s.id !== selectedShow.id);
-                setShows(updatedZalen);
+                const updatedShows = shows.filter(s => s.id !== selectedShow.id);
+                setShows(updatedShows);
                 setSelectedShow(emptyShow);
+                setSelectedMovie(emptyMovie);
+                setSelectedZaal(emptyZaal);
             }
             else {
                 alert("Show not delete, something went wrong.");
@@ -149,7 +162,7 @@ function Show_panel() {
         };
     };
 
-    function formatDateForInput(date: Date | string): string {
+    function formatDateForInput(date?: Date | string): string {
         if (!date) return "";
         if (typeof date === "string") return date;
         const offset = date.getTimezoneOffset();
@@ -194,7 +207,7 @@ function Show_panel() {
                 {selectedShow.endDate &&
                     <div id="info">
                         <div>
-                            <span className="label">End date:</span> {formatDateForShowing(selectedShow.startDate)}
+                            <span className="label">End date:</span> {formatDateForShowing(selectedShow.endDate)}
                         </div>
                     </div>
                 }
@@ -227,7 +240,7 @@ function Show_panel() {
                         <input
                             type="datetime-local"
                             value={formatDateForInput(selectedShow.startDate)}
-                            onChange={(e) => setSelectedShow({ ...selectedShow, startDate: new Date(e.target.value)})}
+                            onChange={(e) => setSelectedShow({ ...selectedShow, startDate: new Date(e.target.value) })}
                         />
                     </div>
 
@@ -236,7 +249,7 @@ function Show_panel() {
                         <input
                             type="datetime-local"
                             value={formatDateForInput(selectedShow.endDate)}
-                            onChange={(e) => setSelectedShow({ ...selectedShow, endDate: new Date(e.target.value)})}
+                            onChange={(e) => setSelectedShow({ ...selectedShow, endDate: new Date(e.target.value) })}
                         />
                     </div>
 

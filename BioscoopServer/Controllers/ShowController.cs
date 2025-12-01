@@ -40,29 +40,31 @@ namespace Controllers
             if (ShowModel == null)
                 return BadRequest("Show is required.");
 
-            Console.WriteLine(ShowModel.FilmId);
-            Console.WriteLine(ShowModel.RoomId);
-
             Guid ShowId;
             Guid.TryParse(ShowModel.Id, out ShowId);
             Guid FilmId;
-            Guid.TryParse(ShowModel.FilmId, out FilmId);
             Guid RoomId;
-            Guid.TryParse(ShowModel.RoomId, out RoomId);
-            Console.WriteLine(FilmId);
-            Console.WriteLine(RoomId);
-            var Show = new Show
+            if (Guid.TryParse(ShowModel.FilmId, out FilmId) && Guid.TryParse(ShowModel.RoomId, out RoomId))
             {
-                Id = ShowId,
-                FilmId = FilmId,
-                RoomId = RoomId,
-                Begintijd = ShowModel.startDate,
-                Eindtijd = ShowModel.endDate
 
-            };
+                var Show = new Show
+                {
+                    Id = ShowId,
+                    FilmId = FilmId,
+                    RoomId = RoomId,
+                    StartDate = ShowModel.startDate,
+                    EndDate = ShowModel.endDate
 
-            var addedShow = await _DBShowService.AddOrUpdateAsync(Show);
-            return Ok(addedShow);
+                };
+
+                var addedShow = await _DBShowService.AddOrUpdateAsync(Show);
+                return Ok(addedShow);
+            }
+            else
+            {
+                return BadRequest("Invalid show");
+            }
+
         }
         [HttpPost("Delete")]
         public async Task<IActionResult> DeleteShow([FromBody] ShowDTO ShowModel)
@@ -81,16 +83,16 @@ namespace Controllers
                     Id = ShowId,
                     FilmId = FilmId,
                     RoomId = RoomId,
-                    Begintijd = ShowModel.startDate,
-                    Eindtijd = ShowModel.endDate
+                    StartDate = ShowModel.startDate,
+                    EndDate = ShowModel.endDate
                 };
                 await _DBShowService.DeleteAsync(Show);
                 return Ok();
             }
             else
-                {
-                    return BadRequest("Show Id is invalid");
-                }
+            {
+                return BadRequest("Show Id is invalid");
             }
         }
     }
+}
