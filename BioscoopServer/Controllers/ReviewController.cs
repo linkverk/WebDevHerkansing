@@ -87,5 +87,40 @@ namespace Controllers
             });
         }
 
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllReviews()
+        {
+            var reviews = await _DBReviewService.GetAllAsync();
+            var reviewDTOs = reviews.Select(review => new ReviewDTO
+            {
+                Id = review.Id.ToString(),
+                UserId = review.UserId.ToString(),
+                FilmId = review.FilmId.ToString(),
+                Rating = review.Rating,
+                Description = review.Description
+            }).ToList();
+
+            return Ok(reviewDTOs);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetReviewById(Guid id)
+        {
+            var review = await _DBReviewService.GetByIdAsync(id);
+            if (review == null)
+                return NotFound($"No review found with id: {id}");
+
+            var reviewDTO = new ReviewDTO
+            {
+                Id = review.Id.ToString(),
+                UserId = review.UserId.ToString(),
+                FilmId = review.FilmId.ToString(),
+                Rating = review.Rating,
+                Description = review.Description
+            };
+
+            return Ok(reviewDTO);
+        }
+
     }
 }

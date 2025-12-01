@@ -1,4 +1,4 @@
-###
+### Create Review
 POST http://localhost:5275/api/Review/Post
 Content-Type: application/json
 
@@ -10,9 +10,17 @@ Content-Type: application/json
   "description": "Love it !"
 }
 
-###
+### Delete Review
 
 DELETE http://localhost:5275/api/Review/27F5493F-3B7A-4B4A-A431-15A58C3643EA
+Content-Type: application/json
+
+### Get Reviews id
+GET http://localhost:5275/api/Review/D1E4C5E8-E0B3-45B5-BE0C-E7DDF1A44C88
+Content-Type: application/json
+
+### Get All Reviews
+GET http://localhost:5275/api/Review/GetAll
 Content-Type: application/json
 
 ###
