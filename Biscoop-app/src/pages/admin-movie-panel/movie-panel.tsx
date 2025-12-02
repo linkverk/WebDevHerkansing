@@ -116,6 +116,7 @@ function Movie_panel() {
                 setSelectedMovie(emptyMovie);
                 setPoster(undefined);
                 setPosterObject(undefined);
+                alert("Film deleted succesfully.");
             }
             else {
                 alert("Film not delete, something went wrong.");
