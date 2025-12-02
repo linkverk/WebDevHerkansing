@@ -11,6 +11,27 @@ namespace BioscoopServer.DBServices
             return existing != null;
         }
 
+        public override async Task<Film?> AddOrUpdateAsync(Film entity)
+        {
+            Film? completeFilm = await GetFilmByIdFull(entity.Id);
+            if(completeFilm == null || completeFilm.Shows.Count() == 0)
+            {
+                return await base.AddOrUpdateAsync(entity);
+            }
+            Console.w
+            else
+            {
+                foreach(Show show in completeFilm.Shows)
+                {
+                    if(show.EndDate - show.StartDate < TimeSpan.FromMinutes((Double)completeFilm.Duration))
+                    {
+                        return null;
+                    }
+                }
+            }
+            return await base.AddOrUpdateAsync(entity);
+        }
+
         public async Task<Film?> GetFilmByIdFull(Guid id)
         {
             return await _dbSet

@@ -93,6 +93,10 @@ namespace Controllers
             };
 
             var addedFilm = await _DBFilmService.AddOrUpdateAsync(film);
+            if(addedFilm == null)
+            {
+                return BadRequest("Show cannot be updated because the duration does not fit some of its shows.");
+            }
             return Ok(addedFilm);
         }
         [HttpPost("Delete")]
