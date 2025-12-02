@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using BioscoopServer.DBServices;
 using BioscoopServer.Data;
 
@@ -14,7 +15,12 @@ builder.Services.AddScoped<DBFilmService>();
 builder.Services.AddScoped<DBUserService>();
 builder.Services.AddScoped<DBReviewServices>();
 builder.Services.AddScoped<DBRoomService>();
-builder.Services.AddControllers();
+builder.Services.AddScoped<DBShowService>();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

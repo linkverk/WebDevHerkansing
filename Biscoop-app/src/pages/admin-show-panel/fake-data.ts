@@ -16,8 +16,8 @@ interface MovieProp {
 
 interface ShowProp {
   id: string;
-  start_date: Date;
-  end_date: Date;
+  startDate: Date;
+  endDate: Date;
   movie: MovieProp;
   zaal: ZaalProp;
 }
@@ -25,8 +25,8 @@ interface ShowProp {
 export const fakeShows: ShowProp[] = [
   {
     id: "show-1",
-    start_date: new Date("2025-10-28T18:00:00"),
-    end_date: new Date("2025-10-28T20:30:00"),
+    startDate: new Date("2025-10-28T18:00:00"),
+    endDate: new Date("2025-10-28T20:30:00"),
     movie: {
       id: "movie-1",
       title: "The Silent Horizon",
@@ -44,8 +44,8 @@ export const fakeShows: ShowProp[] = [
   },
   {
     id: "show-2",
-    start_date: new Date("2025-10-28T21:00:00"),
-    end_date: new Date("2025-10-28T23:00:00"),
+    startDate: new Date("2025-10-28T21:00:00"),
+    endDate: new Date("2025-10-28T23:00:00"),
     movie: {
       id: "movie-2",
       title: "Echoes of Tomorrow",
@@ -63,8 +63,8 @@ export const fakeShows: ShowProp[] = [
   },
   {
     id: "show-3",
-    start_date: new Date("2025-10-29T16:30:00"),
-    end_date: new Date("2025-10-29T18:30:00"),
+    startDate: new Date("2025-10-29T16:30:00"),
+    endDate: new Date("2025-10-29T18:30:00"),
     movie: {
       id: "movie-3",
       title: "Whispers in the Wind",
@@ -82,8 +82,8 @@ export const fakeShows: ShowProp[] = [
   },
   {
     id: "show-4",
-    start_date: new Date("2025-10-30T19:00:00"),
-    end_date: new Date("2025-10-30T21:30:00"),
+    startDate: new Date("2025-10-30T19:00:00"),
+    endDate: new Date("2025-10-30T21:30:00"),
     movie: {
       id: "movie-4",
       title: "Crimson Shadows",
@@ -101,8 +101,8 @@ export const fakeShows: ShowProp[] = [
   },
   {
     id: "show-5",
-    start_date: new Date("2025-10-31T17:30:00"),
-    end_date: new Date("2025-10-31T19:00:00"),
+    startDate: new Date("2025-10-31T17:30:00"),
+    endDate: new Date("2025-10-31T19:00:00"),
     movie: {
       id: "movie-5",
       title: "The Laughing Planet",

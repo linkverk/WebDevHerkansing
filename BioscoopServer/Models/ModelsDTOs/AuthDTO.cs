@@ -8,12 +8,6 @@ namespace BioscoopServer.Models.ModelsDTOs
         public string? LastName { get; set; }
     }
 
-    public class LoginDTO
-    {
-        public string Email { get; set; } = null!;
-        public string Password { get; set; } = null!;
-    }
-
     public class LogoutDTO
     {
         public string? UserId { get; set; }

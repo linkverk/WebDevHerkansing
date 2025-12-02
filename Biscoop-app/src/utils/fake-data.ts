@@ -17,17 +17,18 @@ export interface MovieProp {
 
 export type Review = {
   name: string;
-  text: string;
+  description: string;
   rating: number;
-  movieId: string;
+  filmId: string;
+  userId: string;
 };
 
 export interface ShowProp {
   id: string;
-  start_date: Date;
-  end_date: Date;
-  movieId: string;
-  zaalId: string;
+  startDate: Date | undefined;
+  endDate: Date |undefined;
+  filmId: string;
+  roomId: string;
 }
 
 // ----- Fake Zalen -----
@@ -67,42 +68,42 @@ export const fakeMovies: MovieProp[] = [
 
 // ----- Fake Reviews -----
 export const fakeReviews: Review[] = [
-  { name: "Sophie", text: "Incredible story with great visuals!", rating: 5, movieId: "movie-1" },
-  { name: "Mark", text: "A bit confusing, but very entertaining.", rating: 4, movieId: "movie-1" },
-  { name: "Emma", text: "So romantic and beautifully shot.", rating: 5, movieId: "movie-2" },
-  { name: "Liam", text: "Predictable, but still enjoyable.", rating: 3, movieId: "movie-2" },
-  { name: "Noah", text: "Suspenseful and chilling!", rating: 5, movieId: "movie-3" },
-  { name: "Ava", text: "Too dark for my taste, but well made.", rating: 4, movieId: "movie-3" },
+  { name: "Sophie", description: "Incredible story with great visuals!", rating: 5, filmId: "movie-1", userId:"1"},
+  { name: "Mark", description: "A bit confusing, but very entertaining.", rating: 4, filmId: "movie-1", userId:"1" },
+  { name: "Emma", description: "So romantic and beautifully shot.", rating: 5, filmId: "movie-2", userId:"1" },
+  { name: "Liam", description: "Predictable, but still enjoyable.", rating: 3, filmId: "movie-2", userId:"1" },
+  { name: "Noah", description: "Suspenseful and chilling!", rating: 5, filmId: "movie-3", userId:"1" },
+  { name: "Ava", description: "Too dark for my taste, but well made.", rating: 4, filmId: "movie-3", userId:"1" },
 ];
 
 // ----- Fake Shows -----
 export const fakeShows: ShowProp[] = [
   {
     id: "show-1",
-    start_date: new Date("2025-10-28T14:00:00"),
-    end_date: new Date("2025-10-28T16:00:00"),
-    movieId: "movie-1",
-    zaalId: "zaal-1",
+    startDate: new Date("2025-10-28T14:00:00"),
+    endDate: new Date("2025-10-28T16:00:00"),
+    filmId: "movie-1",
+    roomId: "zaal-1",
   },
   {
     id: "show-2",
-    start_date: new Date("2025-10-28T17:00:00"),
-    end_date: new Date("2025-10-28T19:00:00"),
-    movieId: "movie-2",
-    zaalId: "zaal-2",
+    startDate: new Date("2025-10-28T17:00:00"),
+    endDate: new Date("2025-10-28T19:00:00"),
+    filmId: "movie-2",
+    roomId: "zaal-2",
   },
   {
     id: "show-3",
-    start_date: new Date("2025-10-28T20:00:00"),
-    end_date: new Date("2025-10-28T22:10:00"),
-    movieId: "movie-3",
-    zaalId: "zaal-3",
+    startDate: new Date("2025-10-28T20:00:00"),
+    endDate: new Date("2025-10-28T22:10:00"),
+    filmId: "movie-3",
+    roomId: "zaal-3",
   },
   {
     id: "show-4",
-    start_date: new Date("2025-10-29T14:00:00"),
-    end_date: new Date("2025-10-29T16:00:00"),
-    movieId: "movie-2",
-    zaalId: "zaal-1",
+    startDate: new Date("2025-10-29T14:00:00"),
+    endDate: new Date("2025-10-29T16:00:00"),
+    filmId: "movie-2",
+    roomId: "zaal-1",
   },
 ];

@@ -7,11 +7,12 @@ import { getAppData, setAppData } from "../../utils/storage";
 import type { Review, ZaalProp } from "../../utils/fake-data";
 import { useParams } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
+import type { Description } from "@mui/icons-material";
 
 export interface ShowPropWithZaal {
     id: string;
-    start_date: Date;
-    end_date: Date;
+    startDate: Date;
+    endDate: Date;
     movieId: string;
     zaalId: string;
     zaal: ZaalProp;
@@ -44,12 +45,12 @@ const ReviewForm: React.FC<{ movieId: string; onAdded: () => void }> = ({ movieI
         if (!text.trim()) return;
         
         const data = getAppData();
-        const newReview = { 
+        const newReview: Review = { 
             name: username, 
-            text: text.trim(), 
+            description: text.trim(), 
             rating, 
-            movieId,
-            userId: userId // Include user ID for tracking
+            filmId: movieId,
+            userId: userId
         };
         data.fakeReviews.push(newReview);
         setAppData(data);
@@ -109,7 +110,7 @@ function Movie_detail() {
 
     const fetchAllMoviesFull = async () => {
         try {
-            const response = await fetch(`http://localhost:5275/api/Films/GetById?id=${movieId}`)
+            const response = await fetch(`http://localhost:5275/api/Films/GetById/Full?id=${movieId}`)
             const data: MoviePropFull = await response.json();
             setMovieFull(data);
         } catch (error) {
