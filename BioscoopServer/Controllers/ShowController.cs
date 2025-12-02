@@ -58,6 +58,10 @@ namespace Controllers
                 };
 
                 var addedShow = await _DBShowService.AddOrUpdateAsync(Show);
+                if(addedShow == null)
+                {
+                    return BadRequest("There is already a show in this room at this time.");
+                }
                 return Ok(addedShow);
             }
             else
