@@ -19,6 +19,52 @@ namespace Controllers
             _context = context;
         }
 
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginModel)
+        {
+            if (loginModel == null || string.IsNullOrWhiteSpace(loginModel.Email) || string.IsNullOrWhiteSpace(loginModel.Password))
+            {
+                return BadRequest("Email and password are required");
+            }
+
+            try
+            {
+                // Find user by email
+                var user = await _context.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Email == loginModel.Email);
+
+                if (user == null)
+                {
+                    return Unauthorized(new { message = "Invalid email or password" });
+                }
+
+                // Verify password (NOTE: In production, use proper password hashing!)
+                if (user.Password != loginModel.Password)
+                {
+                    return Unauthorized(new { message = "Invalid email or password" });
+                }
+
+                // Return user data (without password)
+                var userDto = new UserDTO
+                {
+                    Id = user.Id.ToString(),
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
+
+                Console.WriteLine($"✅ User logged in: {user.Email} (ID: {user.Id})");
+
+                return Ok(userDto);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Login error: {ex.Message}");
+                return StatusCode(500, new { message = "An error occurred during login" });
+            }
+        }
+
         [HttpGet("GetById")]
         public async Task<IActionResult> GetUserById([FromQuery] string id)
         {

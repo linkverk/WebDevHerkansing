@@ -6,6 +6,7 @@ import ShowInfo from "../movie-list/showInfo";
 import { getAppData, setAppData } from "../../utils/storage";
 import type { Review, ZaalProp } from "../../utils/fake-data";
 import { useParams } from "react-router-dom";
+import { useUserContext } from "../../context/UserContext";
 
 export interface ShowPropWithZaal {
     id: string;
@@ -27,35 +28,29 @@ export interface MoviePropFull {
     reviews: Review[];
 }
 
-
-const getStoredUsername = () => {
-    // support multiple keys used across the app: 'username' (lowercase) or 'userName' (from register)
-    const a = localStorage.getItem("username");
-    if (a) return a;
-    // try registeredUser object
-    const reg = localStorage.getItem("registeredUser");
-    if (reg) {
-        try {
-            const parsed = JSON.parse(reg);
-            if (parsed && parsed.name) return parsed.name;
-        } catch (e) {
-            // ignore
-        }
-    }
-    return "Jhon Doe";
-    //This needs to be fixed later, so that it fetches the correct username from localStorage
-};
-
 const ReviewForm: React.FC<{ movieId: string; onAdded: () => void }> = ({ movieId, onAdded }) => {
-    const username = getStoredUsername();
+    // Use context to get current user
+    const { user, isAuthenticated } = useUserContext();
+    
+    // Use user from context, fallback to localStorage
+    const username = user.name || localStorage.getItem("username") || "Guest";
+    const userId = user.id || localStorage.getItem("userId") || "";
+    
     const [text, setText] = useState("");
     const [rating, setRating] = useState<number>(5);
 
     const submit = (e?: React.FormEvent) => {
         e?.preventDefault();
         if (!text.trim()) return;
+        
         const data = getAppData();
-        const newReview = { name: username, text: text.trim(), rating, movieId };
+        const newReview = { 
+            name: username, 
+            text: text.trim(), 
+            rating, 
+            movieId,
+            userId: userId // Include user ID for tracking
+        };
         data.fakeReviews.push(newReview);
         setAppData(data);
         setText("");
@@ -63,8 +58,22 @@ const ReviewForm: React.FC<{ movieId: string; onAdded: () => void }> = ({ movieI
         onAdded();
     };
 
+    if (!isAuthenticated) {
+        return (
+            <div style={{ 
+                padding: '1rem', 
+                backgroundColor: '#1a1a20', 
+                borderRadius: '8px',
+                textAlign: 'center',
+                color: '#9ab0c9'
+            }}>
+                Please log in to write a review.
+            </div>
+        );
+    }
+
     return (
-        <form className="review-form" onSubmit={submit}>
+        <div className="review-form">
             <div className="review-form-row">
                 <label>Review</label>
                 <textarea value={text} onChange={(e) => setText(e.target.value)} />
@@ -80,17 +89,21 @@ const ReviewForm: React.FC<{ movieId: string; onAdded: () => void }> = ({ movieI
                 </select>
             </div>
             <div className="review-form-row">
-                <button className="btn" type="submit">Add review as {username}</button>
+                <button className="btn" type="button" onClick={submit}>
+                    Add review as {username}
+                </button>
             </div>
-        </form>
+        </div>
     );
 };
 
 function Movie_detail() {
     const { movieId } = useParams();
+    const { user } = useUserContext();
+    
     useEffect(() => {
         fetchAllMoviesFull();
-    }, []);
+    }, [movieId]);
 
     const [movieFull, setMovieFull] = useState<MoviePropFull>();
 
@@ -104,9 +117,9 @@ function Movie_detail() {
         }
     };
 
-
     const reloadReviews = () => {
-        return
+        // Reload from API if needed
+        fetchAllMoviesFull();
     };
 
     return (

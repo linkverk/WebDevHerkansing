@@ -35,7 +35,8 @@ const EditProfile: React.FC = () => {
   }, []);
 
   const loadUserProfile = async () => {
-    const userId = getCurrentUserId();
+    // Use user ID from context first, then localStorage
+    const userId = user.id || getCurrentUserId();
     if (!userId) {
       setErrorMessage('User not logged in');
       return;
@@ -43,7 +44,6 @@ const EditProfile: React.FC = () => {
 
     try {
       setLoading(true);
-      // Load from API
       const profile = await getUserProfile(userId);
       console.log('📋 Loading profile for edit:', profile);
       
@@ -63,7 +63,7 @@ const EditProfile: React.FC = () => {
         }
       }
 
-      // Get password from localStorage (for updating)
+      // Get password from localStorage
       const registeredUser = localStorage.getItem('registeredUser');
       let password = '';
       if (registeredUser) {
@@ -87,7 +87,7 @@ const EditProfile: React.FC = () => {
       console.error('Error loading profile:', error);
       setErrorMessage('Failed to load profile from database.');
       
-      // Fallback to localStorage
+      // Fallback to context/localStorage
       const savedProfile = localStorage.getItem('userProfile');
       if (savedProfile) {
         try {
@@ -140,7 +140,8 @@ const EditProfile: React.FC = () => {
       return;
     }
 
-    const userId = getCurrentUserId();
+    // Use user ID from context first, then localStorage
+    const userId = user.id || getCurrentUserId();
     if (!userId) {
       setErrorMessage('User not logged in');
       return;
@@ -149,26 +150,27 @@ const EditProfile: React.FC = () => {
     try {
       setLoading(true);
 
-      // Update via API - SEND COMPLETE USER DATA INCLUDING PASSWORD
+      // Update via API
       const updatedProfile = await updateUserProfile(userId, {
         id: userId,
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        password: formData.password // IMPORTANT: Send password to database!
+        password: formData.password
       });
 
       console.log('✅ Profile updated in database:', updatedProfile);
 
-      // IMPORTANT: Update the user context so Profile component shows correct data
+      // Update the user context
       const fullName = `${updatedProfile.firstName} ${updatedProfile.lastName}`;
       setUser({
         ...user,
+        id: userId,
         name: fullName,
         email: updatedProfile.email
       });
 
-      // Save extended profile data to localStorage (bio and genre only)
+      // Save extended profile data to localStorage
       const profileData = {
         bio: formData.bio,
         genre: formData.genre,
@@ -176,7 +178,7 @@ const EditProfile: React.FC = () => {
       };
       localStorage.setItem('userProfile', JSON.stringify(profileData));
 
-      // Update registered user data in localStorage (for login persistence)
+      // Update registered user data in localStorage
       const registeredUser = localStorage.getItem('registeredUser');
       if (registeredUser) {
         const userData = JSON.parse(registeredUser);
@@ -188,12 +190,11 @@ const EditProfile: React.FC = () => {
         console.log('✅ localStorage updated');
       }
 
-      // Also update username in simple storage
+      // Update username in simple storage
       localStorage.setItem('username', fullName);
 
       setSuccessMessage('Profile updated successfully in database!');
       
-      // Navigate back after short delay
       setTimeout(() => {
         navigate('/profile');
       }, 1500);

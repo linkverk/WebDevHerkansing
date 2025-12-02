@@ -4,7 +4,7 @@ import { saveCurrentUserId } from '../../api/users';
 import './auth.css';
 
 export interface LoginProps {
-  onLogin: (email: string, password: string) => void;
+  onLogin: (userId: string, email: string, firstName: string, lastName: string) => void;
 }
 
 const API_BASE_URL = 'http://localhost:5275/api/auth';
@@ -32,25 +32,75 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     }
 
     try {
-      // Call backend API for login with BCrypt password verification
-      const response = await fetch(`${API_BASE_URL}/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
+      // Check for hardcoded admin account
+      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        try {
+          // Create or get admin user from database
+          const user = await createOrGetUser({
+            email: ADMIN_EMAIL,
+            password: ADMIN_PASSWORD,
+            firstName: 'John',
+            lastName: 'Doe'
+          });
+          
+          saveCurrentUserId(user.id);
+          localStorage.setItem('username', `${user.firstName} ${user.lastName}`);
+          
+          // Call onLogin with full user data
+          onLogin(user.id, user.email, user.firstName || 'John', user.lastName || 'Doe');
+          navigate('/home');
+          return;
+        } catch (err) {
+          console.error('Failed to create/get admin user:', err);
+          setError('Failed to connect to server. Please make sure the backend is running.');
+          setLoading(false);
+          return;
+        }
       }
 
-      console.log('✅ User logged in successfully:', data);
+      // Check for registered user in localStorage
+      const registeredUser = localStorage.getItem('registeredUser');
+      if (registeredUser) {
+        try {
+          const userData = JSON.parse(registeredUser);
+          if (userData.email === email && userData.password === password) {
+            // Try to get/create user in database
+            try {
+              const nameParts = userData.name.split(' ');
+              const firstName = nameParts[0];
+              const lastName = nameParts.slice(1).join(' ') || 'User';
+              
+              const user = await createOrGetUser({
+                email: userData.email,
+                password: userData.password,
+                firstName: firstName,
+                lastName: lastName
+              });
+              
+              saveCurrentUserId(user.id);
+              localStorage.setItem('username', userData.name);
+              
+              // Call onLogin with full user data
+              onLogin(user.id, user.email, user.firstName || firstName, user.lastName || lastName);
+              navigate('/home');
+              return;
+            } catch (err) {
+              console.error('Failed to create user in database:', err);
+              // Continue with localStorage only
+              const userId = userData.id || crypto.randomUUID();
+              saveCurrentUserId(userId);
+              localStorage.setItem('username', userData.name);
+              
+              const nameParts = userData.name.split(' ');
+              onLogin(userId, email, nameParts[0], nameParts.slice(1).join(' ') || '');
+              navigate('/home');
+              return;
+            }
+          }
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
 
       // Save user data
       saveCurrentUserId(data.id);
@@ -111,7 +161,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
         )}
         
-        <form onSubmit={handleSubmit}>
+        <div>
           <div className="form-group">
             <label className="form-label">Email</label>
             <input
@@ -139,10 +189,15 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             />
           </div>
           
-          <button type="submit" className="btn-primary" disabled={loading}>
+          <button 
+            type="button" 
+            className="btn-primary" 
+            disabled={loading}
+            onClick={handleSubmit}
+          >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
-        </form>
+        </div>
         
         <div className="auth-footer">
           <span className="auth-text">Don't have an account? </span>
