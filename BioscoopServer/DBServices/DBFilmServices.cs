@@ -18,12 +18,11 @@ namespace BioscoopServer.DBServices
             {
                 return await base.AddOrUpdateAsync(entity);
             }
-            Console.w
             else
             {
                 foreach(Show show in completeFilm.Shows)
                 {
-                    if(show.EndDate - show.StartDate < TimeSpan.FromMinutes((Double)completeFilm.Duration))
+                    if(show.EndDate - show.StartDate < TimeSpan.FromMinutes((Double)entity.Duration))
                     {
                         return null;
                     }
