@@ -1,12 +1,12 @@
 using BioscoopServer.models;
 using Microsoft.EntityFrameworkCore;
 
-public class ReviewServices : DBDefaultService<Review>
+public class DBReviewServices : DBDefaultService<Review>
 {
-    protected readonly DbContext _context;
+    protected readonly CinemaContext _context;
     protected readonly DbSet<Review> _dbSet;
 
-    public ReviewServices(DbContext context) : base(context)
+    public DBReviewServices(CinemaContext context) : base(context)
     {
         _context = context;
         _dbSet = _context.Set<Review>();
@@ -20,21 +20,10 @@ public class ReviewServices : DBDefaultService<Review>
 
     public override async Task<Review?> AddAsync(Review review)
     {
-        if (review == null) throw new ArgumentNullException(nameof(review), "Nothing was filled in");
 
         await _dbSet.AddAsync(review);
         await _context.SaveChangesAsync();
         return review;
-    }
-
-    public override async Task<List<Review>> GetAllAsync()
-    {
-        return await _dbSet.AsNoTracking().ToListAsync();
-    }
-    public override async Task<Review?> GetByIdAsync(object id)
-    {
-        if(id != null);
-        return await _dbSet.FindAsync(id);
     }
 
 }

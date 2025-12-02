@@ -16,6 +16,11 @@ export interface UserProfile {
   lastName: string;
 }
 
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
 export interface UserBooking {
   id: string;
   userId: string;
@@ -54,6 +59,33 @@ export interface FilmHistory {
   genre: string;
   duration: number;
   description: string;
+}
+
+// NEW: Login user via database
+export async function loginUser(credentials: LoginCredentials): Promise<UserProfile> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/Login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    });
+    
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('Invalid email or password');
+      }
+      throw new Error(`Login failed: ${response.status}`);
+    }
+    
+    const user = await response.json();
+    console.log('✅ Login successful:', user.id);
+    return user;
+  } catch (error) {
+    console.error("Login failed:", error);
+    throw error;
+  }
 }
 
 // NEW: Create or get user from database
@@ -205,4 +237,46 @@ export function saveCurrentUserId(userId: string): void {
 // Helper to clear user ID from localStorage
 export function clearCurrentUserId(): void {
   localStorage.removeItem('userId');
+}
+
+// Auth endpoints
+export async function registerUser(userData: {
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+}): Promise<UserProfile> {
+  const response = await fetch(`${API_BASE_URL.replace('/Users', '/auth')}/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData),
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Registration failed');
+  }
+  return response.json();
+}
+
+export async function loginUser(email: string, password: string): Promise<UserProfile> {
+  const response = await fetch(`${API_BASE_URL.replace('/Users', '/auth')}/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Login failed');
+  }
+  return response.json();
+}
+
+export async function logoutUser(userId?: string): Promise<void> {
+  await fetch(`${API_BASE_URL.replace('/Users', '/auth')}/logout`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId }),
+  });
 }

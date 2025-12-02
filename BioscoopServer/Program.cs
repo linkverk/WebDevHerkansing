@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using BioscoopServer.DBServices;
+using BioscoopServer.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,7 @@ builder.Services.AddDbContext<CinemaContext>(options =>
 
 builder.Services.AddScoped<DBFilmService>();
 builder.Services.AddScoped<DBUserService>();
-// builder.Services.AddScoped<ReviewServices>();
+builder.Services.AddScoped<DBReviewServices>();
 builder.Services.AddScoped<DBRoomService>();
 builder.Services.AddScoped<DBShowService>();
 builder.Services.AddControllers()
@@ -35,6 +36,18 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Seed demo account on startup
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<CinemaContext>();
+    
+    // Ensure database is created
+    context.Database.EnsureCreated();
+    
+    // Seed demo account
+    DatabaseSeeder.SeedDemoAccount(context);
+}
 
 if (app.Environment.IsDevelopment())
 {

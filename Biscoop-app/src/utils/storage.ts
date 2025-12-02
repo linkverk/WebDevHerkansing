@@ -94,7 +94,7 @@ export function deleteItem<K extends keyof AppData>(key: K, id: string) {
     case "fakeMovies":
       data.fakeMovies = data.fakeMovies.filter(m => m.id !== id);
       data.fakeShows = data.fakeShows.filter(s => s.filmId !== id);
-      data.fakeReviews = data.fakeReviews.filter(r => r.movieId !== id);
+      data.fakeReviews = data.fakeReviews.filter(r => r.filmId !== id);
       break;
 
     case "fakeZalen":

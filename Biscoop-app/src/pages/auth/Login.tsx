@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { saveCurrentUserId, createOrGetUser } from '../../api/users';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { saveCurrentUserId } from '../../api/users';
 import './auth.css';
 
 export interface LoginProps {
-  onLogin: (email: string, password: string) => void;
+  onLogin: (userId: string, email: string, firstName: string, lastName: string) => void;
 }
 
-const ADMIN_EMAIL = 'johndoe@test.test';
-const ADMIN_PASSWORD = '123456';
+const API_BASE_URL = 'http://localhost:5275/api/auth';
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Check for success message from registration
+  const successMessage = location.state?.message;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +45,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           
           saveCurrentUserId(user.id);
           localStorage.setItem('username', `${user.firstName} ${user.lastName}`);
-          onLogin(email, password);
+          
+          // Call onLogin with full user data
+          onLogin(user.id, user.email, user.firstName || 'John', user.lastName || 'Doe');
           navigate('/home');
           return;
         } catch (err) {
@@ -61,17 +66,23 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           if (userData.email === email && userData.password === password) {
             // Try to get/create user in database
             try {
+              const nameParts = userData.name.split(' ');
+              const firstName = nameParts[0];
+              const lastName = nameParts.slice(1).join(' ') || 'User';
+              
               const user = await createOrGetUser({
                 email: userData.email,
                 password: userData.password,
-                firstName: userData.name.split(' ')[0],
-                lastName: userData.name.split(' ').slice(1).join(' ') || 'User'
+                firstName: firstName,
+                lastName: lastName
               });
               
               saveCurrentUserId(user.id);
               localStorage.setItem('username', userData.name);
-              onLogin(email, password);
-              navigate('/profile');
+              
+              // Call onLogin with full user data
+              onLogin(user.id, user.email, user.firstName || firstName, user.lastName || lastName);
+              navigate('/home');
               return;
             } catch (err) {
               console.error('Failed to create user in database:', err);
@@ -79,8 +90,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               const userId = userData.id || crypto.randomUUID();
               saveCurrentUserId(userId);
               localStorage.setItem('username', userData.name);
-              onLogin(email, password);
-              navigate('/profile');
+              
+              const nameParts = userData.name.split(' ');
+              onLogin(userId, email, nameParts[0], nameParts.slice(1).join(' ') || '');
+              navigate('/home');
               return;
             }
           }
@@ -89,8 +102,29 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         }
       }
 
-      // If we get here, credentials are invalid
-      setError('Invalid email or password. Please try again or register a new account.');
+      // Save user data
+      saveCurrentUserId(data.id);
+      
+      const fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'User';
+      localStorage.setItem('username', fullName);
+      
+      // Also update registeredUser for consistency
+      localStorage.setItem('registeredUser', JSON.stringify({
+        id: data.id,
+        name: fullName,
+        email: data.email,
+        password: password, // Keep for future reference
+      }));
+
+      onLogin(email, password);
+      navigate('/home');
+    } catch (err) {
+      console.error('❌ Login error:', err);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Invalid email or password. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -100,6 +134,19 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     <div className="auth-container">
       <div className="auth-card">
         <h2 className="auth-title">Welcome Back</h2>
+        
+        {successMessage && (
+          <div className="success-message" style={{ 
+            color: '#2c5f2d', 
+            marginBottom: '1rem', 
+            padding: '0.75rem',
+            backgroundColor: '#d4edda',
+            borderRadius: '8px',
+            textAlign: 'center'
+          }}>
+            ✓ {successMessage}
+          </div>
+        )}
         
         {error && (
           <div className="error-message" style={{ 
@@ -114,7 +161,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
         )}
         
-        <form onSubmit={handleSubmit}>
+        <div>
           <div className="form-group">
             <label className="form-label">Email</label>
             <input
@@ -142,10 +189,15 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             />
           </div>
           
-          <button type="submit" className="btn-primary" disabled={loading}>
+          <button 
+            type="button" 
+            className="btn-primary" 
+            disabled={loading}
+            onClick={handleSubmit}
+          >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
-        </form>
+        </div>
         
         <div className="auth-footer">
           <span className="auth-text">Don't have an account? </span>
