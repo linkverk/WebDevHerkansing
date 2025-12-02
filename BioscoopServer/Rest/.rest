@@ -1,0 +1,18 @@
+###
+POST http://localhost:5275/api/Review/Post
+Content-Type: application/json
+
+{
+  "id": "",
+  "userId": "14130273-39A2-4451-8AD7-0A7317891827",
+  "filmId": "5243C985-4825-4E06-BA3C-779171E93C96",
+  "rating": 5,
+  "description": "Love it !"
+}
+
+###
+
+DELETE http://localhost:5275/api/Review/27F5493F-3B7A-4B4A-A431-15A58C3643EA
+Content-Type: application/json
+
+###

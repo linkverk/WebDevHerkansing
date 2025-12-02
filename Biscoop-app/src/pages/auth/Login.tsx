@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { saveCurrentUserId, createOrGetUser } from '../../api/users';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { saveCurrentUserId } from '../../api/users';
 import './auth.css';
 
 export interface LoginProps {
   onLogin: (userId: string, email: string, firstName: string, lastName: string) => void;
 }
 
-const ADMIN_EMAIL = 'johndoe@test.test';
-const ADMIN_PASSWORD = '123456';
+const API_BASE_URL = 'http://localhost:5275/api/auth';
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Check for success message from registration
+  const successMessage = location.state?.message;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,8 +102,29 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         }
       }
 
-      // If we get here, credentials are invalid
-      setError('Invalid email or password. Please try again or register a new account.');
+      // Save user data
+      saveCurrentUserId(data.id);
+      
+      const fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'User';
+      localStorage.setItem('username', fullName);
+      
+      // Also update registeredUser for consistency
+      localStorage.setItem('registeredUser', JSON.stringify({
+        id: data.id,
+        name: fullName,
+        email: data.email,
+        password: password, // Keep for future reference
+      }));
+
+      onLogin(email, password);
+      navigate('/home');
+    } catch (err) {
+      console.error('❌ Login error:', err);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Invalid email or password. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -110,6 +134,19 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     <div className="auth-container">
       <div className="auth-card">
         <h2 className="auth-title">Welcome Back</h2>
+        
+        {successMessage && (
+          <div className="success-message" style={{ 
+            color: '#2c5f2d', 
+            marginBottom: '1rem', 
+            padding: '0.75rem',
+            backgroundColor: '#d4edda',
+            borderRadius: '8px',
+            textAlign: 'center'
+          }}>
+            ✓ {successMessage}
+          </div>
+        )}
         
         {error && (
           <div className="error-message" style={{ 
