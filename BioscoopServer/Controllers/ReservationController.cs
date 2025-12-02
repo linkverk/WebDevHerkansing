@@ -20,7 +20,7 @@ namespace Controllers
         {
             public Guid UserId { get; set; }
             public Guid ShowId { get; set; }
-            public List<string> SeatNumbers { get; set; } = new();
+            public List<int> SeatNumbers { get; set; } = new();
         }
 
         [HttpGet("show/{showId}/seats")]
