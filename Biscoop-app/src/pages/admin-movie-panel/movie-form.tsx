@@ -4,19 +4,11 @@ import type { MovieProp } from "../../utils/fake-data";
 interface MovieFormProps {
     selectedMovie: MovieProp;
     setSelectedMovie: React.Dispatch<React.SetStateAction<MovieProp>>;
-    poster: string | undefined;
-    setPoster: React.Dispatch<React.SetStateAction<string | undefined>>;
+    handlePosterUpload: (e: React.ChangeEvent<HTMLInputElement>, movieId: string) => void;
     handleSave: () => void;
 }
 
-const MovieForm: React.FC<MovieFormProps> = ({ selectedMovie, setSelectedMovie, poster, setPoster, handleSave }) => {
-
-    const handlePosterUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file && selectedMovie) {
-            setPoster(URL.createObjectURL(file));
-        }
-    };
+const MovieForm: React.FC<MovieFormProps> = ({ selectedMovie, setSelectedMovie, handlePosterUpload, handleSave }) => {
 
     return (
         <div className="form-top">
@@ -82,7 +74,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ selectedMovie, setSelectedMovie, 
 
             <div className="form-group">
                 <label>Poster Image:</label>
-                <input type="file" accept="image/*" onChange={handlePosterUpload} />
+                <input type="file" accept="image/*" onChange={(e) => handlePosterUpload(e, selectedMovie.id)} />
             </div>
 
             <button onClick={handleSave} className="save-button">

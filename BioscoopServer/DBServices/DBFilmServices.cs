@@ -15,9 +15,6 @@ namespace BioscoopServer.DBServices
         {
             return await _dbSet
             .AsNoTracking()
-            .Include(f => f.Shows)
-            .ThenInclude(s => s.Zaal)
-            .Include(f => f.Reviews)
             .ToListAsync();
         }
     }
