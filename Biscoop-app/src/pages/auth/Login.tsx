@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { saveCurrentUserId } from '../../api/users';
+import { saveCurrentUserId, loginUserAuth, createOrGetUser } from '../../api/users';
 import './auth.css';
 
 export interface LoginProps {
   onLogin: (userId: string, email: string, firstName: string, lastName: string) => void;
 }
 
-const API_BASE_URL = 'http://localhost:5275/api/auth';
+// Demo account credentials
+const ADMIN_EMAIL = 'johndoe@test.test';
+const ADMIN_PASSWORD = '123456';
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const navigate = useNavigate();
@@ -102,29 +104,37 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         }
       }
 
-      // Save user data
-      saveCurrentUserId(data.id);
-      
-      const fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'User';
-      localStorage.setItem('username', fullName);
-      
-      // Also update registeredUser for consistency
-      localStorage.setItem('registeredUser', JSON.stringify({
-        id: data.id,
-        name: fullName,
-        email: data.email,
-        password: password, // Keep for future reference
-      }));
+      // Try login with auth controller
+      try {
+        const data = await loginUserAuth({ email, password });
+        
+        // Save user data
+        saveCurrentUserId(data.id);
+        
+        const fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'User';
+        localStorage.setItem('username', fullName);
+        
+        // Also update registeredUser for consistency
+        localStorage.setItem('registeredUser', JSON.stringify({
+          id: data.id,
+          name: fullName,
+          email: data.email,
+          password: password, // Keep for future reference
+        }));
 
-      onLogin(email, password);
-      navigate('/home');
+        onLogin(data.id, data.email, data.firstName, data.lastName);
+        navigate('/home');
+      } catch (err) {
+        console.error('❌ Login error:', err);
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('Invalid email or password. Please try again.');
+        }
+      }
     } catch (err) {
       console.error('❌ Login error:', err);
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Invalid email or password. Please try again.');
-      }
+      setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }

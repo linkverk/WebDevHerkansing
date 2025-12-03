@@ -1,5 +1,6 @@
 // User API Service - Films Style with Database Support
 const API_BASE_URL = 'http://localhost:5275/api/Users';
+const AUTH_BASE_URL = 'http://localhost:5275/api/auth';
 
 export interface UserDTO {
   id?: string;
@@ -59,33 +60,6 @@ export interface FilmHistory {
   genre: string;
   duration: number;
   description: string;
-}
-
-// NEW: Login user via database
-export async function loginUser(credentials: LoginCredentials): Promise<UserProfile> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/Login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(credentials),
-    });
-    
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error('Invalid email or password');
-      }
-      throw new Error(`Login failed: ${response.status}`);
-    }
-    
-    const user = await response.json();
-    console.log('✅ Login successful:', user.id);
-    return user;
-  } catch (error) {
-    console.error("Login failed:", error);
-    throw error;
-  }
 }
 
 // NEW: Create or get user from database
@@ -239,14 +213,14 @@ export function clearCurrentUserId(): void {
   localStorage.removeItem('userId');
 }
 
-// Auth endpoints
+// Auth endpoints using the auth controller
 export async function registerUser(userData: {
   email: string;
   password: string;
   firstName?: string;
   lastName?: string;
 }): Promise<UserProfile> {
-  const response = await fetch(`${API_BASE_URL.replace('/Users', '/auth')}/register`, {
+  const response = await fetch(`${AUTH_BASE_URL}/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData),
@@ -259,11 +233,11 @@ export async function registerUser(userData: {
   return response.json();
 }
 
-export async function loginUser(email: string, password: string): Promise<UserProfile> {
-  const response = await fetch(`${API_BASE_URL.replace('/Users', '/auth')}/login`, {
+export async function loginUserAuth(credentials: LoginCredentials): Promise<UserProfile> {
+  const response = await fetch(`${AUTH_BASE_URL}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify(credentials),
   });
   
   if (!response.ok) {
@@ -274,7 +248,7 @@ export async function loginUser(email: string, password: string): Promise<UserPr
 }
 
 export async function logoutUser(userId?: string): Promise<void> {
-  await fetch(`${API_BASE_URL.replace('/Users', '/auth')}/logout`, {
+  await fetch(`${AUTH_BASE_URL}/logout`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ userId }),
