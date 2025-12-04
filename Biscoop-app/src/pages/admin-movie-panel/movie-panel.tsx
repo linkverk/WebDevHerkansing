@@ -61,13 +61,13 @@ function Movie_panel() {
             return;
         }
 
-        const requestOptions: RequestInit = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(selectedMovie),
-        };
-
         try {
+            const requestOptions: RequestInit = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(selectedMovie),
+            };
+
             const response = await fetch("http://localhost:5275/api/Films/AddOrUpdate",
                 requestOptions
             );
@@ -86,7 +86,8 @@ function Movie_panel() {
                 }
             }
             else {
-                alert("Film not saved, something went wrong.");
+                const text = await response.text();
+                alert(text);
             }
         } catch (err) {
             console.error("Failed to add or update movie:", err);

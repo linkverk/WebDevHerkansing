@@ -123,7 +123,8 @@ function Show_panel() {
                 }
             }
             else {
-                alert("Show not saved, something went wrong.");
+                const text = await response.text();
+                alert(text);
             }
         } catch (err) {
             console.error("Failed to add or update movie:", err);
