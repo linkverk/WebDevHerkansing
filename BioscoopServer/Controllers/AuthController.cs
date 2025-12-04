@@ -23,9 +23,9 @@ namespace Controllers
             _DBJwtService = DBJwtService;
         }
 
-        [HttpPost("register")]
+        [HttpPost("users")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterDTO registerModel)
+        public async Task<IActionResult> CreateUser([FromBody] RegisterDTO registerModel)
         {
             if (registerModel == null)
                 return BadRequest(new { message = "Registration data is required" });
@@ -64,7 +64,6 @@ namespace Controllers
                 Console.WriteLine($"✅ User registered: {user.Email} (ID: {user.Id})");
                 Console.WriteLine($"🔒 Password hashed and salted");
 
-                // Generate JWT token
                 var token = _DBJwtService.GenerateToken(user.Id.ToString(), user.Email);
 
                 var responseDto = new AuthResponseDTO
@@ -77,7 +76,7 @@ namespace Controllers
                     Message = "Registration successful"
                 };
 
-                return Ok(responseDto);
+                return CreatedAtAction(nameof(GetUser), new { id = user.Id }, responseDto);
             }
             catch (Exception ex)
             {
@@ -86,9 +85,9 @@ namespace Controllers
             }
         }
 
-        [HttpPost("login")]
+        [HttpPost("sessions")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginDTO loginModel)
+        public async Task<IActionResult> CreateSession([FromBody] LoginDTO loginModel)
         {
             if (loginModel == null)
                 return BadRequest(new { message = "Login data is required" });
@@ -125,7 +124,6 @@ namespace Controllers
 
             Console.WriteLine($"✅ User logged in: {user.Email} (ID: {user.Id})");
 
-            // Generate JWT token
             var token = _DBJwtService.GenerateToken(user.Id.ToString(), user.Email);
 
             var responseDto = new AuthResponseDTO
@@ -141,33 +139,13 @@ namespace Controllers
             return Ok(responseDto);
         }
 
-        [HttpPost("logout")]
-        public IActionResult Logout([FromBody] LogoutDTO? logoutModel)
+        [HttpDelete("sessions")]
+        [Authorize]
+        public IActionResult DeleteSession([FromBody] LogoutDTO? logoutModel)
         {
             var userId = logoutModel?.UserId ?? "unknown";
             Console.WriteLine($"✅ User logged out: {userId}");
             return NoContent();
-        }
-
-        // Keep legacy endpoints for backward compatibility
-        [HttpPost("users")]
-        [AllowAnonymous]
-        public async Task<IActionResult> CreateUser([FromBody] RegisterDTO registerModel)
-        {
-            return await Register(registerModel);
-        }
-
-        [HttpPost("sessions")]
-        [AllowAnonymous]
-        public async Task<IActionResult> CreateSession([FromBody] LoginDTO loginModel)
-        {
-            return await Login(loginModel);
-        }
-
-        [HttpDelete("sessions")]
-        public IActionResult DeleteSession([FromBody] LogoutDTO? logoutModel)
-        {
-            return Logout(logoutModel);
         }
 
         [HttpGet("users/{id}")]

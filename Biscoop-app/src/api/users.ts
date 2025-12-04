@@ -1,4 +1,4 @@
-// User API Service - Updated with JWT token handling
+// User API Service - Updated with JWT token handling and REST API structure
 const API_BASE_URL = 'http://localhost:5275/api/Users';
 const AUTH_BASE_URL = 'http://localhost:5275/api/auth';
 
@@ -71,7 +71,6 @@ export interface FilmHistory {
   description: string;
 }
 
-// Token management
 export function getAuthToken(): string | null {
   return localStorage.getItem('authToken');
 }
@@ -84,7 +83,6 @@ export function clearAuthToken(): void {
   localStorage.removeItem('authToken');
 }
 
-// Create headers with JWT token if available
 function getAuthHeaders(): HeadersInit {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
@@ -98,7 +96,6 @@ function getAuthHeaders(): HeadersInit {
   return headers;
 }
 
-// GET user profile by ID
 export async function getUserProfile(userId: string): Promise<UserProfile> {
   try {
     const response = await fetch(`${API_BASE_URL}/${userId}`, {
@@ -114,7 +111,6 @@ export async function getUserProfile(userId: string): Promise<UserProfile> {
   }
 }
 
-// UPDATE user profile (using PUT endpoint)
 export async function updateUserProfile(userId: string, userData: UserDTO): Promise<UserProfile> {
   try {
     const response = await fetch(`${API_BASE_URL}/${userId}`, {
@@ -132,7 +128,6 @@ export async function updateUserProfile(userId: string, userData: UserDTO): Prom
   }
 }
 
-// DELETE user account
 export async function deleteUserAccount(userId: string): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/${userId}`, {
@@ -148,7 +143,6 @@ export async function deleteUserAccount(userId: string): Promise<void> {
   }
 }
 
-// GET user film history
 export async function getUserHistory(userId: string): Promise<FilmHistory[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/${userId}/history`, {
@@ -164,7 +158,6 @@ export async function getUserHistory(userId: string): Promise<FilmHistory[]> {
   }
 }
 
-// ADD film to user history
 export async function addToUserHistory(userId: string, filmId: string): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/${userId}/history`, {
@@ -181,7 +174,6 @@ export async function addToUserHistory(userId: string, filmId: string): Promise<
   }
 }
 
-// GET user bookings
 export async function getUserBookings(userId: string): Promise<UserBooking[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/${userId}/bookings`, {
@@ -197,30 +189,26 @@ export async function getUserBookings(userId: string): Promise<UserBooking[]> {
   }
 }
 
-// Helper to get current user ID from localStorage
 export function getCurrentUserId(): string | null {
   return localStorage.getItem('userId');
 }
 
-// Helper to save user ID to localStorage
 export function saveCurrentUserId(userId: string): void {
   localStorage.setItem('userId', userId);
 }
 
-// Helper to clear user ID from localStorage
 export function clearCurrentUserId(): void {
   localStorage.removeItem('userId');
   clearAuthToken();
 }
 
-// Auth endpoints using the auth controller with JWT
 export async function registerUser(userData: {
   email: string;
   password: string;
   firstName?: string;
   lastName?: string;
 }): Promise<AuthResponse> {
-  const response = await fetch(`${AUTH_BASE_URL}/register`, {
+  const response = await fetch(`${AUTH_BASE_URL}/users`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData),
@@ -243,7 +231,7 @@ export async function registerUser(userData: {
 }
 
 export async function loginUserAuth(credentials: LoginCredentials): Promise<AuthResponse> {
-  const response = await fetch(`${AUTH_BASE_URL}/login`, {
+  const response = await fetch(`${AUTH_BASE_URL}/sessions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(credentials),
@@ -266,21 +254,34 @@ export async function loginUserAuth(credentials: LoginCredentials): Promise<Auth
 }
 
 export async function logoutUser(userId?: string): Promise<void> {
-  await fetch(`${AUTH_BASE_URL}/logout`, {
-    method: 'POST',
+  const response = await fetch(`${AUTH_BASE_URL}/sessions`, {
+    method: 'DELETE',
     headers: getAuthHeaders(),
     body: JSON.stringify({ userId }),
   });
+  
+  if (response.status === 204) {
+    clearAuthToken();
+    console.log('🔓 JWT token cleared');
+    return;
+  }
+
+  if (!response.ok) {
+    try {
+      const error = await response.json();
+      throw new Error(error.message || 'Logout failed');
+    } catch {
+      throw new Error('Logout failed');
+    }
+  }
   
   // Clear token on logout
   clearAuthToken();
   console.log('🔓 JWT token cleared');
 }
 
-// Legacy function - kept for backward compatibility
 export async function createOrGetUser(userData: UserDTO): Promise<UserProfile> {
   try {
-    // First, try to find user by email
     const response = await fetch(`${API_BASE_URL}?email=${encodeURIComponent(userData.email)}`, {
       headers: getAuthHeaders()
     });
