@@ -8,7 +8,7 @@ using BCrypt.Net;
 namespace Controllers
 {
     [ApiController]
-    [Route("api/auth")]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly DBUserService _DBUserService;
@@ -20,8 +20,9 @@ namespace Controllers
             _context = context;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDTO registerModel)
+        // POST api/auth/users - Register nieuwe gebruiker (CREATE user resource)
+        [HttpPost("users")]
+        public async Task<IActionResult> CreateUser([FromBody] RegisterDTO registerModel)
         {
             if (registerModel == null)
                 return BadRequest(new { message = "Registration data is required" });
@@ -35,7 +36,6 @@ namespace Controllers
             if (registerModel.Password.Length < 6)
                 return BadRequest(new { message = "Password must be at least 6 characters" });
 
-            // Check if user already exists
             var existingUser = await _DBUserService.GetByEmailAsync(registerModel.Email);
             if (existingUser != null)
             {
@@ -45,7 +45,6 @@ namespace Controllers
             // Hash the password with BCrypt (automatically generates salt)
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerModel.Password);
 
-            // Create new user with hashed password
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -72,7 +71,7 @@ namespace Controllers
                     Message = "Registration successful"
                 };
 
-                return Ok(responseDto);
+                return CreatedAtAction(nameof(GetUser), new { id = user.Id }, responseDto);
             }
             catch (Exception ex)
             {
@@ -81,8 +80,8 @@ namespace Controllers
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO loginModel)
+        [HttpPost("sessions")]
+        public async Task<IActionResult> CreateSession([FromBody] LoginDTO loginModel)
         {
             if (loginModel == null)
                 return BadRequest(new { message = "Login data is required" });
@@ -93,7 +92,6 @@ namespace Controllers
             if (string.IsNullOrWhiteSpace(loginModel.Password))
                 return BadRequest(new { message = "Password is required" });
 
-            // Find user by email
             var user = await _DBUserService.GetByEmailAsync(loginModel.Email);
             
             if (user == null)
@@ -101,7 +99,6 @@ namespace Controllers
                 return Unauthorized(new { message = "Invalid email or password" });
             }
 
-            // Verify password against hash
             bool isValidPassword = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.Password);
             
             if (!isValidPassword)
@@ -109,7 +106,7 @@ namespace Controllers
                 return Unauthorized(new { message = "Invalid email or password" });
             }
 
-            Console.WriteLine($"✅ User logged in: {user.Email} (ID: {user.Id})");
+            Console.WriteLine($"✅ Session created for user: {user.Email} (ID: {user.Id})");
 
             var responseDto = new AuthResponseDTO
             {
@@ -123,20 +120,17 @@ namespace Controllers
             return Ok(responseDto);
         }
 
-        [HttpPost("logout")]
-        public IActionResult Logout([FromBody] LogoutDTO? logoutModel)
-        {
-            // For a stateless API, logout is handled client-side
-            // This endpoint exists for completeness and future token invalidation
-            
+        [HttpDelete("sessions")]
+        public IActionResult DeleteSession([FromBody] LogoutDTO? logoutModel)
+        {   
             var userId = logoutModel?.UserId ?? "unknown";
-            Console.WriteLine($"✅ User logged out: {userId}");
+            Console.WriteLine($"✅ Session deleted for user: {userId}");
 
-            return Ok(new { message = "Logout successful" });
+            return NoContent();
         }
 
-        [HttpGet("verify")]
-        public async Task<IActionResult> VerifyUser([FromQuery] string id)
+        [HttpGet("users/{id}")]
+        public async Task<IActionResult> GetUser(string id)
         {
             if (!Guid.TryParse(id, out var userId))
             {
