@@ -3,11 +3,13 @@ using BioscoopServer.models;
 using BioscoopServer.DBServices;
 using BioscoopServer.Models.ModelsDTOs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly DBUserService _DBUserService;
@@ -79,6 +81,7 @@ namespace Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateUser([FromBody] UserDTO userModel)
         {
             if (userModel == null)
@@ -134,7 +137,7 @@ namespace Controllers
             existingUser.Email = userModel.Email;
             existingUser.FirstName = userModel.FirstName;
             existingUser.LastName = userModel.LastName;
-
+            
             if (!string.IsNullOrWhiteSpace(userModel.Password))
             {
                 existingUser.Password = userModel.Password;

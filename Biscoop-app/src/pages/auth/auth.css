@@ -84,6 +84,13 @@
   box-shadow: 0 4px 12px rgba(44, 95, 45, 0.4);
 }
 
+.btn-primary:disabled {
+  background: #1a3a1b;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 .auth-footer {
   text-align: center;
 }
@@ -107,10 +114,47 @@
   color: #8bb9e8;
 }
 
+.link-button:disabled {
+  color: #4a6786;
+  cursor: not-allowed;
+}
+
+.success-message,
+.error-message {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  text-align: center;
+  animation: slideDown 0.3s ease;
+}
+
+.success-message {
+  color: #2c5f2d;
+  background-color: #d4edda;
+  border: 1px solid #2c5f2d;
+}
+
+.error-message {
+  color: #e74c3c;
+  background-color: #fee;
+  border: 1px solid #e74c3c;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
     transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;

@@ -19,6 +19,7 @@ namespace BioscoopServer.Models.ModelsDTOs
         public string Email { get; set; } = null!;
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public string? Token { get; set; }
         public string Message { get; set; } = null!;
     }
 }

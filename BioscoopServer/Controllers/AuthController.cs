@@ -4,6 +4,7 @@ using BioscoopServer.DBServices;
 using BioscoopServer.Models.ModelsDTOs;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers
 {
@@ -13,16 +14,18 @@ namespace Controllers
     {
         private readonly DBUserService _DBUserService;
         private readonly CinemaContext _context;
+        private readonly DBJwtService _DBJwtService;
 
-        public AuthController(DBUserService DBUserService, CinemaContext context)
+        public AuthController(DBUserService DBUserService, CinemaContext context, DBJwtService DBJwtService)
         {
             _DBUserService = DBUserService;
             _context = context;
+            _DBJwtService = DBJwtService;
         }
 
-        // POST api/auth/users - Register nieuwe gebruiker (CREATE user resource)
-        [HttpPost("users")]
-        public async Task<IActionResult> CreateUser([FromBody] RegisterDTO registerModel)
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register([FromBody] RegisterDTO registerModel)
         {
             if (registerModel == null)
                 return BadRequest(new { message = "Registration data is required" });
@@ -42,7 +45,6 @@ namespace Controllers
                 return Conflict(new { message = "User with this email already exists" });
             }
 
-            // Hash the password with BCrypt (automatically generates salt)
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerModel.Password);
 
             var user = new User
@@ -62,16 +64,20 @@ namespace Controllers
                 Console.WriteLine($"✅ User registered: {user.Email} (ID: {user.Id})");
                 Console.WriteLine($"🔒 Password hashed and salted");
 
+                // Generate JWT token
+                var token = _DBJwtService.GenerateToken(user.Id.ToString(), user.Email);
+
                 var responseDto = new AuthResponseDTO
                 {
                     Id = user.Id.ToString(),
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
+                    Token = token,
                     Message = "Registration successful"
                 };
 
-                return CreatedAtAction(nameof(GetUser), new { id = user.Id }, responseDto);
+                return Ok(responseDto);
             }
             catch (Exception ex)
             {
@@ -80,8 +86,9 @@ namespace Controllers
             }
         }
 
-        [HttpPost("sessions")]
-        public async Task<IActionResult> CreateSession([FromBody] LoginDTO loginModel)
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginModel)
         {
             if (loginModel == null)
                 return BadRequest(new { message = "Login data is required" });
@@ -99,14 +106,27 @@ namespace Controllers
                 return Unauthorized(new { message = "Invalid email or password" });
             }
 
-            bool isValidPassword = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.Password);
+            bool isValidPassword;
+            try
+            {
+                isValidPassword = BCrypt.Net.BCrypt.Verify(loginModel.Password, user.Password);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ BCrypt verification error: {ex.Message}");
+                Console.WriteLine($"   Password hash: {user.Password}");
+                return StatusCode(500, new { message = "Authentication error. Please contact support." });
+            }
             
             if (!isValidPassword)
             {
                 return Unauthorized(new { message = "Invalid email or password" });
             }
 
-            Console.WriteLine($"✅ Session created for user: {user.Email} (ID: {user.Id})");
+            Console.WriteLine($"✅ User logged in: {user.Email} (ID: {user.Id})");
+
+            // Generate JWT token
+            var token = _DBJwtService.GenerateToken(user.Id.ToString(), user.Email);
 
             var responseDto = new AuthResponseDTO
             {
@@ -114,22 +134,44 @@ namespace Controllers
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                Token = token,
                 Message = "Login successful"
             };
 
             return Ok(responseDto);
         }
 
-        [HttpDelete("sessions")]
-        public IActionResult DeleteSession([FromBody] LogoutDTO? logoutModel)
-        {   
+        [HttpPost("logout")]
+        public IActionResult Logout([FromBody] LogoutDTO? logoutModel)
+        {
             var userId = logoutModel?.UserId ?? "unknown";
-            Console.WriteLine($"✅ Session deleted for user: {userId}");
-
+            Console.WriteLine($"✅ User logged out: {userId}");
             return NoContent();
         }
 
+        // Keep legacy endpoints for backward compatibility
+        [HttpPost("users")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateUser([FromBody] RegisterDTO registerModel)
+        {
+            return await Register(registerModel);
+        }
+
+        [HttpPost("sessions")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateSession([FromBody] LoginDTO loginModel)
+        {
+            return await Login(loginModel);
+        }
+
+        [HttpDelete("sessions")]
+        public IActionResult DeleteSession([FromBody] LogoutDTO? logoutModel)
+        {
+            return Logout(logoutModel);
+        }
+
         [HttpGet("users/{id}")]
+        [Authorize]
         public async Task<IActionResult> GetUser(string id)
         {
             if (!Guid.TryParse(id, out var userId))
