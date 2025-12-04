@@ -32,6 +32,7 @@ const ZaalForm: React.FC<ZaalFormProps> = ({ selectedZaal, setSelectedZaal, hand
                     }
                     placeholder="Enter number of rows"
                     min={0}
+                    max={20}
                 />
             </div>
 
@@ -47,6 +48,7 @@ const ZaalForm: React.FC<ZaalFormProps> = ({ selectedZaal, setSelectedZaal, hand
                     }
                     placeholder="Enter seats per row"
                     min={0}
+                    max={10}
                 />
             </div>
 

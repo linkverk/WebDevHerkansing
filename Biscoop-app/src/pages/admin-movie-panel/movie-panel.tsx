@@ -115,6 +115,7 @@ function Movie_panel() {
                 setSelectedMovie(emptyMovie);
                 setPoster(undefined);
                 setPosterObject(undefined);
+                alert("Film deleted succesfully.");
             }
             else {
                 alert("Film not delete, something went wrong.");
@@ -128,7 +129,7 @@ function Movie_panel() {
         <div className="movie-panel-container">
             <div className="movie-preview-side">
                 <div className="top"><h1>Preview</h1></div>
-                {(
+                {selectedMovie.id != "" && (
                     <MovieInfo
                         poster={poster}
                         id={selectedMovie.id}

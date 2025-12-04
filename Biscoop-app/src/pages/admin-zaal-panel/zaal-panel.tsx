@@ -36,6 +36,16 @@ function Zaal_panel() {
             return;
         }
 
+        if (selectedZaal.rijen > 20) {
+            alert("Number of rows can not be more than 20.");
+            return;
+        }
+
+        if (selectedZaal.stoelenPerRij > 10) {
+            alert("There is a maximum of 10 seats per row.");
+            return;
+        }
+
         const requestOptions: RequestInit = {
             method: "POST",
             headers: { "Content-Type": "application/json" },

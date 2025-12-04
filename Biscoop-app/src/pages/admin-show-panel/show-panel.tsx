@@ -169,14 +169,15 @@ function Show_panel() {
         const local = new Date(date.getTime() - offset * 60 * 1000);
         return local.toISOString().slice(0, 16);
     }
+    console.log(selectedMovie.id)
 
     return (
         <div className="movie-panel-container">
             <div className="movie-preview-side">
                 <div className="top"><h1>Preview</h1></div>
-                {selectedMovie != null && (
+                {selectedMovie.id != "" && (
                     <MovieInfo
-                        id={selectedMovie.id}
+                        id={selectedMovie.id as string}
                         name={selectedMovie?.name}
                         duration={selectedMovie.duration as number}
                         rating={selectedMovie.rating}
@@ -188,7 +189,7 @@ function Show_panel() {
                         textClass="movie-preview-info"
                     />
                 )}
-                {selectedzaal != null &&
+                {selectedzaal.id != "" &&
                     <div id="info">
                         <div>
                             <span className="label">Show name:</span> {selectedzaal?.naam}
@@ -228,7 +229,7 @@ function Show_panel() {
                     />
 
                     <GenericSelect<ZaalProp>
-                        title="Select a Show"
+                        title="Select a Room"
                         items={rooms}
                         selectedItem={selectedzaal}
                         setSelectedItem={setSelectedZaal}

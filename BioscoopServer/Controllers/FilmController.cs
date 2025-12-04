@@ -31,7 +31,7 @@ namespace Controllers
         public async Task<IActionResult> GetFilmByIdFull([FromQuery] string id)
         {
             var film = await _DBFilmService.GetFilmByIdFull(Guid.Parse(id));
-            if(film == null)
+            if (film == null)
             {
                 return BadRequest($"Film with id {id} was not found");
             }
@@ -63,8 +63,13 @@ namespace Controllers
             if (!Directory.Exists(rootPath))
                 Directory.CreateDirectory(rootPath);
 
-            var fileName = $"movie_{id}{Path.GetExtension(poster.FileName)}";
+            var existingFiles = Directory.GetFiles(rootPath, $"movie_{id}.*");
+            foreach (var file in existingFiles)
+            {
+                System.IO.File.Delete(file);
+            }
 
+            var fileName = $"movie_{id}{Path.GetExtension(poster.FileName)}";
             var filePath = Path.Combine(rootPath, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -104,17 +109,12 @@ namespace Controllers
             if (!Guid.TryParse(filmModel.Id, out Guid filmId))
                 return BadRequest("Film Id is invalid");
 
-            var extensions = new[] { ".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".avif", ".PNG", ".JPG", ".JPEG", ".GIF", "WEBP", ".BMP", ".TIFF", ".AVIF" };
-            var basePath = Path.Combine(Directory.GetCurrentDirectory(), "../Biscoop-app/public/images");
+            var rootPath = Path.Combine(Directory.GetCurrentDirectory(), "../Biscoop-app/public/images");
 
-            foreach (var ext in extensions)
+            var existingFiles = Directory.GetFiles(rootPath, $"movie_{filmId}.*");
+            foreach (var file in existingFiles)
             {
-                var posterPath = Path.Combine(basePath, $"movie_{filmModel.Id}{ext}");
-                if (System.IO.File.Exists(posterPath))
-                {
-                    System.IO.File.Delete(posterPath);
-                    break;
-                }
+                System.IO.File.Delete(file);
             }
 
             var film = new Film
