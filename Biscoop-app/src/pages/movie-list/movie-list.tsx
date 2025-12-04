@@ -35,7 +35,7 @@ function MovieList() {
 
     const fetchAllMoviesFull = async () => {
         try {
-            const response = await fetch("http://localhost:5275/api/Films/GetAllFull")
+            const response = await fetch("http://localhost:5275/api/Films", {method: "GET"})
             const data: MoviePropFull[] = await response.json();
             setMoviesFull(data);
         } catch (error) {

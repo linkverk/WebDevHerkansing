@@ -11,24 +11,24 @@ namespace BioscoopServer.DBServices
             return existing != null;
         }
 
-        public override async Task<Film?> AddOrUpdateAsync(Film entity)
+        public override async Task<bool> Valid(Film entity)
         {
             Film? completeFilm = await GetFilmByIdFull(entity.Id);
-            if(completeFilm == null || completeFilm.Shows.Count() == 0)
+            if (completeFilm == null || completeFilm.Shows.Count() == 0)
             {
-                return await base.AddOrUpdateAsync(entity);
+                return true;
             }
             else
             {
-                foreach(Show show in completeFilm.Shows)
+                foreach (Show show in completeFilm.Shows)
                 {
-                    if(show.EndDate - show.StartDate < TimeSpan.FromMinutes((Double)entity.Duration))
+                    if (show.EndDate - show.StartDate < TimeSpan.FromMinutes((Double)entity.Duration))
                     {
-                        return null;
+                        return false;
                     }
                 }
             }
-            return await base.AddOrUpdateAsync(entity);
+            return true;
         }
 
         public async Task<Film?> GetFilmByIdFull(Guid id)

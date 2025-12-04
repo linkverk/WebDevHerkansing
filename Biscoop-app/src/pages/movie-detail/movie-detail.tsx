@@ -110,7 +110,7 @@ function Movie_detail() {
 
     const fetchAllMoviesFull = async () => {
         try {
-            const response = await fetch(`http://localhost:5275/api/Films/GetById/Full?id=${movieId}`)
+            const response = await fetch(`http://localhost:5275/api/Films/${movieId}`)
             const data: MoviePropFull = await response.json();
             setMovieFull(data);
         } catch (error) {
