@@ -39,7 +39,7 @@ namespace Controllers
             if (user == null)
                 return BadRequest($"There is no user with this id: {userId}");
 
-            var review = new Review
+            Review review = new Review
             {
                 Id = Guid.NewGuid(),
                 UserId = userId,
@@ -50,7 +50,7 @@ namespace Controllers
 
             var addedReview = await _DBReviewService.AddAsync(review);
 
-            var responseDTO = new ReviewDTO
+            ReviewDTO responseDTO = new ReviewDTO
             {
                 Id = addedReview.Id.ToString(),
                 UserId = addedReview.UserId.ToString(),
@@ -122,5 +122,38 @@ namespace Controllers
             return Ok(reviewDTO);
         }
 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateReview(Guid id, [FromBody] ReviewUpdateDTO UpdatedReview)
+        {
+            Review? existingReview = await _context.Reviews.FindAsync(id);
+
+            if (existingReview == null)
+                return NotFound($"No review found with id: {id}");
+
+            if (UpdatedReview == null)
+                return BadRequest("Nothing was filled in.");
+
+            if (UpdatedReview.Rating < 1 || UpdatedReview.Rating > 5)
+                return BadRequest("Rating must be between 1 and 5.");
+
+            if (UpdatedReview.Rating.HasValue)
+                existingReview.Rating = UpdatedReview.Rating.Value;
+
+            if (!string.IsNullOrWhiteSpace(UpdatedReview.Description))
+                existingReview.Description = UpdatedReview.Description;
+
+            Review updatedReview = await _DBReviewService.UpdateAsync(existingReview);
+
+            ReviewDTO responseDTO = new ReviewDTO
+            {
+                Id = updatedReview.Id.ToString(),
+                UserId = updatedReview.UserId.ToString(),
+                FilmId = updatedReview.FilmId.ToString(),
+                Rating = updatedReview.Rating,
+                Description = updatedReview.Description
+            };
+
+            return Ok(responseDTO);
+        }
     }
 }
