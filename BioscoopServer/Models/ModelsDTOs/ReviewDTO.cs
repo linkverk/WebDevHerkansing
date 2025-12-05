@@ -12,4 +12,11 @@ namespace BioscoopServer.Models.ModelsDTOs
         public string? Description {get; set;}
 
     }
+
+    public class ReviewUpdateDTO
+    {
+        public int? Rating { get; set; }
+
+        public string? Description { get; set; }
+    }
 }
