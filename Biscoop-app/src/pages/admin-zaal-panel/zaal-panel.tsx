@@ -102,7 +102,7 @@ function Zaal_panel() {
         }
 
         if(selectedZaal.shows.length != 0){
-            alert("this room has shows.");
+            alert("this room has shows, first delete these shows.");
             return;
         }
 

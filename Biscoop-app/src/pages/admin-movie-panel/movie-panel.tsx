@@ -123,7 +123,7 @@ function Movie_panel() {
 
         if(selectedMovie.shows.length != 0)
         {
-            alert("This movie has shows");
+            alert("This movie has shows, first delete these shows.");
             return;
         }
 
