@@ -58,5 +58,72 @@ namespace BioscoopServer.DBServices
 
             return reservation;
         }
+        public async Task<Reservation?> UpdateReservationSeatsAsync(Guid reservationId, Guid userId, List<int> newSeatNumbers)
+        {
+            // load reservation including seats
+            var reservation = await _context.Reservations
+                .Include(r => r.Seats)
+                .FirstOrDefaultAsync(r => r.Id == reservationId && r.UserId == userId);
+
+            if (reservation == null)
+            {
+                return null; // not found or not user's reservation
+            }
+
+            if (newSeatNumbers == null || !newSeatNumbers.Any())
+            {
+                // optionally: clear all seats, or treat as invalid
+                return null;
+            }
+
+            // find conflicts: seats in this show reserved by OTHERS
+            var conflicts = await _context.Seats
+                .AsNoTracking()
+                .Where(s =>
+                    s.Reservation.ShowId == reservation.ShowId &&
+                    s.Reservation.Id != reservation.Id &&          // other reservations
+                    newSeatNumbers.Contains(s.Stoelnummer))
+                .Select(s => s.Stoelnummer)
+                .ToListAsync();
+
+            if (conflicts.Any())
+            {
+                // you could return null or throw; keeping same pattern as CreateReservationAsync
+                return null;
+            }
+
+            // remove old seats
+            _context.Seats.RemoveRange(reservation.Seats);
+
+            // add new seats
+            reservation.Seats = newSeatNumbers.Select(sn => new Seat
+            {
+                Id = Guid.NewGuid(),
+                Stoelnummer = sn
+            }).ToList();
+
+            await _context.SaveChangesAsync();
+            return reservation;
+        }
+
+        public async Task<bool> DeleteReservationAsync(Guid reservationId, Guid userId)
+        {
+            var reservation = await _context.Reservations
+                .Include(r => r.Seats)
+                .FirstOrDefaultAsync(r => r.Id == reservationId && r.UserId == userId);
+
+            if (reservation == null)
+            {
+                return false;
+            }
+
+            // EF will cascade if configured; otherwise explicitly remove seats
+            _context.Seats.RemoveRange(reservation.Seats);
+            _context.Reservations.Remove(reservation);
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

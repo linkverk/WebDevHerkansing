@@ -1,6 +1,5 @@
 {
   "devDependencies": {
-<<<<<<< HEAD
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
     "@types/react-router-dom": "^5.3.3",
@@ -11,9 +10,5 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.6"
-=======
-    "@vitejs/plugin-react": "^5.1.1",
-    "vite": "^7.2.6"
->>>>>>> origin/16-screening-page-bug-fixes
   }
 }
