@@ -17,7 +17,7 @@ function Show_panel() {
 
     const fetchAllMovies = async () => {
         try {
-            const response = await fetch("http://localhost:5275/api/Films/GetAll")
+            const response = await fetch("http://localhost:5275/api/Films")
             const data: MovieProp[] = await response.json();
             setMovies(data);
         } catch (error) {

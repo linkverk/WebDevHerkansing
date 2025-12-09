@@ -10,7 +10,7 @@ namespace Controllers
     public class PosterController : ControllerBase
     {
         [HttpPost()]
-        public async Task<IActionResult> DeletePoster([FromQuery] string id, IFormFile poster)
+        public async Task<IActionResult> UploadPoster([FromQuery] string id, IFormFile poster)
         {
             if (poster == null || poster.Length == 0)
                 return BadRequest("No file uploaded.");
@@ -36,7 +36,7 @@ namespace Controllers
         }
 
         [HttpDelete()]
-        public async Task<IActionResult> UploadPoster([FromQuery] string id)
+        public async Task<IActionResult> DeletePoster([FromQuery] string id)
         {
             var rootPath = Path.Combine(Directory.GetCurrentDirectory(), "../Biscoop-app/public/images");
 
