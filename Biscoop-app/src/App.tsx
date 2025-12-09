@@ -17,7 +17,7 @@ import EditProfile from './pages/profile/EditProfile';
 import History from './pages/profile/History';
 import UserContext from './context/UserContext'
 import Bookings from './pages/bookings/Bookings';
-import { getCurrentUserId, getUserProfile } from './api/users';
+import { getCurrentUserId, getUserProfile, getAuthToken, clearAuthToken, clearCurrentUserId } from './api/users';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -29,7 +29,9 @@ function App() {
   useEffect(() => {
     const checkExistingSession = async () => {
       const userId = getCurrentUserId();
-      if (userId) {
+      const token = getAuthToken();
+      
+      if (userId && token) {
         try {
           const profile = await getUserProfile(userId);
           const fullName = `${profile.firstName} ${profile.lastName}`.trim();
@@ -42,9 +44,18 @@ function App() {
           setIsAuthenticated(true);
           console.log('✅ Session restored for user:', fullName);
         } catch (error) {
-          console.error('Failed to restore session:', error);
-          // Clear invalid session
-          localStorage.removeItem('userId');
+          console.error('❌ Failed to restore session:', error);
+          // Clear invalid session - both userId AND token
+          clearCurrentUserId();
+          clearAuthToken();
+          console.log('🔓 Invalid session cleared');
+        }
+      } else {
+        // Als userId of token ontbreekt, clear alles
+        if (userId || token) {
+          console.log('⚠️ Incomplete session data, clearing...');
+          clearCurrentUserId();
+          clearAuthToken();
         }
       }
       setLoading(false);
@@ -68,10 +79,12 @@ function App() {
   const handleLogout = () => {
     setIsAuthenticated(false);
     setUser({ id: '', name: '', email: '', points: 0 });
-    localStorage.removeItem('userId');
+    clearCurrentUserId();
+    clearAuthToken();  // ✅ TOEGEVOEGD
     localStorage.removeItem('username');
     localStorage.removeItem('userProfile');
-    console.log('✅ User logged out');
+    localStorage.removeItem('registeredUser');
+    console.log('✅ User logged out - all auth data cleared');
   }
 
   if (loading) {
