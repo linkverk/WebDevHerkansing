@@ -27,7 +27,7 @@ function Show_panel() {
 
     const fetchAllRooms = async () => {
         try {
-            const response = await fetch("http://localhost:5275/api/Rooms/GetAll")
+            const response = await fetch("http://localhost:5275/api/Rooms")
             const data: ZaalProp[] = await response.json();
             setRooms(data);
         } catch (error) {
