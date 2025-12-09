@@ -3,27 +3,7 @@ import GenericSelect from "../../components/generic-select";
 import MovieInfo from "../movie-detail/MovieInfo";
 import MovieForm from "./movie-form";
 import "./movie-panel.css";
-import type { Review, ZaalProp } from "../../utils/fake-data";
-
-export interface ShowPropWithZaal {
-    id: string;
-    startDate: Date;
-    endDate: Date;
-    movieId: string;
-    zaalId: string;
-    zaal: ZaalProp;
-}
-
-export interface MoviePropFull {
-    id: string;
-    name: string;
-    duration: number;
-    rating: string;
-    genre: string;
-    description: string;
-    shows: ShowPropWithZaal[];
-    reviews: Review[];
-}
+import type { MoviePropFull } from "../../props/props";
 
 function Movie_panel() {
     useEffect(() => {

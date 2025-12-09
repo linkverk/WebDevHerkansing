@@ -1,22 +1,9 @@
 import { useState, useEffect } from "react";
 import GenericSelect from "../../components/generic-select";
+import { type ZaalPropFull} from "../../props/props";
 import ZaalForm from "./zaal-form";
 import Seats from '../../components/Seats';
 import "./zaal-panel.css";
-export interface ShowProp {
-  id: string;
-  startDate: Date | undefined;
-  endDate: Date |undefined;
-  filmId: string;
-  roomId: string;
-}
-export interface ZaalPropFull {
-  id: string;
-  naam: string;
-  rijen: number;
-  stoelenPerRij: number;
-  shows: ShowProp[]
-}
 
 function Zaal_panel() {
     useEffect(() => {

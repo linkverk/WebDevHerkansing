@@ -1,17 +1,9 @@
 import { useState, useEffect } from "react";
 import { formatDateForShowing } from "../../utils/date-fromatter";
 import MovieInfo from "../movie-detail/MovieInfo";
-import { type ZaalProp, type MovieProp, type ShowProp } from "../../utils/fake-data";
+import { type ShowProp, type MovieProp, type ZaalProp  } from "../../props/props";
 import GenericSelect from "../../components/generic-select";
 import "./show-panel.css";
-
-export interface ZaalPropFull {
-  id: string;
-  naam: string;
-  rijen: number;
-  stoelenPerRij: number;
-  shows: ShowProp[]
-}
 
 function Show_panel() {
     useEffect(() => {
