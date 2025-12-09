@@ -16,8 +16,8 @@ namespace Controllers
             _DBShowService = DBShowService;
         }
 
-        [HttpGet("GetById")]
-        public async Task<IActionResult> GetShowById([FromQuery] string id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetShowById(string id)
         {
             var Show = await _DBShowService.GetByIdAsync(Guid.Parse(id));
             if (Show == null)
@@ -27,15 +27,15 @@ namespace Controllers
             return Ok(Show);
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet()]
         public async Task<IActionResult> GetAllShows()
         {
             var Shows = await _DBShowService.GetAllAsync();
             return Ok(Shows);
         }
 
-        [HttpPost("AddOrUpdate")]
-        public async Task<IActionResult> AddOrUpdateShow([FromBody] ShowDTO ShowModel)
+        [HttpPost()]
+        public async Task<IActionResult> AddShow([FromBody] ShowDTO ShowModel)
         {
             if (ShowModel == null)
                 return BadRequest("Show is required.");
@@ -57,8 +57,8 @@ namespace Controllers
 
                 };
 
-                var addedShow = await _DBShowService.AddOrUpdateAsync(Show);
-                if(addedShow == null)
+                var addedShow = await _DBShowService.AddValidAsync(Show);
+                if (addedShow == null)
                 {
                     return BadRequest("There is already a show in this room at this time.");
                 }
@@ -68,18 +68,19 @@ namespace Controllers
             {
                 return BadRequest("Invalid show");
             }
-
         }
-        [HttpPost("Delete")]
-        public async Task<IActionResult> DeleteShow([FromBody] ShowDTO ShowModel)
+
+        [HttpPatch()]
+        public async Task<IActionResult> UpdateShow([FromBody] ShowDTO ShowModel)
         {
             if (ShowModel == null)
                 return BadRequest("Show is required.");
 
             Guid ShowId;
+            Guid.TryParse(ShowModel.Id, out ShowId);
             Guid FilmId;
             Guid RoomId;
-            if (Guid.TryParse(ShowModel.Id, out ShowId) && Guid.TryParse(ShowModel.FilmId, out FilmId) && Guid.TryParse(ShowModel.RoomId, out RoomId))
+            if (Guid.TryParse(ShowModel.FilmId, out FilmId) && Guid.TryParse(ShowModel.RoomId, out RoomId))
             {
 
                 var Show = new Show
@@ -89,14 +90,32 @@ namespace Controllers
                     RoomId = RoomId,
                     StartDate = ShowModel.startDate,
                     EndDate = ShowModel.endDate
+
                 };
-                await _DBShowService.DeleteAsync(Show);
-                return Ok();
+
+                var addedShow = await _DBShowService.UpdateValidAsync(Show);
+                if (addedShow == null)
+                {
+                    return BadRequest("There is already a show in this room at this time.");
+                }
+                return Ok(addedShow);
             }
             else
             {
-                return BadRequest("Show Id is invalid");
+                return BadRequest("Invalid show");
             }
+        }
+
+        [HttpDelete("")]
+        public async Task<IActionResult> DeleteShow([FromQuery] string id)
+        {
+            var show = await _DBShowService.GetByIdAsync(Guid.Parse(id));
+            if (show == null)
+            {
+                return BadRequest($"show with id {id} was not found");
+            }
+            await _DBShowService.DeleteAsync(show);
+            return NoContent();
         }
     }
 }
