@@ -20,7 +20,7 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
             <span className="label">{review.name}</span>
             <span className="review-rating">{renderStars(review.rating)}</span>
           </div>
-          <div className="review-text">{review.text}</div>
+          <div className="review-text">{review.description}</div>
         </div>
       ))}
     </div>

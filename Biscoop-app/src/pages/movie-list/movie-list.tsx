@@ -7,8 +7,8 @@ import type { Review, ZaalProp } from "../../utils/fake-data";
 
 export interface ShowPropWithZaal {
   id: string;
-  start_date: Date;
-  end_date: Date;
+  startDate: Date;
+  endDate: Date;
   movieId: string;
   zaalId: string;
   zaal: ZaalProp;
@@ -61,11 +61,12 @@ function MovieList() {
             {moviesFull.map((item) => (
                 <div className="movie-list-part">
                     <MovieInfo
+                        id={item.id}
                         name={item.name ?? "N/A"}
                         duration={item.duration ?? 0}
                         rating={item.rating ?? "N/A"}
                         genre={item.genre ?? "N/A"}
-                        stars={renderStars(averageRating(item.reviews.filter(r => r.movieId === item.id)))}
+                        stars={renderStars(averageRating(item.reviews.filter(r => r.filmId === item.id)))}
                         includeDescription={false}
                         className="movie-info-list"
                         posterClass="poster-movielist"

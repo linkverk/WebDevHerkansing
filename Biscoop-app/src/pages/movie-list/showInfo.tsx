@@ -6,8 +6,8 @@ import { formatDateForShowing } from "../../utils/date-fromatter";
 
 export interface ShowPropWithZaal {
   id: string;
-  start_date: Date;
-  end_date: Date;
+  startDate: Date;
+  endDate: Date;
   movieId: string;
   zaalId: string;
   zaal: ZaalProp;
@@ -29,8 +29,8 @@ const ShowInfo: React.FC<ShowInfoProps> = ({ shows, button }) => {
           <div key={show.id} className="voorstelling-card">
             <div>zaal: {show.zaal?.naam ?? "N/A"}</div>
             <div>Stoelen: {totalSeats}</div>
-            <div>start date: {formatDateForShowing(show.start_date)}</div>
-            <div>end date: {formatDateForShowing(show.end_date)}</div>
+            <div>start date: {formatDateForShowing(show.startDate)}</div>
+            <div>end date: {formatDateForShowing(show.endDate)}</div>
             {button && show.zaal &&
               <Link
                 key={show.zaal.id ?? "N/A"}

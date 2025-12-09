@@ -24,7 +24,7 @@ function NavBalk({ isAuthenticated = false }: NavBalkProps) {
   const allItems = [...authItems];
 
   return (
-    <div className="nav-balk">
+    <nav className="nav-balk">
       <div className="nav-items">
         {allItems.map((item) => (
           <Link
@@ -38,7 +38,7 @@ function NavBalk({ isAuthenticated = false }: NavBalkProps) {
           </Link>
         ))}
       </div>
-    </div>
+    </nav>
   );
 }
 

@@ -53,7 +53,7 @@ public abstract class DBDefaultService<TEntity> where TEntity : class
 
             _dbSet.Update(entity);
             await _context.SaveChangesAsync();
-            return existing;
+            return entity;
         }
         else
         {

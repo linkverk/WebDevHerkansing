@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '../../context/UserContext';
+import { clearCurrentUserId } from '../../api/users';
 import './loged-in-user.css';
 import bowingGif from '../../assets/bowing-gif.gif';
 
@@ -9,9 +11,10 @@ type Props = {
 
 const LogedInUser: React.FC<Props> = ({ username }) => {
   const navigate = useNavigate();
+  const { user, setUser, setIsAuthenticated } = useUserContext();
 
-  // Prefer prop, fallback to localStorage, then 'User'
-  const name = username ?? localStorage.getItem('username') ?? 'User';
+  // Use context user name, then prop, then localStorage as fallbacks
+  const name = user.name || username || localStorage.getItem('username') || 'User';
 
   function handleBrowse() {
     navigate('/movie_list');
@@ -26,21 +29,33 @@ const LogedInUser: React.FC<Props> = ({ username }) => {
   }
 
   function handleLogout() {
-    // Clear common auth keys (adjust keys if your app uses different names)
-    localStorage.removeItem('token');
+    // Clear auth state
+    setIsAuthenticated(false);
+    setUser({ id: '', name: '', email: '', points: 0 });
+    
+    // Clear localStorage
+    clearCurrentUserId();
     localStorage.removeItem('username');
+    localStorage.removeItem('userProfile');
+    localStorage.removeItem('token');
+    
     navigate('/login');
   }
 
   return (
     <div className="logged-in-page">
       <section className="li-quick">
-          <button className="li-logout" onClick={handleLogout}>Logout</button>
+        <button className="li-logout" onClick={handleLogout}>Logout</button>
       </section>
       <header className="li-header">
         <img src={bowingGif} alt="bowing gif" style={{ width: "500px", height: "300px" }} />
         <h1 className="li-title">Welcome back, <span className="li-username">{name}</span>!</h1>
         <p className="li-sub">Find your upcoming screenings, manage bookings, or browse new movies.</p>
+        {user.id && (
+          <p className="li-user-id" style={{ fontSize: '0.8rem', color: '#666', marginTop: '8px' }}>
+            User ID: {user.id}
+          </p>
+        )}
       </header>
 
       <main className="li-main">

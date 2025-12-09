@@ -1,0 +1,34 @@
+### Create Review
+POST http://localhost:5275/api/Review/Post
+Content-Type: application/json
+
+{
+  "id": "",
+  "userId": "3B84AD03-DABC-45C6-AB69-FB53C0938CA0",
+  "filmId": "5243C985-4825-4E06-BA3C-779171E93C96",
+  "rating": 5,
+  "description": "Love it !"
+}
+
+### Delete Review
+
+DELETE http://localhost:5275/api/Review/27F5493F-3B7A-4B4A-A431-15A58C3643EA
+Content-Type: application/json
+
+### Get Reviews by id
+GET http://localhost:5275/api/Review/D1E4C5E8-E0B3-45B5-BE0C-E7DDF1A44C88
+Content-Type: application/json
+
+### Get All Reviews
+GET http://localhost:5275/api/Review/GetAll
+Content-Type: application/json
+
+### Review update
+
+PATCH http://localhost:5275/api/Review/9D047ECC-8CCD-4C04-919B-BB75689DE32B
+Content-Type: application/json
+
+{
+  "rating": 5,
+  "description": "Update test 2"
+}

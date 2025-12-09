@@ -1,5 +1,6 @@
 // User API Service - Films Style with Database Support
 const API_BASE_URL = 'http://localhost:5275/api/Users';
+const AUTH_BASE_URL = 'http://localhost:5275/api/auth';
 
 export interface UserDTO {
   id?: string;
@@ -14,6 +15,11 @@ export interface UserProfile {
   email: string;
   firstName: string;
   lastName: string;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
 }
 
 export interface UserBooking {
@@ -205,4 +211,46 @@ export function saveCurrentUserId(userId: string): void {
 // Helper to clear user ID from localStorage
 export function clearCurrentUserId(): void {
   localStorage.removeItem('userId');
+}
+
+// Auth endpoints using the auth controller
+export async function registerUser(userData: {
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+}): Promise<UserProfile> {
+  const response = await fetch(`${AUTH_BASE_URL}/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData),
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Registration failed');
+  }
+  return response.json();
+}
+
+export async function loginUserAuth(credentials: LoginCredentials): Promise<UserProfile> {
+  const response = await fetch(`${AUTH_BASE_URL}/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credentials),
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Login failed');
+  }
+  return response.json();
+}
+
+export async function logoutUser(userId?: string): Promise<void> {
+  await fetch(`${AUTH_BASE_URL}/logout`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId }),
+  });
 }
