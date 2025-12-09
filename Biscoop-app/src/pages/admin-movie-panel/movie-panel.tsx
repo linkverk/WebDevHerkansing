@@ -1,26 +1,48 @@
 import { useState, useEffect } from "react";
 import GenericSelect from "../../components/generic-select";
-import type { MovieProp } from "../../utils/fake-data";
 import MovieInfo from "../movie-detail/MovieInfo";
 import MovieForm from "./movie-form";
 import "./movie-panel.css";
+import type { Review, ZaalProp } from "../../utils/fake-data";
+
+export interface ShowPropWithZaal {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+    movieId: string;
+    zaalId: string;
+    zaal: ZaalProp;
+}
+
+export interface MoviePropFull {
+    id: string;
+    name: string;
+    duration: number;
+    rating: string;
+    genre: string;
+    description: string;
+    shows: ShowPropWithZaal[];
+    reviews: Review[];
+}
 
 function Movie_panel() {
     useEffect(() => {
         fetchAllMovies();
     }, []);
 
-    const [movies, setMovies] = useState<MovieProp[]>([]);
-    const emptyMovie: MovieProp = {
+    const [movies, setMovies] = useState<MoviePropFull[]>([]);
+    const emptyMovie: MoviePropFull = {
         id: '',
         name: '',
         duration: 0,
         rating: '',
         genre: '',
         description: '',
+        shows: [],
+        reviews:[],
     };
 
-    const [selectedMovie, setSelectedMovie] = useState<MovieProp>(emptyMovie);
+    const [selectedMovie, setSelectedMovie] = useState<MoviePropFull>(emptyMovie);
     const [poster, setPoster] = useState<string | undefined>(undefined);
     const [posterObject, setPosterObject] = useState<React.ChangeEvent<HTMLInputElement> | undefined>(undefined);
 
@@ -53,7 +75,7 @@ function Movie_panel() {
     const fetchAllMovies = async () => {
         try {
             const response = await fetch("http://localhost:5275/api/Films", { method: "GET" })
-            const data: MovieProp[] = await response.json();
+            const data: MoviePropFull[] = await response.json();
             setMovies(data);
         } catch (error) {
             console.error("Failed to fetch movies:", error);
@@ -75,7 +97,7 @@ function Movie_panel() {
                 });
                 if (response.ok) {
                     alert("Film added succesfully.");
-                    const data: MovieProp = await response.json();
+                    const data: MoviePropFull = await response.json();
                     setMovies([...movies, data]);
                     setSelectedMovie(data);
                     if (posterObject) {
@@ -99,7 +121,7 @@ function Movie_panel() {
                 });
                 if (response.ok) {
                     alert("Film updated succesfully.");
-                    const data: MovieProp = await response.json();
+                    const data: MoviePropFull = await response.json();
                     setMovies(movies.map((m) => (m.id === data.id ? data : m)));
                     setSelectedMovie(data);
                 }
@@ -116,6 +138,12 @@ function Movie_panel() {
     const handleDelete = async () => {
         if (selectedMovie.id === "") {
             alert("Please select a movie.");
+            return;
+        }
+
+        if(selectedMovie.shows.length != 0)
+        {
+            alert("This movie has shows");
             return;
         }
 
@@ -173,7 +201,7 @@ function Movie_panel() {
                 </div>
 
                 <div className="form-bottom">
-                    <GenericSelect<MovieProp>
+                    <GenericSelect<MoviePropFull>
                         title="Select a Movie"
                         items={movies}
                         selectedItem={selectedMovie}

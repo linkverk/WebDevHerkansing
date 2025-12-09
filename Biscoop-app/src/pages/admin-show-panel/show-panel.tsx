@@ -4,6 +4,15 @@ import MovieInfo from "../movie-detail/MovieInfo";
 import { type ZaalProp, type MovieProp, type ShowProp } from "../../utils/fake-data";
 import GenericSelect from "../../components/generic-select";
 import "./show-panel.css";
+
+export interface ZaalPropFull {
+  id: string;
+  naam: string;
+  rijen: number;
+  stoelenPerRij: number;
+  shows: ShowProp[]
+}
+
 function Show_panel() {
     useEffect(() => {
         fetchAllMovies();

@@ -28,9 +28,9 @@ namespace Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetAllRooms()
+        public async Task<IActionResult> GetAllRoomsFull()
         {
-            var Rooms = await _DBRoomService.GetAllAsync();
+            var Rooms = await _DBRoomService.GetRoomsFull();
             return Ok(Rooms);
         }
 

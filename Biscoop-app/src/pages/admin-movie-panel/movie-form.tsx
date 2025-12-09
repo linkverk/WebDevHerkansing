@@ -1,9 +1,30 @@
 import React from "react";
-import type { MovieProp } from "../../utils/fake-data";
+import type { Review, ZaalProp } from "../../utils/fake-data";
+
+export interface ShowPropWithZaal {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+    movieId: string;
+    zaalId: string;
+    zaal: ZaalProp;
+}
+
+export interface MoviePropFull {
+    id: string;
+    name: string;
+    duration: number;
+    rating: string;
+    genre: string;
+    description: string;
+    shows: ShowPropWithZaal[];
+    reviews: Review[];
+}
+
 
 interface MovieFormProps {
-    selectedMovie: MovieProp;
-    setSelectedMovie: React.Dispatch<React.SetStateAction<MovieProp>>;
+    selectedMovie: MoviePropFull;
+    setSelectedMovie: React.Dispatch<React.SetStateAction<MoviePropFull>>;
     handlePosterUpload: (e: React.ChangeEvent<HTMLInputElement>, movieId: string) => void;
     handleSave: () => void;
 }

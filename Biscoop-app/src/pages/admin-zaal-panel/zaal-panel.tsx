@@ -1,9 +1,22 @@
 import { useState, useEffect } from "react";
-import type { ZaalProp } from "../../utils/fake-data";
 import GenericSelect from "../../components/generic-select";
 import ZaalForm from "./zaal-form";
 import Seats from '../../components/Seats';
 import "./zaal-panel.css";
+export interface ShowProp {
+  id: string;
+  startDate: Date | undefined;
+  endDate: Date |undefined;
+  filmId: string;
+  roomId: string;
+}
+export interface ZaalPropFull {
+  id: string;
+  naam: string;
+  rijen: number;
+  stoelenPerRij: number;
+  shows: ShowProp[]
+}
 
 function Zaal_panel() {
     useEffect(() => {
@@ -13,22 +26,23 @@ function Zaal_panel() {
     const fetchAllRooms = async () => {
         try {
             const response = await fetch("http://localhost:5275/api/Rooms")
-            const data: ZaalProp[] = await response.json();
+            const data: ZaalPropFull[] = await response.json();
             setZalen(data);
         } catch (error) {
             console.error("Failed to fetch movies:", error);
         }
     };
 
-    const [zalen, setZalen] = useState<ZaalProp[]>([]);
-    const emptyZaal: ZaalProp = {
+    const [zalen, setZalen] = useState<ZaalPropFull[]>([]);
+    const emptyZaal: ZaalPropFull = {
         id: '',
         naam: '',
         rijen: 0,
         stoelenPerRij: 0,
+        shows: [],
     };
 
-    const [selectedZaal, setSelectedZaal] = useState<ZaalProp>(emptyZaal);
+    const [selectedZaal, setSelectedZaal] = useState<ZaalPropFull>(emptyZaal);
 
     const handleSave = async () => {
         if (selectedZaal.naam === "" || selectedZaal.rijen === 0 || selectedZaal.stoelenPerRij === 0) {
@@ -56,7 +70,7 @@ function Zaal_panel() {
                     });
                     if (response.ok) {
                         alert("Room added succesfully.");
-                        const data: ZaalProp = await response.json();
+                        const data: ZaalPropFull = await response.json();
                         setZalen([...zalen, data]);
                         setSelectedZaal(data);
                     }
@@ -77,7 +91,7 @@ function Zaal_panel() {
                     });
                     if (response.ok) {
                         alert("Room updated succesfully.");
-                        const data: ZaalProp = await response.json();
+                        const data: ZaalPropFull = await response.json();
                         setZalen(zalen.map((z) => (z.id === data.id ? data : z)));
                         setSelectedZaal(data);
                     }
@@ -97,6 +111,11 @@ function Zaal_panel() {
     const handleDelete = async () => {
         if (selectedZaal.id === "") {
             alert("Please select a Room.");
+            return;
+        }
+
+        if(selectedZaal.shows.length != 0){
+            alert("this room has shows.");
             return;
         }
 
@@ -147,7 +166,7 @@ function Zaal_panel() {
                 </div>
 
                 <div className="form-bottom">
-                    <GenericSelect<ZaalProp>
+                    <GenericSelect<ZaalPropFull>
                         title="Select a Room"
                         items={zalen}
                         selectedItem={selectedZaal}
