@@ -82,12 +82,12 @@ function Movie_detail() {
     const { user } = useUserContext();
     
     useEffect(() => {
-        fetchAllMoviesFull();
+        fetchMovieFull();
     }, [movieId]);
 
     const [movieFull, setMovieFull] = useState<MoviePropFull>();
 
-    const fetchAllMoviesFull = async () => {
+    const fetchMovieFull = async () => {
         try {
             const response = await fetch(`http://localhost:5275/api/Films/${movieId}`)
             const data: MoviePropFull = await response.json();
@@ -99,7 +99,7 @@ function Movie_detail() {
 
     const reloadReviews = () => {
         // Reload from API if needed
-        fetchAllMoviesFull();
+        fetchMovieFull();
     };
 
     return (
