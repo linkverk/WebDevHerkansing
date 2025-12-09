@@ -13,7 +13,7 @@ namespace BioscoopServer.DBServices
         public override async Task<bool> Valid(Show entity)
         {
             List<Show>? shows = _dbSet.AsNoTracking()
-            .Where(f => f.RoomId == entity.RoomId).ToList();
+            .Where(s => s.RoomId == entity.RoomId && s.Id != entity.Id).ToList();
 
             if (shows == null || shows.Count() == 0)
             {

@@ -110,6 +110,8 @@ function Show_panel() {
                     if (response.ok) {
                         alert("Show added succesfully.");
                         const data: ShowProp = await response.json();
+                        data.endDate = data.endDate ? new Date(data.endDate) : undefined;
+                        data.startDate = data.startDate ? new Date(data.startDate) : undefined;
                         setShows([...shows, data]);
                         setSelectedShow(data);
                     }
@@ -131,6 +133,8 @@ function Show_panel() {
                     if (response.ok) {
                         alert("Show updated succesfully.");
                         const data: ShowProp = await response.json();
+                        data.endDate = data.endDate ? new Date(data.endDate) : undefined;
+                        data.startDate = data.startDate ? new Date(data.startDate) : undefined;
                         setShows(shows.map((s) => (s.id === data.id ? data : s)));
                         setSelectedShow(data);
                     }
@@ -181,7 +185,6 @@ function Show_panel() {
         const local = new Date(date.getTime() - offset * 60 * 1000);
         return local.toISOString().slice(0, 16);
     }
-    console.log(selectedMovie.id)
 
     return (
         <div className="movie-panel-container">
