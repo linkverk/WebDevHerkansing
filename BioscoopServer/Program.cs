@@ -35,6 +35,11 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Configuration.AddUserSecrets<Program>();
+var email = builder.Configuration["email"];
+var passcode = builder.Configuration["passcode"];
+EmailMaker.Initialize(email, passcode);
+
 var app = builder.Build();
 
 // Seed demo account on startup
