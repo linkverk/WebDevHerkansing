@@ -1,7 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using BioscoopServer.models;
-using BioscoopServer.DBServices;
-using BioscoopServer.Models.ModelsDTOs;
 
 namespace Controllers
 {

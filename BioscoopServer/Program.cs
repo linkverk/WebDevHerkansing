@@ -21,7 +21,7 @@ builder.Services.AddScoped<DBReviewServices>();
 builder.Services.AddScoped<DBRoomService>();
 builder.Services.AddScoped<DBShowService>();
 builder.Services.AddScoped<DBJwtService>();
-builder.Services.Configure<Path>(builder.Configuration.GetSection("FilePath"));
+builder.Services.Configure<LoggingPath>(builder.Configuration.GetSection("FileLoggingPath"));
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -97,11 +97,12 @@ app.MapControllers();
 
 app.Use(async (context, next) =>
 {
-    var Path = context.RequestServices.GetService<IOptions<Path>>().Value;
+    LoggingPath Path = context.RequestServices.GetService<IOptions<LoggingPath>>().Value;
     string logPath = Path.FilePath;
     var logEntry = $"\nRequest from: {context.Connection.RemoteIpAddress}\n" +
                 $"Protocol: {context.Request.Protocol}\n" +
                 $"Method: {context.Request.Method}\n" +
+                $"Time: {DateTime.Now}\n" +
                 $"URL: {context.Request.Path}\n";
 
     await next.Invoke();
@@ -120,7 +121,7 @@ app.Use(async (context, next) =>
 
 app.Run();
 
-public class Path
+public class LoggingPath
 {
     public string FilePath { get; set; }
 }
