@@ -11,6 +11,26 @@ namespace BioscoopServer.DBServices
             return existing != null;
         }
 
+        public override async Task<bool> Valid(Film entity)
+        {
+            Film? completeFilm = await GetFilmByIdFull(entity.Id);
+            if (completeFilm == null || completeFilm.Shows.Count() == 0)
+            {
+                return true;
+            }
+            else
+            {
+                foreach (Show show in completeFilm.Shows)
+                {
+                    if (show.EndDate - show.StartDate < TimeSpan.FromMinutes((Double)entity.Duration))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         public async Task<Film?> GetFilmByIdFull(Guid id)
         {
             return await _dbSet

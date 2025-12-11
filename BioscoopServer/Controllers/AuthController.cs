@@ -75,6 +75,7 @@ namespace Controllers
                     Token = token,
                     Message = "Registration successful"
                 };
+                await EmailMaker.MakeEmail(user.Email, false, "Acount created", $"Welcome {user.FirstName} {user.LastName} to cinema app, your acount was created succesfully!");
 
                 return CreatedAtAction(nameof(GetUser), new { id = user.Id }, responseDto);
             }

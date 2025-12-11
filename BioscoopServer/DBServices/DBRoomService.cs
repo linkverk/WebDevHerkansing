@@ -11,5 +11,13 @@ namespace BioscoopServer.DBServices
             return existing != null;
         }
 
+        public async Task<List<Room>> GetRoomsFull()
+        {
+            return await _dbSet
+            .AsNoTracking()
+            .Include(f => f.Shows)
+            .ToListAsync();
+        }
+
     }
 }
