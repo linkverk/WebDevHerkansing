@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using BioscoopServer.DBServices;
 using BioscoopServer.Data;
+using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -20,8 +21,9 @@ builder.Services.AddScoped<DBReviewServices>();
 builder.Services.AddScoped<DBRoomService>();
 builder.Services.AddScoped<DBShowService>();
 builder.Services.AddScoped<DBJwtService>();
+builder.Services.Configure<Path>(builder.Configuration.GetSection("FilePath"));
 
-// JWT Authentication configuratie
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -88,4 +90,32 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.Use(async (context, next) =>
+{
+    var Path = context.RequestServices.GetService<IOptions<Path>>().Value;
+    string logPath = Path.FilePath;
+    var logEntry = $"\nRequest from: {context.Connection.RemoteIpAddress}\n" +
+                $"Protocol: {context.Request.Protocol}\n" +
+                $"Method: {context.Request.Method}\n" +
+                $"URL: {context.Request.Path}\n";
+
+    await next.Invoke();
+
+    logEntry += $"Response.StatusCode: {context.Response.StatusCode}\n\n";
+
+    if (!System.IO.File.Exists(logPath))
+    {
+        await System.IO.File.WriteAllTextAsync(logPath, logEntry);
+    }
+    else
+    {
+        await System.IO.File.AppendAllTextAsync(logPath, logEntry);
+    }
+});
+
 app.Run();
+
+public class Path
+{
+    public string FilePath { get; set; }
+}
