@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using BioscoopServer.models;
-using BioscoopServer.DBServices;
+using BioscoopServer.Models.Enums;
 using BioscoopServer.Models.ModelsDTOs;
-using Microsoft.EntityFrameworkCore;
+using BioscoopServer.DBServices;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers
@@ -98,7 +98,8 @@ namespace Controllers
                 Email = userModel.Email,
                 Password = userModel.Password ?? "",
                 FirstName = userModel.FirstName,
-                LastName = userModel.LastName
+                LastName = userModel.LastName,
+                Role = Roles.User
             };
 
             await _context.Users.AddAsync(user);

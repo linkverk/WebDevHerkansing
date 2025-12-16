@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using BioscoopServer.models;
+using BioscoopServer.Models.Enums;
 using BioscoopServer.DBServices;
 using BioscoopServer.Models.ModelsDTOs;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +54,8 @@ namespace Controllers
                 Email = registerModel.Email,
                 Password = hashedPassword,
                 FirstName = registerModel.FirstName ?? "",
-                LastName = registerModel.LastName ?? ""
+                LastName = registerModel.LastName ?? "",
+                Role = Roles.User
             };
 
             try
@@ -75,7 +77,7 @@ namespace Controllers
                     Token = token,
                     Message = "Registration successful"
                 };
-                await EmailMaker.MakeEmail(user.Email, false, "Acount created", $"Welcome {user.FirstName} {user.LastName} to cinema app, your acount was created succesfully!");
+                // await EmailMaker.MakeEmail(user.Email, false, "Acount created", $"Welcome {user.FirstName} {user.LastName} to cinema app, your acount was created succesfully!");
 
                 return CreatedAtAction(nameof(GetUser), new { id = user.Id }, responseDto);
             }

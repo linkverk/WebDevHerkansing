@@ -3,13 +3,15 @@ import GenericSelect from "../../components/generic-select";
 import MovieInfo from "../movie-detail/MovieInfo";
 import MovieForm from "./movie-form";
 import "./movie-panel.css";
+import { getAuthToken } from "../../api/users";
 import type { MoviePropFull } from "../../props/props";
 
 function Movie_panel() {
     useEffect(() => {
         fetchAllMovies();
+        setToken(getAuthToken());
     }, []);
-
+    const [token, setToken] = useState<string | null>(null);
     const [movies, setMovies] = useState<MoviePropFull[]>([]);
     const emptyMovie: MoviePropFull = {
         id: '',
@@ -19,7 +21,7 @@ function Movie_panel() {
         genre: '',
         description: '',
         shows: [],
-        reviews:[],
+        reviews: [],
     };
 
     const [selectedMovie, setSelectedMovie] = useState<MoviePropFull>(emptyMovie);
@@ -54,7 +56,10 @@ function Movie_panel() {
 
     const fetchAllMovies = async () => {
         try {
-            const response = await fetch("http://localhost:5275/api/Films", { method: "GET" })
+            const response = await fetch("http://localhost:5275/api/Films", { 
+                method: "GET", 
+                headers: {"Authorization": `Bearer ${token}`} 
+            })
             const data: MoviePropFull[] = await response.json();
             setMovies(data);
         } catch (error) {
@@ -72,7 +77,7 @@ function Movie_panel() {
             try {
                 const response = await fetch("http://localhost:5275/api/Films", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
                     body: JSON.stringify(selectedMovie),
                 });
                 if (response.ok) {
@@ -96,7 +101,7 @@ function Movie_panel() {
             try {
                 const response = await fetch("http://localhost:5275/api/Films", {
                     method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
                     body: JSON.stringify(selectedMovie),
                 });
                 if (response.ok) {
@@ -121,8 +126,7 @@ function Movie_panel() {
             return;
         }
 
-        if(selectedMovie.shows.length != 0)
-        {
+        if (selectedMovie.shows.length != 0) {
             alert("This movie has shows, first delete these shows.");
             return;
         }
@@ -131,6 +135,7 @@ function Movie_panel() {
             const response = await fetch(`http://localhost:5275/api/Films?id=${selectedMovie.id}`,
                 {
                     method: "DELETE",
+                    headers: {"Authorization": `Bearer ${token}`}
                 });
             if (response.ok) {
                 const updatedMovies = movies.filter(m => m.id !== selectedMovie.id);

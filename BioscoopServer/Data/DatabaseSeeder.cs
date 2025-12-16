@@ -20,7 +20,8 @@ namespace BioscoopServer.Data
                     Email = demoEmail,
                     Password = BCrypt.Net.BCrypt.HashPassword("123456"), // Hash the password!
                     FirstName = "John",
-                    LastName = "Doe"
+                    LastName = "Doe",
+                    Role = Models.Enums.Roles.Admin
                 };
 
                 context.Users.Add(demoUser);

@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using BioscoopServer.models;
 using BioscoopServer.DBServices;
 using BioscoopServer.Models.ModelsDTOs;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
 
 namespace Controllers
 {
@@ -88,14 +91,16 @@ namespace Controllers
             return Ok(addedFilm);
         }
 
-        [HttpDelete("")]
+        [Authorize]
+        [HttpDelete]
         public async Task<IActionResult> DeleteFilm([FromQuery] string id)
         {
             var film = await _DBFilmService.GetByIdAsync(Guid.Parse(id));
             if (film == null)
             {
-                return BadRequest($"Film with id {id} was not found");
+                return NotFound($"Film with ID {id} not found.");
             }
+
             await _DBFilmService.DeleteAsync(film);
             return NoContent();
         }
