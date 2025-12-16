@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Security.Claims;
 
 public class UserCheck : Attribute, IAsyncActionFilter
 {
@@ -7,7 +8,7 @@ public class UserCheck : Attribute, IAsyncActionFilter
     {
         var user = context.HttpContext.User;
 
-        var role = user.FindFirst("role")?.Value;
+        var role = user.FindFirst(ClaimTypes.Role)?.Value;
 
         if (role != "User")
         {

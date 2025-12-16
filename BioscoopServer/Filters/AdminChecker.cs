@@ -8,7 +8,7 @@ public class AdminCheck : Attribute, IAsyncActionFilter
     {
         var user = context.HttpContext.User;
 
-        var role = user.FindFirst("role")?.Value;
+        var role = user.FindFirst(ClaimTypes.Role)?.Value;
 
         if (role != "Admin")
         {

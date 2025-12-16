@@ -4,21 +4,27 @@ import MovieInfo from "../movie-detail/MovieInfo";
 import { type ShowProp, type MovieProp, type ZaalProp  } from "../../props/props";
 import GenericSelect from "../../components/generic-select";
 import "./show-panel.css";
+import { getAuthToken } from "../../api/users";
 
 function Show_panel() {
     useEffect(() => {
-        fetchAllMovies();
-        fetchAllShows();
-        fetchAllRooms();
+        fetchAllMovies(getAuthToken());
+        fetchAllShows(getAuthToken());
+        fetchAllRooms(getAuthToken());
+        setToken(getAuthToken());
     }, []);
 
     const [shows, setShows] = useState<ShowProp[]>([]);
     const [movies, setMovies] = useState<MovieProp[]>([]);
     const [rooms, setRooms] = useState<ZaalProp[]>([]);
+    const [token, setToken] = useState<string | null>(null);
 
-    const fetchAllMovies = async () => {
+    const fetchAllMovies = async (Token: string|null) => {
         try {
-            const response = await fetch("http://localhost:5275/api/Films")
+            const response = await fetch("http://localhost:5275/api/Films", { 
+                method: "GET", 
+                headers: {"Authorization": `Bearer ${Token ?? token}`} 
+            })
             const data: MovieProp[] = await response.json();
             setMovies(data);
         } catch (error) {
@@ -26,9 +32,12 @@ function Show_panel() {
         }
     };
 
-    const fetchAllRooms = async () => {
+    const fetchAllRooms = async (Token: string|null) => {
         try {
-            const response = await fetch("http://localhost:5275/api/Rooms")
+            const response = await fetch("http://localhost:5275/api/Rooms", { 
+                method: "GET", 
+                headers: {"Authorization": `Bearer ${Token ?? token}`} 
+            })
             const data: ZaalProp[] = await response.json();
             setRooms(data);
         } catch (error) {
@@ -36,9 +45,12 @@ function Show_panel() {
         }
     };
 
-    const fetchAllShows = async () => {
+    const fetchAllShows = async (Token: string|null) => {
         try {
-            const response = await fetch("http://localhost:5275/api/Shows")
+            const response = await fetch("http://localhost:5275/api/Shows", { 
+                method: "GET", 
+                headers: {"Authorization": `Bearer ${Token ?? token}`} 
+            })
             const data: ShowProp[] = await response.json();
 
             const mappedData = data.map(s => ({
@@ -104,7 +116,7 @@ function Show_panel() {
                 try {
                     const response = await fetch("http://localhost:5275/api/Shows", {
                         method: "POST",
-                        headers: { "Content-Type": "application/json" },
+                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${ token }` },
                         body: JSON.stringify(selectedShow),
                     });
                     if (response.ok) {
@@ -127,7 +139,7 @@ function Show_panel() {
                 try {
                     const response = await fetch("http://localhost:5275/api/Shows", {
                         method: "PATCH",
-                        headers: { "Content-Type": "application/json" },
+                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${ token }` },
                         body: JSON.stringify(selectedShow),
                     });
                     if (response.ok) {
@@ -160,7 +172,7 @@ function Show_panel() {
 
         try {
             const response = await fetch(`http://localhost:5275/api/Shows?id=${selectedShow.id}`,
-                {method: "Delete"}
+                {method: "Delete", headers: { "Authorization": `Bearer ${ token }` },}
             );
             if (response.ok) {
                 const updatedShows = shows.filter(s => s.id !== selectedShow.id);
