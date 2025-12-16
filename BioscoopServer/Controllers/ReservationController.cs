@@ -104,7 +104,7 @@ namespace Controllers
             // Hard-coded test IDs (do not rely on real User/Show entries)
             var userId = Guid.Parse("D3C5A1A6-9C96-433A-93B6-64A8658AB2E0");
             var showId = Guid.Parse("9a6e7eb3-04dc-4318-9718-820ded01731d");
-            var seatNumbers = new List<int> { 1, 2, 3 };
+            var seatNumbers = new List<int> { 11, 12, 13 };
 
             var reservation = await _reservationService.CreateReservationAsync(userId, showId, seatNumbers);
 

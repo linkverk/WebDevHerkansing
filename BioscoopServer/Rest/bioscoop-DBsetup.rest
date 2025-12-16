@@ -1,0 +1,114 @@
+@baseUrl = http://localhost:5275
+
+###
+
+### 1. CREATE TEST USER
+POST {{baseUrl}}/api/Users/AddOrUpdate
+Content-Type: application/json
+
+{
+  "id": "",
+  "email": "john.test@example.com",
+  "password": "Test123!",
+  "firstName": "John",
+  "lastName": "Test"
+}
+
+###
+
+### 2. CREATE TEST ROOM
+POST {{baseUrl}}/api/Rooms/AddOrUpdate
+Content-Type: application/json
+
+{
+  "id": "",
+  "naam": "Test Zaal",
+  "rijen": 10,
+  "stoelenPerRij": 15
+}
+
+###
+
+### 3. CREATE TEST FILM
+POST {{baseUrl}}/api/Films/AddOrUpdate
+Content-Type: application/json
+
+{
+  "id": "",
+  "name": "Test Movie",
+  "rating": "PG-13",
+  "genre": "Action",
+  "duration": 120,
+  "description": "Test film for reservations"
+}
+
+###
+
+### 4. CREATE TEST SHOW (uses FilmId + RoomId from above)
+POST {{baseUrl}}/api/Shows/AddOrUpdate
+Content-Type: application/json
+
+{
+  "id": "",
+  "startDate": "2025-12-10T14:00:00Z",
+  "endDate": "2025-12-10T16:00:00Z",
+  "filmId": "d72eb037-27e8-425a-9e2f-3012c7e70dac",
+  "roomId": "aec916f3-c29a-4fcb-829b-5eea3076bf9b"
+}
+
+###
+
+### 5. CREATE RESERVATION (your CRUD!)
+POST {{baseUrl}}/api/Reservation
+Content-Type: application/json
+
+{
+  "userId": "19C36789-BA39-4DAA-8CF9-C1BC77765C4D",
+  "showId": "a70c74e4-bc00-4986-be23-b3475c987ca2",
+  "seatNumbers": [30, 31, 32]
+}
+
+###
+
+### 6. GET RESERVED SEATS
+GET {{baseUrl}}/api/Reservation/show/A70C74E4-BC00-4986-BE23-B3475C987CA2/seats
+
+###
+
+### 7. UPDATE RESERVATION
+PUT {{baseUrl}}/api/Reservation/0aabd017-d6b3-4e12-801a-499e4784a506
+Content-Type: application/json
+
+{
+  "userId": "19C36789-BA39-4DAA-8CF9-C1BC77765C4D",
+  "seatNumbers": [5, 6, 7]
+}
+
+###
+
+POST http://localhost:5275/api/Reservation/test
+
+
+###
+
+### 8. DELETE RESERVATION
+DELETE {{baseUrl}}/api/Reservation/0aabd017-d6b3-4e12-801a-499e4784a506?userId=19C36789-BA39-4DAA-8CF9-C1BC77765C4D
+
+###
+
+### 9. VERIFY DELETE (should be empty)
+GET {{baseUrl}}/api/Reservation/show/0aabd017-d6b3-4e12-801a-499e4784a506/seats
+
+
+
+### Verify USER exists
+GET http://localhost:5275/api/Users/GetById?id=19C36789-BA39-4DAA-8CF9-C1BC77765C4D
+
+### Verify ROOM exists  
+GET http://localhost:5275/api/Rooms/GetById?id=aec916f3-c29a-4fcb-829b-5eea3076bf9b
+
+### Verify FILM exists (MOST LIKELY CULPRIT)
+GET http://localhost:5275/api/Films/GetById?id=d72eb037-27e8-425a-9e2f-3012c7e70dac
+
+### Verify SHOW exists AND has correct FilmId/RoomId
+GET http://localhost:5275/api/Shows/GetById?id=a70c74e4-bc00-4986-be23-b3475c987ca2

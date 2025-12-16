@@ -26,19 +26,20 @@ namespace BioscoopServer.DBServices
         // Create reservation with seats
         public async Task<Reservation?> CreateReservationAsync(Guid userId, Guid showId, List<int> seatNumbers)
         {
-            //checks user chairs against all chairs in database (reserved ones) and adds duplicates to list 
-            var alreadyReserved = await _context.Seats
-                .AsNoTracking()
-                .Where(s => s.Reservation.ShowId == showId && seatNumbers.Contains(s.Stoelnummer))
-                .Select(s => s.Stoelnummer)
-                .ToListAsync();
+            var alreadyReserved = await _context.Reservations
+            .AsNoTracking()
+            .Where(r => r.ShowId == showId)
+            .SelectMany(r => r.Seats)
+            .Where(s => seatNumbers.Contains(s.Stoelnummer))
+            .Select(s => s.Stoelnummer)
+            .ToListAsync();
 
-            //handles if any chosen chairs are in list
-            if (alreadyReserved.Any())
-            {
-                //add feedback to user that seat is already taken
-                return null;
-            }
+            if (alreadyReserved.Any()) return null;
+
+            
+            // LOAD Show to get RoomId
+            var show = await _context.Shows.FindAsync(showId);
+            if (show == null) return null;
 
             //fills a reservation with user and chairs data.
             var reservation = new Reservation
@@ -49,7 +50,8 @@ namespace BioscoopServer.DBServices
                 Seats = seatNumbers.Select(sn => new Seat
                 {
                     Id = Guid.NewGuid(),
-                    Stoelnummer = sn
+                    Stoelnummer = sn,
+                    RoomId = show.RoomId 
                 }).ToList()
             };
 
@@ -63,6 +65,7 @@ namespace BioscoopServer.DBServices
             // load reservation including seats
             var reservation = await _context.Reservations
                 .Include(r => r.Seats)
+                .Include(r => r.Show)
                 .FirstOrDefaultAsync(r => r.Id == reservationId && r.UserId == userId);
 
             if (reservation == null)
@@ -73,6 +76,7 @@ namespace BioscoopServer.DBServices
             if (newSeatNumbers == null || !newSeatNumbers.Any())
             {
                 // optionally: clear all seats, or treat as invalid
+                
                 return null;
             }
 
@@ -99,7 +103,8 @@ namespace BioscoopServer.DBServices
             reservation.Seats = newSeatNumbers.Select(sn => new Seat
             {
                 Id = Guid.NewGuid(),
-                Stoelnummer = sn
+                Stoelnummer = sn,
+                RoomId = reservation.Show.RoomId
             }).ToList();
 
             await _context.SaveChangesAsync();
