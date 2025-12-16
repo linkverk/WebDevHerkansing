@@ -1,5 +1,5 @@
 import React from "react";
-import type { Review } from "../../utils/fake-data";
+import { type Review} from "../../props/props";
 
 type ReviewListProps = {
   reviews: Review[];

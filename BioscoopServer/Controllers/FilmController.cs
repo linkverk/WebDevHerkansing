@@ -16,19 +16,8 @@ namespace Controllers
             _DBFilmService = DBFilmService;
         }
 
-        [HttpGet("GetById")]
-        public async Task<IActionResult> GetFilmById([FromQuery] string id)
-        {
-            var film = await _DBFilmService.GetByIdAsync(Guid.Parse(id));
-            if (film == null)
-            {
-                return BadRequest($"Film with id {id} was not found");
-            }
-            return Ok(film);
-        }
-
-        [HttpGet("GetById/Full")]
-        public async Task<IActionResult> GetFilmByIdFull([FromQuery] string id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetFilmByIdFull(string id)
         {
             var film = await _DBFilmService.GetFilmByIdFull(Guid.Parse(id));
             if (film == null)
@@ -38,48 +27,15 @@ namespace Controllers
             return Ok(film);
         }
 
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllFilms()
-        {
-            var films = await _DBFilmService.GetAllAsync();
-            return Ok(films);
-        }
-
-        [HttpGet("GetAllFull")]
+        [HttpGet()]
         public async Task<IActionResult> GetAllFilmsFull()
         {
             var films = await _DBFilmService.GetFilmsFull();
             return Ok(films);
         }
 
-        [HttpPost("UploadPoster")]
-        public async Task<IActionResult> UploadPoster([FromQuery] string id, IFormFile poster)
-        {
-            if (poster == null || poster.Length == 0)
-                return BadRequest("No file uploaded.");
-
-            var rootPath = Path.Combine(Directory.GetCurrentDirectory(), "../Biscoop-app/public/images");
-
-            if (!Directory.Exists(rootPath))
-                Directory.CreateDirectory(rootPath);
-
-            var existingFiles = Directory.GetFiles(rootPath, $"movie_{id}.*");
-            foreach (var file in existingFiles)
-            {
-                System.IO.File.Delete(file);
-            }
-
-            var fileName = $"movie_{id}{Path.GetExtension(poster.FileName)}";
-            var filePath = Path.Combine(rootPath, fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-                await poster.CopyToAsync(stream);
-
-            return Ok("Uploaded");
-        }
-
-        [HttpPost("AddOrUpdate")]
-        public async Task<IActionResult> AddOrUpdateFilm([FromBody] FilmDTO filmModel)
+        [HttpPost()]
+        public async Task<IActionResult> AddFilm([FromBody] FilmDTO filmModel)
         {
             if (filmModel == null)
                 return BadRequest("Film is required.");
@@ -97,25 +53,22 @@ namespace Controllers
                 Description = filmModel.Description,
             };
 
-            var addedFilm = await _DBFilmService.AddOrUpdateAsync(film);
+            var addedFilm = await _DBFilmService.AddValidAsync(film);
+            if (addedFilm == null)
+            {
+                return BadRequest("Show cannot be added because the duration does not fit some of its shows.");
+            }
             return Ok(addedFilm);
         }
-        [HttpPost("Delete")]
-        public async Task<IActionResult> DeleteFilm([FromBody] FilmDTO filmModel)
+
+        [HttpPatch()]
+        public async Task<IActionResult> UpdateFilm([FromBody] FilmDTO filmModel)
         {
             if (filmModel == null)
                 return BadRequest("Film is required.");
 
-            if (!Guid.TryParse(filmModel.Id, out Guid filmId))
-                return BadRequest("Film Id is invalid");
-
-            var rootPath = Path.Combine(Directory.GetCurrentDirectory(), "../Biscoop-app/public/images");
-
-            var existingFiles = Directory.GetFiles(rootPath, $"movie_{filmId}.*");
-            foreach (var file in existingFiles)
-            {
-                System.IO.File.Delete(file);
-            }
+            Guid filmId;
+            Guid.TryParse(filmModel.Id, out filmId);
 
             var film = new Film
             {
@@ -127,9 +80,24 @@ namespace Controllers
                 Description = filmModel.Description,
             };
 
-            await _DBFilmService.DeleteAsync(film);
+            var addedFilm = await _DBFilmService.UpdateValidAsync(film);
+            if (addedFilm == null)
+            {
+                return BadRequest("Show cannot be added because the duration does not fit some of its shows.");
+            }
+            return Ok(addedFilm);
+        }
 
-            return Ok();
+        [HttpDelete("")]
+        public async Task<IActionResult> DeleteFilm([FromQuery] string id)
+        {
+            var film = await _DBFilmService.GetByIdAsync(Guid.Parse(id));
+            if (film == null)
+            {
+                return BadRequest($"Film with id {id} was not found");
+            }
+            await _DBFilmService.DeleteAsync(film);
+            return NoContent();
         }
     }
 }
