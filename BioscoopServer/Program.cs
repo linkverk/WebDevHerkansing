@@ -37,7 +37,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero,
+            RoleClaimType = "role",
         };
     });
 
@@ -93,8 +94,6 @@ app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
-
 app.Use(async (context, next) =>
 {
     LoggingPath Path = context.RequestServices.GetService<IOptions<LoggingPath>>().Value;
@@ -118,6 +117,8 @@ app.Use(async (context, next) =>
         await System.IO.File.AppendAllTextAsync(logPath, logEntry);
     }
 });
+
+app.MapControllers();
 
 app.Run();
 

@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using BioscoopServer.Models.Enums;
 
 namespace BioscoopServer.DBServices
 {
@@ -14,7 +15,7 @@ namespace BioscoopServer.DBServices
             _configuration = configuration;
         }
 
-        public string GenerateToken(string userId, string email)
+        public string GenerateToken(string userId, string email, Roles role)
         {
             var securityKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)
@@ -28,6 +29,7 @@ namespace BioscoopServer.DBServices
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId),
                 new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim("role", role.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, userId)
             };

@@ -7,6 +7,7 @@ import { getAppData, setAppData } from "../../utils/storage";
 import { useParams } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
 import { type MoviePropFull, type Review} from "../../props/props";
+import { getAuthToken } from "../../api/users";
 
 const ReviewForm: React.FC<{ movieId: string; onAdded: () => void }> = ({ movieId, onAdded }) => {
     // Use context to get current user
@@ -82,14 +83,16 @@ function Movie_detail() {
     const { user } = useUserContext();
     
     useEffect(() => {
-        fetchMovieFull();
+        setToken(getAuthToken());
+        fetchMovieFull(getAuthToken());
     }, [movieId]);
 
+    const [token, setToken] = useState<string | null>(null);
     const [movieFull, setMovieFull] = useState<MoviePropFull>();
 
-    const fetchMovieFull = async () => {
+    const fetchMovieFull = async (Token: string|null) => {
         try {
-            const response = await fetch(`http://localhost:5275/api/Films/${movieId}`)
+            const response = await fetch(`http://localhost:5275/api/Films/${movieId}`, { method: "GET", headers: { "Authorization": `Bearer ${Token ?? token}` }})
             const data: MoviePropFull = await response.json();
             setMovieFull(data);
         } catch (error) {
@@ -99,7 +102,7 @@ function Movie_detail() {
 
     const reloadReviews = () => {
         // Reload from API if needed
-        fetchMovieFull();
+        fetchMovieFull(getAuthToken() ?? token);
     };
 
     return (

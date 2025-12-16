@@ -66,7 +66,7 @@ namespace Controllers
                 Console.WriteLine($"✅ User registered: {user.Email} (ID: {user.Id})");
                 Console.WriteLine($"🔒 Password hashed and salted");
 
-                var token = _DBJwtService.GenerateToken(user.Id.ToString(), user.Email);
+                var token = _DBJwtService.GenerateToken(user.Id.ToString(), user.Email, user.Role);
 
                 var responseDto = new AuthResponseDTO
                 {
@@ -127,7 +127,7 @@ namespace Controllers
 
             Console.WriteLine($"✅ User logged in: {user.Email} (ID: {user.Id})");
 
-            var token = _DBJwtService.GenerateToken(user.Id.ToString(), user.Email);
+            var token = _DBJwtService.GenerateToken(user.Id.ToString(), user.Email, user.Role);
 
             var responseDto = new AuthResponseDTO
             {

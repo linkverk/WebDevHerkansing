@@ -8,7 +8,7 @@ import type { MoviePropFull } from "../../props/props";
 
 function Movie_panel() {
     useEffect(() => {
-        fetchAllMovies();
+        fetchAllMovies(getAuthToken());
         setToken(getAuthToken());
     }, []);
     const [token, setToken] = useState<string | null>(null);
@@ -54,11 +54,11 @@ function Movie_panel() {
         });
     };
 
-    const fetchAllMovies = async () => {
+    const fetchAllMovies = async (Token: string|null) => {
         try {
             const response = await fetch("http://localhost:5275/api/Films", { 
                 method: "GET", 
-                headers: {"Authorization": `Bearer ${token}`} 
+                headers: {"Authorization": `Bearer ${Token ?? token}`} 
             })
             const data: MoviePropFull[] = await response.json();
             setMovies(data);

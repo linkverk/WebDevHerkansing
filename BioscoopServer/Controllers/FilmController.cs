@@ -3,7 +3,6 @@ using BioscoopServer.models;
 using BioscoopServer.DBServices;
 using BioscoopServer.Models.ModelsDTOs;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
 
 namespace Controllers
@@ -19,6 +18,7 @@ namespace Controllers
             _DBFilmService = DBFilmService;
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFilmByIdFull(string id)
         {
@@ -30,6 +30,7 @@ namespace Controllers
             return Ok(film);
         }
 
+        [Authorize]
         [HttpGet()]
         public async Task<IActionResult> GetAllFilmsFull()
         {
@@ -37,6 +38,8 @@ namespace Controllers
             return Ok(films);
         }
 
+        [Authorize]
+        [AdminCheck]
         [HttpPost()]
         public async Task<IActionResult> AddFilm([FromBody] FilmDTO filmModel)
         {
@@ -64,6 +67,8 @@ namespace Controllers
             return Ok(addedFilm);
         }
 
+        [Authorize]
+        [AdminCheck]
         [HttpPatch()]
         public async Task<IActionResult> UpdateFilm([FromBody] FilmDTO filmModel)
         {
@@ -92,6 +97,7 @@ namespace Controllers
         }
 
         [Authorize]
+        [AdminCheck]
         [HttpDelete]
         public async Task<IActionResult> DeleteFilm([FromQuery] string id)
         {
