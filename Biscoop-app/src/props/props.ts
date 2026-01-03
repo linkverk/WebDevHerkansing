@@ -51,6 +51,7 @@ export interface ZaalPropFull {
 }
 
 export type Review = {
+  id: string;
   name: string;
   description: string;
   rating: number;
