@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { saveCurrentUserId, loginUserAuth, createOrGetUser } from '../../api/users';
+import { saveCurrentUserId, loginUserAuth, saveAuthToken } from '../../api/users';
 import './auth.css';
 
 export interface LoginProps {
   onLogin: (userId: string, email: string, firstName: string, lastName: string) => void;
 }
-
-// Demo account credentials
-const ADMIN_EMAIL = 'johndoe@test.test';
-const ADMIN_PASSWORD = '123456';
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const navigate = useNavigate();
@@ -34,107 +30,39 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     }
 
     try {
-      // Check for hardcoded admin account
-      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-        try {
-          // Create or get admin user from database
-          const user = await createOrGetUser({
-            email: ADMIN_EMAIL,
-            password: ADMIN_PASSWORD,
-            firstName: 'John',
-            lastName: 'Doe'
-          });
-          
-          saveCurrentUserId(user.id);
-          localStorage.setItem('username', `${user.firstName} ${user.lastName}`);
-          
-          // Call onLogin with full user data
-          onLogin(user.id, user.email, user.firstName || 'John', user.lastName || 'Doe');
-          navigate('/home');
-          return;
-        } catch (err) {
-          console.error('Failed to create/get admin user:', err);
-          setError('Failed to connect to server. Please make sure the backend is running.');
-          setLoading(false);
-          return;
-        }
+      // Try login with backend (handles all users including demo account)
+      const data = await loginUserAuth({ email, password });
+      
+      // Save user data
+      saveCurrentUserId(data.id);
+      
+      // Save JWT token
+      if (data.token) {
+        saveAuthToken(data.token);
+        console.log('🔐 JWT token received and saved');
       }
+      
+      const fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'User';
+      localStorage.setItem('username', fullName);
+      
+      // Also update registeredUser for consistency
+      localStorage.setItem('registeredUser', JSON.stringify({
+        id: data.id,
+        name: fullName,
+        email: data.email,
+        password: password,
+      }));
 
-      // Check for registered user in localStorage
-      const registeredUser = localStorage.getItem('registeredUser');
-      if (registeredUser) {
-        try {
-          const userData = JSON.parse(registeredUser);
-          if (userData.email === email && userData.password === password) {
-            // Try to get/create user in database
-            try {
-              const nameParts = userData.name.split(' ');
-              const firstName = nameParts[0];
-              const lastName = nameParts.slice(1).join(' ') || 'User';
-              
-              const user = await createOrGetUser({
-                email: userData.email,
-                password: userData.password,
-                firstName: firstName,
-                lastName: lastName
-              });
-              
-              saveCurrentUserId(user.id);
-              localStorage.setItem('username', userData.name);
-              
-              // Call onLogin with full user data
-              onLogin(user.id, user.email, user.firstName || firstName, user.lastName || lastName);
-              navigate('/home');
-              return;
-            } catch (err) {
-              console.error('Failed to create user in database:', err);
-              // Continue with localStorage only
-              const userId = userData.id || crypto.randomUUID();
-              saveCurrentUserId(userId);
-              localStorage.setItem('username', userData.name);
-              
-              const nameParts = userData.name.split(' ');
-              onLogin(userId, email, nameParts[0], nameParts.slice(1).join(' ') || '');
-              navigate('/home');
-              return;
-            }
-          }
-        } catch (error) {
-          console.error('Error parsing user data:', error);
-        }
-      }
-
-      // Try login with auth controller
-      try {
-        const data = await loginUserAuth({ email, password });
-        
-        // Save user data
-        saveCurrentUserId(data.id);
-        
-        const fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'User';
-        localStorage.setItem('username', fullName);
-        
-        // Also update registeredUser for consistency
-        localStorage.setItem('registeredUser', JSON.stringify({
-          id: data.id,
-          name: fullName,
-          email: data.email,
-          password: password, // Keep for future reference
-        }));
-
-        onLogin(data.id, data.email, data.firstName, data.lastName);
-        navigate('/home');
-      } catch (err) {
-        console.error('❌ Login error:', err);
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('Invalid email or password. Please try again.');
-        }
-      }
+      console.log('✅ Login successful:', fullName);
+      onLogin(data.id, data.email, data.firstName, data.lastName);
+      navigate('/home');
     } catch (err) {
       console.error('❌ Login error:', err);
-      setError('An error occurred. Please try again.');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Invalid email or password. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

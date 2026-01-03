@@ -1,9 +1,21 @@
 import React from "react";
-import type { ZaalProp} from "../../utils/fake-data";
-
+export interface ShowProp {
+  id: string;
+  startDate: Date | undefined;
+  endDate: Date |undefined;
+  filmId: string;
+  roomId: string;
+}
+export interface ZaalPropFull {
+  id: string;
+  naam: string;
+  rijen: number;
+  stoelenPerRij: number;
+  shows: ShowProp[]
+}
 interface ZaalFormProps {
-    selectedZaal: ZaalProp;
-    setSelectedZaal: React.Dispatch<React.SetStateAction<ZaalProp>>;
+    selectedZaal: ZaalPropFull;
+    setSelectedZaal: React.Dispatch<React.SetStateAction<ZaalPropFull>>;
     handleSave: () => void;
 }
 

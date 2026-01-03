@@ -4,31 +4,9 @@ import ReviewList, { ReviewForm } from "./Review";
 import MovieInfo from "./MovieInfo";
 import ShowInfo from "../movie-list/showInfo";
 import { getAppData, setAppData } from "../../utils/storage";
-import type { Review, ZaalProp } from "../../utils/fake-data";
 import { useParams } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
-import type { Description } from "@mui/icons-material";
-
-
-export interface ShowPropWithZaal {
-    id: string;
-    startDate: Date;
-    endDate: Date;
-    movieId: string;
-    zaalId: string;
-    zaal: ZaalProp;
-}
-
-export interface MoviePropFull {
-    id: string;
-    name: string;
-    duration: number;
-    rating: string;
-    genre: string;
-    description: string;
-    shows: ShowPropWithZaal[];
-    reviews: Review[];
-}
+import { type MoviePropFull, type Review} from "../../props/props";
 
 
 function Movie_detail() {
@@ -36,14 +14,14 @@ function Movie_detail() {
     const { user } = useUserContext();
 
     useEffect(() => {
-        fetchAllMoviesFull();
+        fetchMovieFull();
     }, [movieId]);
 
     const [movieFull, setMovieFull] = useState<MoviePropFull>();
 
-    const fetchAllMoviesFull = async () => {
+    const fetchMovieFull = async () => {
         try {
-            const response = await fetch(`http://localhost:5275/api/Films/GetById/Full?id=${movieId}`)
+            const response = await fetch(`http://localhost:5275/api/Films/${movieId}`)
             const data: MoviePropFull = await response.json();
             setMovieFull(data);
         } catch (error) {
@@ -53,7 +31,7 @@ function Movie_detail() {
 
     const reloadReviews = () => {
         // Reload from API if needed
-        fetchAllMoviesFull();
+        fetchMovieFull();
     };
 
     return (

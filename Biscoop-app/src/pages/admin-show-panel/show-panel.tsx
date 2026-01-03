@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { formatDateForShowing } from "../../utils/date-fromatter";
 import MovieInfo from "../movie-detail/MovieInfo";
-import { type ZaalProp, type MovieProp, type ShowProp } from "../../utils/fake-data";
+import { type ShowProp, type MovieProp, type ZaalProp  } from "../../props/props";
 import GenericSelect from "../../components/generic-select";
 import "./show-panel.css";
+
 function Show_panel() {
     useEffect(() => {
         fetchAllMovies();
@@ -17,7 +18,7 @@ function Show_panel() {
 
     const fetchAllMovies = async () => {
         try {
-            const response = await fetch("http://localhost:5275/api/Films/GetAll")
+            const response = await fetch("http://localhost:5275/api/Films")
             const data: MovieProp[] = await response.json();
             setMovies(data);
         } catch (error) {
@@ -27,7 +28,7 @@ function Show_panel() {
 
     const fetchAllRooms = async () => {
         try {
-            const response = await fetch("http://localhost:5275/api/Rooms/GetAll")
+            const response = await fetch("http://localhost:5275/api/Rooms")
             const data: ZaalProp[] = await response.json();
             setRooms(data);
         } catch (error) {
@@ -37,7 +38,7 @@ function Show_panel() {
 
     const fetchAllShows = async () => {
         try {
-            const response = await fetch("http://localhost:5275/api/Shows/GetAll")
+            const response = await fetch("http://localhost:5275/api/Shows")
             const data: ShowProp[] = await response.json();
 
             const mappedData = data.map(s => ({
@@ -98,35 +99,55 @@ function Show_panel() {
             return;
         }
 
-        const requestOptions: RequestInit = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(selectedShow),
-        };
-
         try {
-            const response = await fetch("http://localhost:5275/api/Shows/AddOrUpdate",
-                requestOptions
-            );
-            if (response.ok) {
-                alert("Show added or updated succesfully.");
-                const data: ShowProp = await response.json();
-                console.log(data)
-                data.startDate = data.startDate ? new Date(data.startDate) : undefined;
-                data.endDate = data.endDate ? new Date(data.endDate) : undefined;
-                if (shows.find((s) => s.id === data.id)) {
-                    setShows(shows.map((s) => (s.id === data.id ? data : s)));
-                    setSelectedShow(data);
-                } else {
-                    setShows([...shows, data]);
-                    setSelectedShow(data);
-                }
+            if (selectedShow.id === "") {
+                try {
+                    const response = await fetch("http://localhost:5275/api/Shows", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(selectedShow),
+                    });
+                    if (response.ok) {
+                        alert("Show added succesfully.");
+                        const data: ShowProp = await response.json();
+                        data.endDate = data.endDate ? new Date(data.endDate) : undefined;
+                        data.startDate = data.startDate ? new Date(data.startDate) : undefined;
+                        setShows([...shows, data]);
+                        setSelectedShow(data);
+                    }
+                    else {
+                        const text = await response.text();
+                        alert(text);
+                    }
+                } catch (err) {
+                    console.error("Failed to add Show:", err);
+                };
             }
             else {
-                alert("Show not saved, something went wrong.");
+                try {
+                    const response = await fetch("http://localhost:5275/api/Shows", {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(selectedShow),
+                    });
+                    if (response.ok) {
+                        alert("Show updated succesfully.");
+                        const data: ShowProp = await response.json();
+                        data.endDate = data.endDate ? new Date(data.endDate) : undefined;
+                        data.startDate = data.startDate ? new Date(data.startDate) : undefined;
+                        setShows(shows.map((s) => (s.id === data.id ? data : s)));
+                        setSelectedShow(data);
+                    }
+                    else {
+                        const text = await response.text();
+                        alert(text);
+                    }
+                } catch (err) {
+                    console.error("Failed to update Show:", err);
+                };
             }
         } catch (err) {
-            console.error("Failed to add or update movie:", err);
+            console.error("Failed to add or update Show:", err);
         };
 
     };
@@ -137,15 +158,9 @@ function Show_panel() {
             return;
         }
 
-        const requestOptions: RequestInit = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(selectedShow),
-        };
-
         try {
-            const response = await fetch("http://localhost:5275/api/Shows/Delete",
-                requestOptions
+            const response = await fetch(`http://localhost:5275/api/Shows?id=${selectedShow.id}`,
+                {method: "Delete"}
             );
             if (response.ok) {
                 const updatedShows = shows.filter(s => s.id !== selectedShow.id);
@@ -153,6 +168,7 @@ function Show_panel() {
                 setSelectedShow(emptyShow);
                 setSelectedMovie(emptyMovie);
                 setSelectedZaal(emptyZaal);
+                alert("Show delete succesfully");
             }
             else {
                 alert("Show not delete, something went wrong.");
@@ -169,7 +185,6 @@ function Show_panel() {
         const local = new Date(date.getTime() - offset * 60 * 1000);
         return local.toISOString().slice(0, 16);
     }
-    console.log(selectedMovie.id)
 
     return (
         <div className="movie-panel-container">
