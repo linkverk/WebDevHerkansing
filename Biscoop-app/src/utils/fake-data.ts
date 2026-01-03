@@ -16,6 +16,7 @@ export interface MovieProp {
 }
 
 export type Review = {
+  id : string;
   name: string;
   description: string;
   rating: number;
@@ -68,12 +69,7 @@ export const fakeMovies: MovieProp[] = [
 
 // ----- Fake Reviews -----
 export const fakeReviews: Review[] = [
-  { name: "Sophie", description: "Incredible story with great visuals!", rating: 5, filmId: "movie-1", userId:"1"},
-  { name: "Mark", description: "A bit confusing, but very entertaining.", rating: 4, filmId: "movie-1", userId:"1" },
-  { name: "Emma", description: "So romantic and beautifully shot.", rating: 5, filmId: "movie-2", userId:"1" },
-  { name: "Liam", description: "Predictable, but still enjoyable.", rating: 3, filmId: "movie-2", userId:"1" },
-  { name: "Noah", description: "Suspenseful and chilling!", rating: 5, filmId: "movie-3", userId:"1" },
-  { name: "Ava", description: "Too dark for my taste, but well made.", rating: 4, filmId: "movie-3", userId:"1" },
+  {id: "3f8fbe5a-7156-490d-aaf4-22cd7a0175e0", name: "Sophie", description: "Incredible story with great visuals!", rating: 5, filmId: "movie-1", userId:"1"},
 ];
 
 // ----- Fake Shows -----

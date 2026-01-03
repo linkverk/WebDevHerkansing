@@ -53,7 +53,6 @@ const LogedInUser: React.FC<Props> = ({ username }) => {
         <p className="li-sub">Find your upcoming screenings, manage bookings, or browse new movies.</p>
         {user.id && (
           <p className="li-user-id" style={{ fontSize: '0.8rem', color: '#666', marginTop: '8px' }}>
-            User ID: {user.id}
           </p>
         )}
       </header>
