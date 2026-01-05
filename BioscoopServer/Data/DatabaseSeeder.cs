@@ -13,14 +13,15 @@ namespace BioscoopServer.Data
 
             if (existingUser == null)
             {
-                // Create demo account
+                // Create demo account with HASHED password
                 var demoUser = new User
                 {
                     Id = Guid.NewGuid(),
                     Email = demoEmail,
-                    Password = "123456", // Note: In production, this should be hashed!
+                    Password = BCrypt.Net.BCrypt.HashPassword("123456"), // Hash the password!
                     FirstName = "John",
-                    LastName = "Doe"
+                    LastName = "Doe",
+                    Role = Models.Enums.Roles.Admin
                 };
 
                 context.Users.Add(demoUser);
@@ -28,11 +29,22 @@ namespace BioscoopServer.Data
 
                 Console.WriteLine($"✅ Demo account created: {demoEmail}");
                 Console.WriteLine($"   User ID: {demoUser.Id}");
+                Console.WriteLine($"🔒 Password hashed with BCrypt");
             }
             else
             {
                 Console.WriteLine($"ℹ️  Demo account already exists: {demoEmail}");
                 Console.WriteLine($"   User ID: {existingUser.Id}");
+                
+                // Check if password needs to be re-hashed (in case it was stored as plain text)
+                if (!existingUser.Password.StartsWith("$2"))
+                {
+                    Console.WriteLine($"⚠️  Demo account password was not hashed, updating...");
+                    existingUser.Password = BCrypt.Net.BCrypt.HashPassword("123456");
+                    context.Users.Update(existingUser);
+                    context.SaveChanges();
+                    Console.WriteLine($"✅ Demo account password re-hashed");
+                }
             }
         }
     }

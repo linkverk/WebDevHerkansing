@@ -3,39 +3,22 @@ import { useState, useEffect } from "react";
 import ShowInfo from "./showInfo";
 import "./movie-list.css"
 import MovieInfo from "../movie-detail/MovieInfo";
-import type { Review, ZaalProp } from "../../utils/fake-data";
-
-export interface ShowPropWithZaal {
-  id: string;
-  startDate: Date;
-  endDate: Date;
-  movieId: string;
-  zaalId: string;
-  zaal: ZaalProp;
-}
-
-export interface MoviePropFull {
-    id: string;
-    name: string;
-    duration: number;
-    rating: string;
-    genre: string;
-    description: string;
-    shows: ShowPropWithZaal[];
-    reviews: Review[];
-}
+import { type MoviePropFull, type Review } from "../../props/props";
+import { getAuthToken } from "../../api/users";
 
 
 function MovieList() {
     useEffect(() => {
-        fetchAllMoviesFull();
+        setToken(getAuthToken());
+        fetchAllMoviesFull(getAuthToken());
     }, []);
 
+    const [token, setToken] = useState<string | null>(null);
     const [moviesFull, setMoviesFull] = useState<MoviePropFull[]>([]);
 
-    const fetchAllMoviesFull = async () => {
+    const fetchAllMoviesFull = async (Token: string|null) => {
         try {
-            const response = await fetch("http://localhost:5275/api/Films/GetAllFull")
+            const response = await fetch("http://localhost:5275/api/Films", { method: "GET", headers: { "Authorization": `Bearer ${Token ?? token}` } })
             const data: MoviePropFull[] = await response.json();
             setMoviesFull(data);
         } catch (error) {

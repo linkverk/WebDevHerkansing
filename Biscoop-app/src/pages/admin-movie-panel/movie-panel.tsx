@@ -1,29 +1,38 @@
 import { useState, useEffect } from "react";
 import GenericSelect from "../../components/generic-select";
-import type { MovieProp } from "../../utils/fake-data";
 import MovieInfo from "../movie-detail/MovieInfo";
 import MovieForm from "./movie-form";
 import "./movie-panel.css";
+import { getAuthToken } from "../../api/users";
+import type { MoviePropFull } from "../../props/props";
 
 function Movie_panel() {
     useEffect(() => {
-        fetchAllMovies();
+        fetchAllMovies(getAuthToken());
+        setToken(getAuthToken());
     }, []);
-
-    const [movies, setMovies] = useState<MovieProp[]>([]);
-    const emptyMovie: MovieProp = {
+    const [token, setToken] = useState<string | null>(null);
+    const [movies, setMovies] = useState<MoviePropFull[]>([]);
+    const emptyMovie: MoviePropFull = {
         id: '',
         name: '',
         duration: 0,
         rating: '',
         genre: '',
         description: '',
+        shows: [],
+        reviews: [],
     };
 
-    const [selectedMovie, setSelectedMovie] = useState<MovieProp>(emptyMovie);
+    const [selectedMovie, setSelectedMovie] = useState<MoviePropFull>(emptyMovie);
     const [poster, setPoster] = useState<string | undefined>(undefined);
     const [posterObject, setPosterObject] = useState<React.ChangeEvent<HTMLInputElement> | undefined>(undefined);
 
+    const handlePosterDelete = async (movieId: string) => {
+        await fetch(`http://localhost:5275/api/Posters?id=${movieId}`, {
+            method: "DELETE"
+        });
+    }
     const handlePosterUpload = async (e: React.ChangeEvent<HTMLInputElement>, movieId: string) => {
 
         const file = e.target.files?.[0];
@@ -39,16 +48,19 @@ function Movie_panel() {
         const formData = new FormData();
         formData.append("poster", file);
 
-        await fetch(`http://localhost:5275/api/Films/UploadPoster?id=${movieId}`, {
+        await fetch(`http://localhost:5275/api/Posters?id=${movieId}`, {
             method: "POST",
             body: formData
         });
     };
 
-    const fetchAllMovies = async () => {
+    const fetchAllMovies = async (Token: string | null) => {
         try {
-            const response = await fetch("http://localhost:5275/api/Films/GetAll")
-            const data: MovieProp[] = await response.json();
+            const response = await fetch("http://localhost:5275/api/Films", {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${Token ?? token}` }
+            })
+            const data: MoviePropFull[] = await response.json();
             setMovies(data);
         } catch (error) {
             console.error("Failed to fetch movies:", error);
@@ -61,36 +73,51 @@ function Movie_panel() {
             return;
         }
 
-        const requestOptions: RequestInit = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(selectedMovie),
-        };
-
-        try {
-            const response = await fetch("http://localhost:5275/api/Films/AddOrUpdate",
-                requestOptions
-            );
-            if (response.ok) {
-                alert("Film added or updated succesfully.");
-                const data: MovieProp = await response.json();
-                if (movies.find((m) => m.id === data.id)) {
-                    setMovies(movies.map((m) => (m.id === data.id ? data : m)));
-                    setSelectedMovie(data);
-                } else {
+        if (selectedMovie.id === "") {
+            try {
+                const response = await fetch("http://localhost:5275/api/Films", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify(selectedMovie),
+                });
+                if (response.ok) {
+                    alert("Film added succesfully.");
+                    const data: MoviePropFull = await response.json();
                     setMovies([...movies, data]);
                     setSelectedMovie(data);
                     if (posterObject) {
                         handlePosterUpload(posterObject, data.id)
                     }
                 }
-            }
-            else {
-                alert("Film not saved, something went wrong.");
-            }
-        } catch (err) {
-            console.error("Failed to add or update movie:", err);
-        };
+                else {
+                    const text = await response.text();
+                    alert(text);
+                }
+            } catch (err) {
+                console.error("Failed to add movie:", err);
+            };
+        }
+        else {
+            try {
+                const response = await fetch("http://localhost:5275/api/Films", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify(selectedMovie),
+                });
+                if (response.ok) {
+                    alert("Film updated succesfully.");
+                    const data: MoviePropFull = await response.json();
+                    setMovies(movies.map((m) => (m.id === data.id ? data : m)));
+                    setSelectedMovie(data);
+                }
+                else {
+                    const text = await response.text();
+                    alert(text);
+                }
+            } catch (err) {
+                console.error("Failed to update movie:", err);
+            };
+        }
     };
 
     const handleDelete = async () => {
@@ -99,18 +126,20 @@ function Movie_panel() {
             return;
         }
 
-        const requestOptions: RequestInit = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(selectedMovie),
-        };
+        if (selectedMovie.shows.length != 0) {
+            alert("This movie has shows, first delete these shows.");
+            return;
+        }
 
         try {
-            const response = await fetch("http://localhost:5275/api/Films/Delete",
-                requestOptions
-            );
+            const response = await fetch(`http://localhost:5275/api/Films?id=${selectedMovie.id}`,
+                {
+                    method: "DELETE",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
             if (response.ok) {
                 const updatedMovies = movies.filter(m => m.id !== selectedMovie.id);
+                handlePosterDelete(selectedMovie.id);
                 setMovies(updatedMovies);
                 setSelectedMovie(emptyMovie);
                 setPoster(undefined);
@@ -118,7 +147,8 @@ function Movie_panel() {
                 alert("Film deleted succesfully.");
             }
             else {
-                alert("Film not delete, something went wrong.");
+                const text = await response.text();
+                alert(text);
             }
         } catch (err) {
             console.error("Failed to delete movie:", err);
@@ -129,7 +159,7 @@ function Movie_panel() {
         <div className="movie-panel-container">
             <div className="movie-preview-side">
                 <div className="top"><h1>Preview</h1></div>
-                {selectedMovie.id != "" && (
+                {(
                     <MovieInfo
                         poster={poster}
                         id={selectedMovie.id}
@@ -157,7 +187,7 @@ function Movie_panel() {
                 </div>
 
                 <div className="form-bottom">
-                    <GenericSelect<MovieProp>
+                    <GenericSelect<MoviePropFull>
                         title="Select a Movie"
                         items={movies}
                         selectedItem={selectedMovie}

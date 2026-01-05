@@ -1,3 +1,4 @@
+using BioscoopServer.Models.Enums;
 namespace BioscoopServer.Models.ModelsDTOs
 {
     public class UserDTO
@@ -7,5 +8,6 @@ namespace BioscoopServer.Models.ModelsDTOs
         public string? Password { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public Roles Role { get; set; }
     }
 }

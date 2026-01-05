@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using BioscoopServer.models;
 using BioscoopServer.DBServices;
 using BioscoopServer.Models.ModelsDTOs;
+using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+
 
 namespace Controllers
 {
@@ -16,8 +19,9 @@ namespace Controllers
             _DBRoomService = DBRoomService;
         }
 
-        [HttpGet("GetById")]
-        public async Task<IActionResult> GetRoomById([FromQuery] string id)
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetRoomById(string id)
         {
             var Room = await _DBRoomService.GetByIdAsync(Guid.Parse(id));
             if (Room == null)
@@ -27,15 +31,18 @@ namespace Controllers
             return Ok(Room);
         }
 
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllRooms()
+        [Authorize]
+        [HttpGet()]
+        public async Task<IActionResult> GetAllRoomsFull()
         {
-            var Rooms = await _DBRoomService.GetAllAsync();
+            var Rooms = await _DBRoomService.GetRoomsFull();
             return Ok(Rooms);
         }
 
-        [HttpPost("AddOrUpdate")]
-        public async Task<IActionResult> AddOrUpdateRoom([FromBody] RoomDTO RoomModel)
+        [Authorize]
+        [AdminCheck]
+        [HttpPost()]
+        public async Task<IActionResult> AddRoom([FromBody] RoomDTO RoomModel)
         {
             if (RoomModel == null)
                 return BadRequest("Room is required.");
@@ -51,33 +58,49 @@ namespace Controllers
                 StoelenPerRij = RoomModel.StoelenPerRij
             };
 
-            var addedRoom = await _DBRoomService.AddOrUpdateAsync(Room);
+            var addedRoom = await _DBRoomService.AddAsync(Room);
             return Ok(addedRoom);
         }
-        [HttpPost("Delete")]
-        public async Task<IActionResult> DeleteRoom([FromBody] RoomDTO RoomModel)
+
+        [Authorize]
+        [AdminCheck]
+        [HttpPatch()]
+        public async Task<IActionResult> UpdateRoom([FromBody] RoomDTO RoomModel)
         {
             if (RoomModel == null)
                 return BadRequest("Room is required.");
 
             Guid RoomId;
-            if (Guid.TryParse(RoomModel.Id, out RoomId))
-            {
-                var Room = new Room
-                {
-                    Id = RoomId,
-                    Naam = RoomModel.Naam,
-                    Rijen = RoomModel.Rijen,
-                    StoelenPerRij = RoomModel.StoelenPerRij
-                };
+            Guid.TryParse(RoomModel.Id, out RoomId);
+            var email = HttpContext.User.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
 
-                await _DBRoomService.DeleteAsync(Room);
-                return Ok();
-            }
-            else
+            var Room = new Room
             {
-                return BadRequest("Room Id is invalid");
+                Id = RoomId,
+                Naam = RoomModel.Naam,
+                Rijen = RoomModel.Rijen,
+                StoelenPerRij = RoomModel.StoelenPerRij
+            };
+
+            var addedRoom = await _DBRoomService.UpdateAsync(Room);
+            return Ok(addedRoom);
+        }
+
+        [Authorize]
+        [AdminCheck]
+        [HttpDelete("")]
+        public async Task<IActionResult> DeleteRoom([FromQuery] string id)
+        {
+            if (id == null)
+                return BadRequest("Room id is required.");
+
+           var room = await _DBRoomService.GetByIdAsync(Guid.Parse(id));
+            if (room == null)
+            {
+                return BadRequest($"room with id {id} was not found");
             }
+            await _DBRoomService.DeleteAsync(room);
+            return NoContent();
         }
     }
 }
