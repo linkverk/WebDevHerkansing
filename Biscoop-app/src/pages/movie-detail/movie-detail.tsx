@@ -1,6 +1,6 @@
 import "./movie-detail.css";
 import React, { useState, useEffect } from "react";
-import ReviewList from "./ReviewList";
+import ReviewList, { ReviewForm } from "./Review";
 import MovieInfo from "./MovieInfo";
 import ShowInfo from "../movie-list/showInfo";
 import { getAppData, setAppData } from "../../utils/storage";
@@ -8,79 +8,11 @@ import { useParams } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
 import { type MoviePropFull, type Review} from "../../props/props";
 
-const ReviewForm: React.FC<{ movieId: string; onAdded: () => void }> = ({ movieId, onAdded }) => {
-    // Use context to get current user
-    const { user, isAuthenticated } = useUserContext();
-    
-    // Use user from context, fallback to localStorage
-    const username = user.name || localStorage.getItem("username") || "Guest";
-    const userId = user.id || localStorage.getItem("userId") || "";
-    
-    const [text, setText] = useState("");
-    const [rating, setRating] = useState<number>(5);
-
-    const submit = (e?: React.FormEvent) => {
-        e?.preventDefault();
-        if (!text.trim()) return;
-        
-        const data = getAppData();
-        const newReview: Review = { 
-            name: username, 
-            description: text.trim(), 
-            rating, 
-            filmId: movieId,
-            userId: userId
-        };
-        data.fakeReviews.push(newReview);
-        setAppData(data);
-        setText("");
-        setRating(5);
-        onAdded();
-    };
-
-    if (!isAuthenticated) {
-        return (
-            <div style={{ 
-                padding: '1rem', 
-                backgroundColor: '#1a1a20', 
-                borderRadius: '8px',
-                textAlign: 'center',
-                color: '#9ab0c9'
-            }}>
-                Please log in to write a review.
-            </div>
-        );
-    }
-
-    return (
-        <div className="review-form">
-            <div className="review-form-row">
-                <label>Review</label>
-                <textarea value={text} onChange={(e) => setText(e.target.value)} />
-            </div>
-            <div className="review-form-row small">
-                <label>Rating</label>
-                <select value={rating} onChange={(e) => setRating(Number(e.target.value))}>
-                    <option value={5}>5</option>
-                    <option value={4}>4</option>
-                    <option value={3}>3</option>
-                    <option value={2}>2</option>
-                    <option value={1}>1</option>
-                </select>
-            </div>
-            <div className="review-form-row">
-                <button className="btn" type="button" onClick={submit}>
-                    Add review as {username}
-                </button>
-            </div>
-        </div>
-    );
-};
 
 function Movie_detail() {
     const { movieId } = useParams();
     const { user } = useUserContext();
-    
+
     useEffect(() => {
         fetchMovieFull();
     }, [movieId]);
@@ -128,7 +60,7 @@ function Movie_detail() {
 
                     <div className="reviews">
                         <h2>Reviews</h2>
-                        <ReviewList reviews={movieFull.reviews} />
+                        <ReviewList reviews={movieFull.reviews} onSaved={reloadReviews} />
                         <h3>Add a review</h3>
                         <ReviewForm movieId={movieFull.id} onAdded={reloadReviews} />
                     </div>
