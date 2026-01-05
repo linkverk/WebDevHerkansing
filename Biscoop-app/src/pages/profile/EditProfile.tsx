@@ -124,7 +124,7 @@ const EditProfile: React.FC = () => {
       setLoading(true);
       const profile = await getUserProfile(userId);
       
-      const savedProfile = localStorage.getItem('userProfile');
+      const savedProfile = localStorage.getItem(`userProfile_${userId}`);
       let extendedData = { 
         bio: '', 
         genre: '', 
@@ -158,7 +158,7 @@ const EditProfile: React.FC = () => {
         }
       }
 
-      const savedAvatar = localStorage.getItem('userAvatar');
+      const savedAvatar = localStorage.getItem(`userAvatar_${userId}`);
       if (savedAvatar) {
         setAvatarImage(savedAvatar);
       }
@@ -219,8 +219,9 @@ const EditProfile: React.FC = () => {
   };
 
   const removeAvatar = () => {
+    const userId = getCurrentUserId();
     setAvatarImage(null);
-    localStorage.removeItem('userAvatar');
+    localStorage.removeItem(`userAvatar_${userId}`);
     setShowAvatarOptions(false);
   };
 
@@ -291,15 +292,15 @@ const EditProfile: React.FC = () => {
         country: formData.country,
         lastUpdated: new Date().toISOString()
       };
-      localStorage.setItem('userProfile', JSON.stringify(profileData));
+      localStorage.setItem(`userProfile_${userId}`, JSON.stringify(profileData));
       console.log('✅ Extended profile saved to localStorage:', profileData);
 
       if (avatarImage) {
-        localStorage.setItem('userAvatar', avatarImage);
+        localStorage.setItem(`userAvatar_${userId}`, avatarImage);
         console.log('✅ Avatar image saved to localStorage');
       } else {
         // If no avatar image, make sure it's removed
-        localStorage.removeItem('userAvatar');
+        localStorage.removeItem(`userAvatar_${userId}`);
         console.log('✅ Avatar image removed from localStorage');
       }
 

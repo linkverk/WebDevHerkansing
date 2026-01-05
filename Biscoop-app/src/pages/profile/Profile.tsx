@@ -74,7 +74,7 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
       });
 
       // Load extended profile data from localStorage (bio, genre, avatar)
-      const savedProfile = localStorage.getItem('userProfile');
+      const savedProfile = localStorage.getItem(`userProfile_${userId}`)
       if (savedProfile) {
         try {
           const profileData = JSON.parse(savedProfile);
@@ -98,7 +98,7 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
       }
 
       // Load avatar image from localStorage
-      const savedAvatar = localStorage.getItem('userAvatar');
+      const savedAvatar = localStorage.getItem(`userAvatar_${userId}`)
       if (savedAvatar) {
         console.log('✅ Avatar image loaded from localStorage');
         setAvatarImage(savedAvatar);
@@ -109,7 +109,7 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
       console.error('❌ Error loading profile from database:', error);
       
       // Fallback to localStorage/context ONLY if database fails
-      const savedProfile = localStorage.getItem('userProfile');
+      const savedProfile = localStorage.getItem(`userProfile_${userId}`);
       if (savedProfile) {
         try {
           const profileData = JSON.parse(savedProfile);
@@ -126,7 +126,7 @@ const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
       }
 
       // Load avatar fallback
-      const savedAvatar = localStorage.getItem('userAvatar');
+      const savedAvatar = localStorage.getItem(`userAvatar_${userId}`);
       if (savedAvatar) {
         setAvatarImage(savedAvatar);
       }
