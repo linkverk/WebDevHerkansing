@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { formatDateForShowing } from "../../utils/date-fromatter";
 import MovieInfo from "../movie-detail/MovieInfo";
-import { type ShowProp, type MovieProp, type ZaalProp  } from "../../props/props";
+import { type ShowProp, type MovieProp, type ZaalProp } from "../../props/props";
 import GenericSelect from "../../components/generic-select";
 import "./show-panel.css";
 import { getAuthToken } from "../../api/users";
@@ -19,11 +19,11 @@ function Show_panel() {
     const [rooms, setRooms] = useState<ZaalProp[]>([]);
     const [token, setToken] = useState<string | null>(null);
 
-    const fetchAllMovies = async (Token: string|null) => {
+    const fetchAllMovies = async (Token: string | null) => {
         try {
-            const response = await fetch("http://localhost:5275/api/Films", { 
-                method: "GET", 
-                headers: {"Authorization": `Bearer ${Token ?? token}`} 
+            const response = await fetch("http://localhost:5275/api/Films", {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${Token ?? token}` }
             })
             const data: MovieProp[] = await response.json();
             setMovies(data);
@@ -32,11 +32,11 @@ function Show_panel() {
         }
     };
 
-    const fetchAllRooms = async (Token: string|null) => {
+    const fetchAllRooms = async (Token: string | null) => {
         try {
-            const response = await fetch("http://localhost:5275/api/Rooms", { 
-                method: "GET", 
-                headers: {"Authorization": `Bearer ${Token ?? token}`} 
+            const response = await fetch("http://localhost:5275/api/Rooms", {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${Token ?? token}` }
             })
             const data: ZaalProp[] = await response.json();
             setRooms(data);
@@ -45,11 +45,11 @@ function Show_panel() {
         }
     };
 
-    const fetchAllShows = async (Token: string|null) => {
+    const fetchAllShows = async (Token: string | null) => {
         try {
-            const response = await fetch("http://localhost:5275/api/Shows", { 
-                method: "GET", 
-                headers: {"Authorization": `Bearer ${Token ?? token}`} 
+            const response = await fetch("http://localhost:5275/api/Shows", {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${Token ?? token}` }
             })
             const data: ShowProp[] = await response.json();
 
@@ -116,7 +116,7 @@ function Show_panel() {
                 try {
                     const response = await fetch("http://localhost:5275/api/Shows", {
                         method: "POST",
-                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${ token }` },
+                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
                         body: JSON.stringify(selectedShow),
                     });
                     if (response.ok) {
@@ -139,7 +139,7 @@ function Show_panel() {
                 try {
                     const response = await fetch("http://localhost:5275/api/Shows", {
                         method: "PATCH",
-                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${ token }` },
+                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
                         body: JSON.stringify(selectedShow),
                     });
                     if (response.ok) {
@@ -172,7 +172,7 @@ function Show_panel() {
 
         try {
             const response = await fetch(`http://localhost:5275/api/Shows?id=${selectedShow.id}`,
-                {method: "Delete", headers: { "Authorization": `Bearer ${ token }` },}
+                { method: "Delete", headers: { "Authorization": `Bearer ${token}` }, }
             );
             if (response.ok) {
                 const updatedShows = shows.filter(s => s.id !== selectedShow.id);
@@ -183,7 +183,8 @@ function Show_panel() {
                 alert("Show delete succesfully");
             }
             else {
-                alert("Show not delete, something went wrong.");
+                const text = await response.text();
+                alert(text);
             }
         } catch (err) {
             console.error("Failed to delete Show:", err);

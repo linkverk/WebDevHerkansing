@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import GenericSelect from "../../components/generic-select";
-import { type ZaalPropFull} from "../../props/props";
+import { type ZaalPropFull } from "../../props/props";
 import ZaalForm from "./zaal-form";
 import Seats from '../../components/Seats';
 import "./zaal-panel.css";
@@ -15,11 +15,11 @@ function Zaal_panel() {
     const [token, setToken] = useState<string | null>(null);
     const [zalen, setZalen] = useState<ZaalPropFull[]>([]);
 
-    const fetchAllRooms = async (Token: string|null) => {
+    const fetchAllRooms = async (Token: string | null) => {
         try {
-            const response = await fetch("http://localhost:5275/api/Rooms", { 
-                method: "GET", 
-                headers: {"Authorization": `Bearer ${Token ?? token}`} 
+            const response = await fetch("http://localhost:5275/api/Rooms", {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${Token ?? token}` }
             })
             const data: ZaalPropFull[] = await response.json();
             setZalen(data);
@@ -59,7 +59,7 @@ function Zaal_panel() {
                 try {
                     const response = await fetch("http://localhost:5275/api/Rooms", {
                         method: "POST",
-                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${ token }` },
+                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
                         body: JSON.stringify(selectedZaal),
                     });
                     if (response.ok) {
@@ -80,7 +80,7 @@ function Zaal_panel() {
                 try {
                     const response = await fetch("http://localhost:5275/api/Rooms", {
                         method: "PATCH",
-                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${ token }` },
+                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
                         body: JSON.stringify(selectedZaal),
                     });
                     if (response.ok) {
@@ -108,7 +108,7 @@ function Zaal_panel() {
             return;
         }
 
-        if(selectedZaal.shows.length != 0){
+        if (selectedZaal.shows.length != 0) {
             alert("this room has shows, first delete these shows.");
             return;
         }
@@ -116,7 +116,7 @@ function Zaal_panel() {
         try {
             const response = await fetch(`http://localhost:5275/api/Rooms?id=${selectedZaal.id}`, {
                 method: "Delete",
-                headers: { "Authorization": `Bearer ${ token }` },
+                headers: { "Authorization": `Bearer ${token}` },
             });
             if (response.ok) {
                 const updatedZalen = zalen.filter(z => z.id !== selectedZaal.id);
@@ -125,7 +125,8 @@ function Zaal_panel() {
                 alert("Room deleted succesfully.");
             }
             else {
-                alert("Room not deleted, something went wrong.");
+                const text = await response.text();
+                alert(text);
             }
         } catch (err) {
             console.error("Failed to delete Room:", err);

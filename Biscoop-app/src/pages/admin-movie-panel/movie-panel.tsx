@@ -54,11 +54,11 @@ function Movie_panel() {
         });
     };
 
-    const fetchAllMovies = async (Token: string|null) => {
+    const fetchAllMovies = async (Token: string | null) => {
         try {
-            const response = await fetch("http://localhost:5275/api/Films", { 
-                method: "GET", 
-                headers: {"Authorization": `Bearer ${Token ?? token}`} 
+            const response = await fetch("http://localhost:5275/api/Films", {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${Token ?? token}` }
             })
             const data: MoviePropFull[] = await response.json();
             setMovies(data);
@@ -135,7 +135,7 @@ function Movie_panel() {
             const response = await fetch(`http://localhost:5275/api/Films?id=${selectedMovie.id}`,
                 {
                     method: "DELETE",
-                    headers: {"Authorization": `Bearer ${token}`}
+                    headers: { "Authorization": `Bearer ${token}` }
                 });
             if (response.ok) {
                 const updatedMovies = movies.filter(m => m.id !== selectedMovie.id);
@@ -147,7 +147,8 @@ function Movie_panel() {
                 alert("Film deleted succesfully.");
             }
             else {
-                alert("Film not delete, something went wrong.");
+                const text = await response.text();
+                alert(text);
             }
         } catch (err) {
             console.error("Failed to delete movie:", err);
