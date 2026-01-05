@@ -54,9 +54,7 @@ namespace Controllers
         }
 
         [HttpPut("{reservationId}")]
-        public async Task<IActionResult> UpdateReservation(
-            Guid reservationId,
-            [FromBody] UpdateReservationRequest request)
+        public async Task<IActionResult> UpdateReservation(Guid reservationId, [FromBody] UpdateReservationRequest request)
         {
             if (request.SeatNumbers == null || request.SeatNumbers.Count == 0)
             {

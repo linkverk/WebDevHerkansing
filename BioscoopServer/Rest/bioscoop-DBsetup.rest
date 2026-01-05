@@ -52,8 +52,8 @@ Content-Type: application/json
   "id": "",
   "startDate": "2025-12-10T14:00:00Z",
   "endDate": "2025-12-10T16:00:00Z",
-  "filmId": "d72eb037-27e8-425a-9e2f-3012c7e70dac",
-  "roomId": "aec916f3-c29a-4fcb-829b-5eea3076bf9b"
+  "filmId": "e91602f8-bc4c-4320-b26e-acf5ce8584fd",
+  "roomId": "0b08e49c-b0c5-459d-ab85-1dd8168a49ca"
 }
 
 ###
@@ -63,25 +63,25 @@ POST {{baseUrl}}/api/Reservation
 Content-Type: application/json
 
 {
-  "userId": "19C36789-BA39-4DAA-8CF9-C1BC77765C4D",
-  "showId": "a70c74e4-bc00-4986-be23-b3475c987ca2",
+  "userId": "7b71b5ec-a3ee-4329-a2c5-f7472d4955fa",
+  "showId": "f4d45acf-76b3-4394-9d78-eb484d0a9850",
   "seatNumbers": [30, 31, 32]
 }
 
 ###
 
 ### 6. GET RESERVED SEATS
-GET {{baseUrl}}/api/Reservation/show/A70C74E4-BC00-4986-BE23-B3475C987CA2/seats
+GET {{baseUrl}}/api/Reservation/show/F4D45ACF-76B3-4394-9D78-EB484D0A9850/seats
 
 ###
 
 ### 7. UPDATE RESERVATION
-PUT {{baseUrl}}/api/Reservation/0aabd017-d6b3-4e12-801a-499e4784a506
+PUT {{baseUrl}}/api/Reservation/19f918f7-31e6-45fd-bae4-d2628e28526c
 Content-Type: application/json
 
 {
-  "userId": "19C36789-BA39-4DAA-8CF9-C1BC77765C4D",
-  "seatNumbers": [5, 6, 7]
+  "userId": "7b71b5ec-a3ee-4329-a2c5-f7472d4955fa",
+  "seatNumbers": [45, 46, 47]
 }
 
 ###
@@ -92,17 +92,17 @@ POST http://localhost:5275/api/Reservation/test
 ###
 
 ### 8. DELETE RESERVATION
-DELETE {{baseUrl}}/api/Reservation/0aabd017-d6b3-4e12-801a-499e4784a506?userId=19C36789-BA39-4DAA-8CF9-C1BC77765C4D
+DELETE {{baseUrl}}/api/Reservation/19f918f7-31e6-45fd-bae4-d2628e28526c?userId=7b71b5ec-a3ee-4329-a2c5-f7472d4955fa
 
 ###
 
 ### 9. VERIFY DELETE (should be empty)
-GET {{baseUrl}}/api/Reservation/show/0aabd017-d6b3-4e12-801a-499e4784a506/seats
+GET {{baseUrl}}/api/Reservation/show/19f918f7-31e6-45fd-bae4-d2628e28526c/seats
 
 
 
 ### Verify USER exists
-GET http://localhost:5275/api/Users/GetById?id=19C36789-BA39-4DAA-8CF9-C1BC77765C4D
+GET http://localhost:5275/api/Users/GetById?id=7b71b5ec-a3ee-4329-a2c5-f7472d4955fa
 
 ### Verify ROOM exists  
 GET http://localhost:5275/api/Rooms/GetById?id=aec916f3-c29a-4fcb-829b-5eea3076bf9b

@@ -36,7 +36,7 @@ namespace BioscoopServer.DBServices
 
             if (alreadyReserved.Any()) return null;
 
-            
+
             // LOAD Show to get RoomId
             var show = await _context.Shows.FindAsync(showId);
             if (show == null) return null;
@@ -51,7 +51,7 @@ namespace BioscoopServer.DBServices
                 {
                     Id = Guid.NewGuid(),
                     Stoelnummer = sn,
-                    RoomId = show.RoomId 
+                    RoomId = show.RoomId
                 }).ToList()
             };
 
@@ -76,7 +76,7 @@ namespace BioscoopServer.DBServices
             if (newSeatNumbers == null || !newSeatNumbers.Any())
             {
                 // optionally: clear all seats, or treat as invalid
-                
+
                 return null;
             }
 
@@ -92,9 +92,14 @@ namespace BioscoopServer.DBServices
 
             if (conflicts.Any())
             {
-                // you could return null or throw; keeping same pattern as CreateReservationAsync
+                //keeping same pattern as CreateReservationAsync
                 return null;
             }
+
+            reservation.Seats = await _context.Seats
+            .Where(s => s.ReservationId == reservation.Id)
+            .ToListAsync();
+
 
             // remove old seats
             _context.Seats.RemoveRange(reservation.Seats);
