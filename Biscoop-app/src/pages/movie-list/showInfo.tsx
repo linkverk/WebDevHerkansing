@@ -34,7 +34,7 @@ const ShowInfo: React.FC<ShowInfoProps> = ({ shows, button }) => {
             {button && show.zaal &&
               <Link
                 key={show.zaal.id ?? "N/A"}
-                to={`/screeningRoom/${show.zaal.id ?? ""}`}
+                to={`/screeningRoom/${show.zaal.id ?? ""}/${show.id}`}
                 title={show.zaal.id ?? "N/A"}
                 className="button"
               >

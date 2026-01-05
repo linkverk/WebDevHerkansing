@@ -32,3 +32,32 @@ Content-Type: application/json
   "rating": 5,
   "description": "Update test 2"
 }
+
+### Create NEW test user (no login needed)
+POST http://localhost:5275/api/Users/AddOrUpdate
+Content-Type: application/json
+
+{
+  "id": "",
+  "email": "john.test@example.com",
+  "password": "Test123!",
+  "firstName": "John",
+  "lastName": "Test"
+}
+
+@userId = 1b646600-3021-487a-b3a7-3ad5065dac66
+
+### Find a ShowId
+GET http://localhost:5275/api/Film
+# or
+#GET http://localhost:5275/api/Room
+
+### Create test room
+POST http://localhost:5275/api/Room
+Content-Type: application/json
+
+{
+  "naam": "Test Zaal",
+  "rijen": 10,
+  "stoelenPerRij": 15
+}

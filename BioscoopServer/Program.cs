@@ -19,6 +19,9 @@ builder.Services.AddScoped<DBFilmService>();
 builder.Services.AddScoped<DBUserService>();
 builder.Services.AddScoped<DBReviewServices>();
 builder.Services.AddScoped<DBRoomService>();
+builder.Services.AddScoped<DBReservationService>();
+
+builder.Services.AddControllers();
 builder.Services.AddScoped<DBShowService>();
 builder.Services.AddScoped<DBJwtService>();
 builder.Services.Configure<LoggingPath>(builder.Configuration.GetSection("FileLoggingPath"));
@@ -74,10 +77,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<CinemaContext>();
-    
+
     // Ensure database is created
     context.Database.EnsureCreated();
-    
+
     // Seed demo account
     DatabaseSeeder.SeedDemoAccount(context);
 }

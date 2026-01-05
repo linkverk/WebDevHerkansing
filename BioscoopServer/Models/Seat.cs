@@ -4,8 +4,10 @@ namespace BioscoopServer.models
     {
         public Guid Id { get; set; }
         public Guid ReservationId { get; set; }
-        public string Stoelnummer { get; set; } = null!;
+        public Guid RoomId {get; set;}
+        public int Stoelnummer { get; set; }
 
         public Reservation Reservation { get; set; } = null!;
+        public Room Room {get; set;} = null!;
     }
 }

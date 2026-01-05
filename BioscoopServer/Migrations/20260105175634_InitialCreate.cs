@@ -18,6 +18,7 @@ namespace BioscoopServer.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     Rating = table.Column<string>(type: "TEXT", nullable: true),
+                    Genre = table.Column<string>(type: "TEXT", nullable: true),
                     Duration = table.Column<int>(type: "INTEGER", nullable: true),
                     Description = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -34,7 +35,8 @@ namespace BioscoopServer.Migrations
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false),
                     FirstName = table.Column<string>(type: "TEXT", nullable: true),
-                    LastName = table.Column<string>(type: "TEXT", nullable: true)
+                    LastName = table.Column<string>(type: "TEXT", nullable: true),
+                    Role = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -89,8 +91,8 @@ namespace BioscoopServer.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     FilmId = table.Column<Guid>(type: "TEXT", nullable: false),
                     RoomId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Begintijd = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Eindtijd = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    StartDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    EndDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -140,7 +142,8 @@ namespace BioscoopServer.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     ReservationId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Stoelnummer = table.Column<string>(type: "TEXT", nullable: false)
+                    RoomId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Stoelnummer = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -149,6 +152,12 @@ namespace BioscoopServer.Migrations
                         name: "FK_Seats_Reservations_ReservationId",
                         column: x => x.ReservationId,
                         principalTable: "Reservations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Seats_Zalen_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Zalen",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -177,6 +186,11 @@ namespace BioscoopServer.Migrations
                 name: "IX_Seats_ReservationId",
                 table: "Seats",
                 column: "ReservationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Seats_RoomId",
+                table: "Seats",
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Shows_FilmId",

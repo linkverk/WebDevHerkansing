@@ -1,0 +1,2360 @@
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:25
+URL: /
+Response.StatusCode: 404
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 18:47:48
+URL: /api/auth/sessions
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:53
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:53
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:56
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:56
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:56
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:56
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:57
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:57
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:57
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:57
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:57
+URL: /api/Shows
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:47:57
+URL: /api/Shows
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:48:01
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:48:01
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:48:03
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:48:03
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 18:57:41
+URL: /api/auth/sessions
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:57:45
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:57:45
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:57:54
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:57:54
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:57:55
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:57:55
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:57:56
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:57:56
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:57:56
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:57:56
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:57:59
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:00
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 18:58:44
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 18:58:46
+URL: /api/Posters
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:49
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:49
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:51
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:51
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:55
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:55
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:55
+URL: /api/Shows
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:55
+URL: /api/Shows
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:55
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:55
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:58
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:58:58
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 18:59:25
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:59:28
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:59:28
+URL: /api/Shows
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:59:28
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 18:59:28
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:00:11
+URL: /api/Shows
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:00:13
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:00:13
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:00:15
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:00:15
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:02:57
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:02:58
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:02:59
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:02:59
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:26:46
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:26:46
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:26:47
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:26:47
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:26:48
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:26:48
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:29:05
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:29:05
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:29:07
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:29:07
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:31:36
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:31:50
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:31:56
+URL: /api/Reservation
+Response.StatusCode: 409
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:32:04
+URL: /api/Reservation
+Response.StatusCode: 409
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:32:07
+URL: /api/Reservation
+Response.StatusCode: 409
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:33:28
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:33:28
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:33:30
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b/history
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:33:30
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b/history
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:33:31
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:33:31
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:33:39
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:33:39
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:33:39
+URL: /api/Shows
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:33:39
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:36:04
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:36:04
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:39:09
+URL: /api/Reservation
+Response.StatusCode: 409
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:39:17
+URL: /api/Reservation
+Response.StatusCode: 409
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:39:20
+URL: /api/Reservation
+Response.StatusCode: 409
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:39:24
+URL: /api/Reservation
+Response.StatusCode: 409
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:39:36
+URL: /api/Reservation
+Response.StatusCode: 409
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:39:50
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:39:50
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:39:52
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:39:52
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:39:56
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:39:59
+URL: /api/Reservation
+Response.StatusCode: 409
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:40:04
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:46:58
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:15
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:15
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:15
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:15
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:23
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:23
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:24
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:24
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:26
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:26
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:26
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:26
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:47:39
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:43
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:43
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:43
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:47:43
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:52:13
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:52:13
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:52:13
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:52:13
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:57:41
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:36
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:36
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:36
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:36
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:58:43
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:47
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:47
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:47
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:47
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:50
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:50
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:50
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:50
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:52
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:52
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:53
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 19:58:53
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 19:58:56
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:02:01
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:02:07
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:02:07
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:02:07
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:02:07
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:24
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:24
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:26
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:26
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:26
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:26
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:26
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:26
+URL: /api/Shows
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:26
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:26
+URL: /api/Shows
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:26
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:26
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:28
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:28
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:46
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:46
+URL: /api/Films/f87d4e00-6451-4b94-ac76-3b184595dde0
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:47
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:05:47
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:06:21
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:06:33
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:06:33
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:06:33
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:06:33
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:07:49
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:07:51
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:07:51
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:07:51
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:07:51
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:33
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:33
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:33
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:33
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:08:37
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:39
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:39
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:39
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:39
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:08:43
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:45
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:45
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:45
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:45
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:08:55
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:57
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:57
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:57
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:57
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:58
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:58
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:58
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:08:58
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:09:02
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:09:04
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:09:04
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:09:04
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:09:04
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:09:25
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:09:25
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:09:25
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:09:25
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:09:28
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:09:29
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:09:29
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:09:30
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:09:30
+URL: /api/Reservation/show/c268b45d-6c30-4ade-b273-4c71c15404f4/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:10:40
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:10:40
+URL: /api/Users/76e8b1e7-5471-4028-9f5d-7be29eef618b
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:16:49
+URL: /api/auth/sessions
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:16:51
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:16:51
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:16:52
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:16:52
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:17:11
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:17:12
+URL: /api/Posters
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:14
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:14
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:17:23
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:25
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:25
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:25
+URL: /api/Rooms
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:25
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:25
+URL: /api/Shows
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:25
+URL: /api/Shows
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:17:46
+URL: /api/Shows
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:49
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:49
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:50
+URL: /api/Films/49a3cceb-a8e9-4fb9-8de6-07fd9f2aa362
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:50
+URL: /api/Films/49a3cceb-a8e9-4fb9-8de6-07fd9f2aa362
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:51
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:17:51
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:18:01
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:03
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:03
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:03
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:03
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:18:07
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:08
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:08
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:08
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:08
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:18:25
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:26
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:26
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:26
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:26
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:18:36
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:37
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:37
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:37
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:18:37
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:19:04
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:19:06
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:19:06
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:19:06
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:19:06
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:19:29
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:19:31
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:19:31
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:19:31
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:19:31
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:19:43
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:19:48
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:19:48
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:19:48
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:19:48
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:20:59
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:21:00
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:21:00
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:21:00
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:21:00
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:26:40
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:26:40
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:26:40
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:26:40
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:26:46
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:26:47
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:26:47
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:26:47
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:26:47
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:31:07
+URL: /api/auth/sessions
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:31:09
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:31:09
+URL: /api/Films
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:31:11
+URL: /api/Films/49a3cceb-a8e9-4fb9-8de6-07fd9f2aa362
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:31:11
+URL: /api/Films/49a3cceb-a8e9-4fb9-8de6-07fd9f2aa362
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:31:21
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:31:21
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: POST
+Time: 05/01/2026 20:31:26
+URL: /api/Reservation
+Response.StatusCode: 201
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:31:27
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:31:27
+URL: /api/Users/12248ce6-e1db-4b2c-b9d9-19c88df954b4
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:31:27
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
+
+Request from: ::1
+Protocol: HTTP/1.1
+Method: GET
+Time: 05/01/2026 20:31:27
+URL: /api/Reservation/show/8eccc4ac-89c6-41ef-b1ed-a18ee50857ad/seats
+Response.StatusCode: 200
+
