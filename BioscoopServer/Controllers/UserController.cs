@@ -9,7 +9,6 @@ namespace Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly DBUserService _DBUserService;
@@ -22,6 +21,7 @@ namespace Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize] // ✅ Requires token
         public async Task<IActionResult> GetUserById(string id)
         {
             if (!Guid.TryParse(id, out var userId))
@@ -47,6 +47,7 @@ namespace Controllers
         }
 
         [HttpGet]
+        [Authorize] // ✅ Requires token
         public async Task<IActionResult> GetUsers([FromQuery] string? email = null)
         {
             if (!string.IsNullOrWhiteSpace(email))
@@ -81,7 +82,7 @@ namespace Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [AllowAnonymous] // ⚠️ No token required for creating users
         public async Task<IActionResult> CreateUser([FromBody] UserDTO userModel)
         {
             if (userModel == null)
@@ -119,6 +120,7 @@ namespace Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize] // ✅ Requires token
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserDTO userModel)
         {
             if (userModel == null)
@@ -161,6 +163,7 @@ namespace Controllers
         }
 
         [HttpPatch("{id}")]
+        [Authorize] // ✅ Requires token
         public async Task<IActionResult> PatchUser(string id, [FromBody] UserDTO userModel)
         {
             if (userModel == null)
@@ -202,6 +205,7 @@ namespace Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize] // ✅ Requires token
         public async Task<IActionResult> DeleteUser(string id)
         {
             if (!Guid.TryParse(id, out var userId))
@@ -217,6 +221,7 @@ namespace Controllers
         }
 
         [HttpGet("{id}/history")]
+        [Authorize] // ✅ Requires token
         public async Task<IActionResult> GetUserHistory(string id)
         {
             if (!Guid.TryParse(id, out var userId))
@@ -234,6 +239,7 @@ namespace Controllers
         }
 
         [HttpPost("{id}/history")]
+        [Authorize] // ✅ Requires token
         public async Task<IActionResult> AddToHistory(string id, [FromBody] HistoryDTO historyModel)
         {
             if (!Guid.TryParse(id, out var userId))
@@ -261,6 +267,7 @@ namespace Controllers
         }
 
         [HttpGet("{id}/bookings")]
+        [Authorize] // ✅ Requires token
         public async Task<IActionResult> GetUserBookings(string id)
         {
             if (!Guid.TryParse(id, out var userId))

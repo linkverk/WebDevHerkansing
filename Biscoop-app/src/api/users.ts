@@ -1,4 +1,4 @@
-// User API Service - Updated with JWT token handling and REST API structure
+// User API Service - Updated with JWT token handling using sessionStorage
 const API_BASE_URL = 'http://localhost:5275/api/Users';
 const AUTH_BASE_URL = 'http://localhost:5275/api/auth';
 
@@ -71,16 +71,19 @@ export interface FilmHistory {
   description: string;
 }
 
+// ✅ Changed to sessionStorage
 export function getAuthToken(): string | null {
-  return localStorage.getItem('authToken');
+  return sessionStorage.getItem('authToken');
 }
 
 export function saveAuthToken(token: string): void {
-  localStorage.setItem('authToken', token);
+  sessionStorage.setItem('authToken', token);
+  console.log('🔐 Token saved to sessionStorage');
 }
 
 export function clearAuthToken(): void {
-  localStorage.removeItem('authToken');
+  sessionStorage.removeItem('authToken');
+  console.log('🔓 Token cleared from sessionStorage');
 }
 
 function getAuthHeaders(): HeadersInit {
@@ -91,6 +94,9 @@ function getAuthHeaders(): HeadersInit {
   const token = getAuthToken();
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
+    console.log('✅ Authorization header added to request');
+  } else {
+    console.warn('⚠️ No auth token found in sessionStorage');
   }
   
   return headers;
@@ -98,108 +104,150 @@ function getAuthHeaders(): HeadersInit {
 
 export async function getUserProfile(userId: string): Promise<UserProfile> {
   try {
+    console.log(`🔍 Fetching user profile for: ${userId}`);
     const response = await fetch(`${API_BASE_URL}/${userId}`, {
       headers: getAuthHeaders()
     });
+    
     if (!response.ok) {
-      throw new Error(`Failed to fetch user: ${response.status}`);
+      const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+      console.error(`❌ Failed to fetch user: ${response.status}`, error);
+      throw new Error(error.message || `Failed to fetch user: ${response.status}`);
     }
-    return response.json();
+    
+    const profile = await response.json();
+    console.log('✅ User profile fetched successfully');
+    return profile;
   } catch (error) {
-    console.error("Failed to fetch user:", error);
+    console.error("❌ Failed to fetch user:", error);
     throw error;
   }
 }
 
 export async function updateUserProfile(userId: string, userData: UserDTO): Promise<UserProfile> {
   try {
+    console.log(`📝 Updating user profile for: ${userId}`);
     const response = await fetch(`${API_BASE_URL}/${userId}`, {
       method: 'PUT',
       headers: getAuthHeaders(),
       body: JSON.stringify(userData),
     });
+    
     if (!response.ok) {
-      throw new Error(`Failed to update user: ${response.status}`);
+      const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+      console.error(`❌ Failed to update user: ${response.status}`, error);
+      throw new Error(error.message || `Failed to update user: ${response.status}`);
     }
-    return response.json();
+    
+    const profile = await response.json();
+    console.log('✅ User profile updated successfully');
+    return profile;
   } catch (error) {
-    console.error("Failed to update user:", error);
+    console.error("❌ Failed to update user:", error);
     throw error;
   }
 }
 
 export async function deleteUserAccount(userId: string): Promise<void> {
   try {
+    console.log(`🗑️ Deleting user account: ${userId}`);
     const response = await fetch(`${API_BASE_URL}/${userId}`, {
       method: 'DELETE',
       headers: getAuthHeaders(),
     });
+    
     if (!response.ok) {
-      throw new Error(`Failed to delete user: ${response.status}`);
+      const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+      console.error(`❌ Failed to delete user: ${response.status}`, error);
+      throw new Error(error.message || `Failed to delete user: ${response.status}`);
     }
+    
+    console.log('✅ User account deleted successfully');
   } catch (error) {
-    console.error("Failed to delete user:", error);
+    console.error("❌ Failed to delete user:", error);
     throw error;
   }
 }
 
 export async function getUserHistory(userId: string): Promise<FilmHistory[]> {
   try {
+    console.log(`📜 Fetching user history for: ${userId}`);
     const response = await fetch(`${API_BASE_URL}/${userId}/history`, {
       headers: getAuthHeaders()
     });
+    
     if (!response.ok) {
-      throw new Error(`Failed to fetch history: ${response.status}`);
+      const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+      console.error(`❌ Failed to fetch history: ${response.status}`, error);
+      throw new Error(error.message || `Failed to fetch history: ${response.status}`);
     }
-    return response.json();
+    
+    const history = await response.json();
+    console.log('✅ User history fetched successfully');
+    return history;
   } catch (error) {
-    console.error("Failed to fetch history:", error);
+    console.error("❌ Failed to fetch history:", error);
     throw error;
   }
 }
 
 export async function addToUserHistory(userId: string, filmId: string): Promise<void> {
   try {
+    console.log(`➕ Adding film ${filmId} to history for user: ${userId}`);
     const response = await fetch(`${API_BASE_URL}/${userId}/history`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ filmId }),
     });
+    
     if (!response.ok) {
-      throw new Error(`Failed to add to history: ${response.status}`);
+      const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+      console.error(`❌ Failed to add to history: ${response.status}`, error);
+      throw new Error(error.message || `Failed to add to history: ${response.status}`);
     }
+    
+    console.log('✅ Film added to history successfully');
   } catch (error) {
-    console.error("Failed to add to history:", error);
+    console.error("❌ Failed to add to history:", error);
     throw error;
   }
 }
 
 export async function getUserBookings(userId: string): Promise<UserBooking[]> {
   try {
+    console.log(`🎫 Fetching bookings for user: ${userId}`);
     const response = await fetch(`${API_BASE_URL}/${userId}/bookings`, {
       headers: getAuthHeaders()
     });
+    
     if (!response.ok) {
-      throw new Error(`Failed to fetch bookings: ${response.status}`);
+      const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+      console.error(`❌ Failed to fetch bookings: ${response.status}`, error);
+      throw new Error(error.message || `Failed to fetch bookings: ${response.status}`);
     }
-    return response.json();
+    
+    const bookings = await response.json();
+    console.log('✅ User bookings fetched successfully');
+    return bookings;
   } catch (error) {
-    console.error("Failed to fetch bookings:", error);
+    console.error("❌ Failed to fetch bookings:", error);
     throw error;
   }
 }
 
+// ✅ Changed to sessionStorage
 export function getCurrentUserId(): string | null {
-  return localStorage.getItem('userId');
+  return sessionStorage.getItem('userId');
 }
 
 export function saveCurrentUserId(userId: string): void {
-  localStorage.setItem('userId', userId);
+  sessionStorage.setItem('userId', userId);
+  console.log(`💾 User ID saved to sessionStorage: ${userId}`);
 }
 
 export function clearCurrentUserId(): void {
-  localStorage.removeItem('userId');
-  clearAuthToken();
+  sessionStorage.removeItem('userId');
+  console.log('🧹 User ID cleared from sessionStorage');
 }
 
 export async function registerUser(userData: {
@@ -208,6 +256,7 @@ export async function registerUser(userData: {
   firstName?: string;
   lastName?: string;
 }): Promise<AuthResponse> {
+  console.log('📝 Registering new user...');
   const response = await fetch(`${AUTH_BASE_URL}/users`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -216,6 +265,7 @@ export async function registerUser(userData: {
   
   if (!response.ok) {
     const error = await response.json();
+    console.error('❌ Registration failed:', error);
     throw new Error(error.message || 'Registration failed');
   }
   
@@ -224,13 +274,14 @@ export async function registerUser(userData: {
   // Save token if provided
   if (data.token) {
     saveAuthToken(data.token);
-    console.log('🔐 JWT token saved');
   }
   
+  console.log('✅ User registered successfully');
   return data;
 }
 
 export async function loginUserAuth(credentials: LoginCredentials): Promise<AuthResponse> {
+  console.log('🔑 Logging in user...');
   const response = await fetch(`${AUTH_BASE_URL}/sessions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -239,6 +290,7 @@ export async function loginUserAuth(credentials: LoginCredentials): Promise<Auth
   
   if (!response.ok) {
     const error = await response.json();
+    console.error('❌ Login failed:', error);
     throw new Error(error.message || 'Login failed');
   }
   
@@ -247,13 +299,14 @@ export async function loginUserAuth(credentials: LoginCredentials): Promise<Auth
   // Save token if provided
   if (data.token) {
     saveAuthToken(data.token);
-    console.log('🔐 JWT token saved');
   }
   
+  console.log('✅ User logged in successfully');
   return data;
 }
 
 export async function logoutUser(userId?: string): Promise<void> {
+  console.log('👋 Logging out user...');
   const response = await fetch(`${AUTH_BASE_URL}/sessions`, {
     method: 'DELETE',
     headers: getAuthHeaders(),
@@ -262,38 +315,38 @@ export async function logoutUser(userId?: string): Promise<void> {
   
   if (response.status === 204) {
     clearAuthToken();
-    console.log('🔓 JWT token cleared');
     return;
   }
 
   if (!response.ok) {
     try {
       const error = await response.json();
+      console.error('❌ Logout failed:', error);
       throw new Error(error.message || 'Logout failed');
     } catch {
       throw new Error('Logout failed');
     }
   }
   
-  // Clear token on logout
   clearAuthToken();
-  console.log('🔓 JWT token cleared');
+  console.log('✅ User logged out successfully');
 }
 
 export async function createOrGetUser(userData: UserDTO): Promise<UserProfile> {
   try {
+    console.log('🔍 Checking if user exists...');
     const response = await fetch(`${API_BASE_URL}?email=${encodeURIComponent(userData.email)}`, {
       headers: getAuthHeaders()
     });
     
     if (response.ok) {
       const user = await response.json();
-      console.log('User found in database:', user.id);
+      console.log('✅ User found in database:', user.id);
       return user;
     }
     
     // User doesn't exist, create new one
-    console.log('Creating new user in database...');
+    console.log('➕ Creating new user in database...');
     const createResponse = await fetch(`${API_BASE_URL}`, {
       method: 'POST',
       headers: getAuthHeaders(),
@@ -301,14 +354,16 @@ export async function createOrGetUser(userData: UserDTO): Promise<UserProfile> {
     });
     
     if (!createResponse.ok) {
-      throw new Error(`Failed to create user: ${createResponse.status}`);
+      const error = await createResponse.json().catch(() => ({ message: 'Unknown error' }));
+      console.error(`❌ Failed to create user: ${createResponse.status}`, error);
+      throw new Error(error.message || `Failed to create user: ${createResponse.status}`);
     }
     
     const newUser = await createResponse.json();
-    console.log('User created in database:', newUser.id);
+    console.log('✅ User created in database:', newUser.id);
     return newUser;
   } catch (error) {
-    console.error("Failed to create/get user:", error);
+    console.error("❌ Failed to create/get user:", error);
     throw error;
   }
 }

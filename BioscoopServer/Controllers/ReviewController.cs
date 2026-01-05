@@ -19,7 +19,7 @@ namespace Controllers
             _context = context;
         }
 
-        [HttpPost("Post")]
+        [HttpPost("{id}")]
         public async Task<IActionResult> AddReview([FromBody] ReviewDTO reviewDTO)
         {
             if (reviewDTO == null)
@@ -87,7 +87,7 @@ namespace Controllers
             });
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet()]
         public async Task<IActionResult> GetAllReviews()
         {
             var reviews = await _DBReviewService.GetAllAsync();
