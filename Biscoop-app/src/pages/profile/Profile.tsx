@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getUserProfile, getCurrentUserId } from '../../api/users';
-import { useUserContext } from '../../context/UserContext';
 import type { User, Movie } from '../../types';
 import './profile.css';
 
@@ -12,35 +11,50 @@ export interface ProfileProps {
 }
 
 interface ExtendedProfile {
-  username: string;
   bio: string;
   genre: string;
+  avatarColor: string;
+  avatarEmoji: string;
+  lastUpdated: string;
+  phoneNumber?: string;
+  countryCode?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  city?: string;
+  country?: string;
 }
 
-const Profile: React.FC<ProfileProps> = ({ movies, onLogout }) => {
+const Profile: React.FC<ProfileProps> = ({ user, movies, onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, setUser, setIsAuthenticated } = useUserContext();
-  
   const [profileData, setProfileData] = useState({
     firstName: '',
     lastName: '',
     email: user.email,
   });
   const [extendedProfile, setExtendedProfile] = useState<ExtendedProfile>({
-    username: '',
     bio: '',
-    genre: ''
+    genre: '',
+    avatarColor: '#7c3aed',
+    avatarEmoji: '👤',
+    lastUpdated: '',
+    phoneNumber: '',
+    countryCode: '+31',
+    dateOfBirth: '',
+    gender: '',
+    city: '',
+    country: 'Netherlands'
   });
+  const [avatarImage, setAvatarImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
+    // Always reload when component mounts or location changes
     loadProfile();
-  }, [location]);
+  }, [location.pathname]); // Re-load when returning from edit-profile
 
   const loadProfile = async () => {
-    // Use user ID from context first, then localStorage
-    const userId = user.id || getCurrentUserId();
+    const userId = getCurrentUserId();
     if (!userId) {
       console.log('No userId found');
       setLoading(false);
@@ -49,6 +63,7 @@ const Profile: React.FC<ProfileProps> = ({ movies, onLogout }) => {
 
     try {
       setLoading(true);
+      // Load from database (source of truth for core data)
       const profile = await getUserProfile(userId);
       console.log('✅ Profile loaded from database:', profile);
       
@@ -58,50 +73,65 @@ const Profile: React.FC<ProfileProps> = ({ movies, onLogout }) => {
         email: profile.email,
       });
 
-      // Update context with latest data from database
-      const fullName = `${profile.firstName} ${profile.lastName}`.trim();
-      if (fullName !== user.name || profile.email !== user.email) {
-        setUser({
-          ...user,
-          id: profile.id,
-          name: fullName,
-          email: profile.email
-        });
-      }
-
-      // Load extended profile data from localStorage
+      // Load extended profile data from localStorage (bio, genre, avatar)
       const savedProfile = localStorage.getItem('userProfile');
       if (savedProfile) {
         try {
           const profileData = JSON.parse(savedProfile);
+          console.log('✅ Extended profile loaded from localStorage:', profileData);
           setExtendedProfile({
-            username: profileData.username || '',
             bio: profileData.bio || '',
-            genre: profileData.genre || ''
+            genre: profileData.genre || '',
+            avatarColor: profileData.avatarColor || '#7c3aed',
+            avatarEmoji: profileData.avatarEmoji || '👤',
+            lastUpdated: profileData.lastUpdated || '',
+            phoneNumber: profileData.phoneNumber || '',
+            countryCode: profileData.countryCode || '+31',
+            dateOfBirth: profileData.dateOfBirth || '',
+            gender: profileData.gender || '',
+            city: profileData.city || '',
+            country: profileData.country || 'Netherlands'
           });
         } catch (error) {
-          console.error('Error loading extended profile:', error);
+          console.error('Error parsing extended profile:', error);
         }
+      }
+
+      // Load avatar image from localStorage
+      const savedAvatar = localStorage.getItem('userAvatar');
+      if (savedAvatar) {
+        console.log('✅ Avatar image loaded from localStorage');
+        setAvatarImage(savedAvatar);
+      } else {
+        setAvatarImage(null);
       }
     } catch (error) {
       console.error('❌ Error loading profile from database:', error);
       
-      // Fallback to context/localStorage
+      // Fallback to localStorage/context ONLY if database fails
       const savedProfile = localStorage.getItem('userProfile');
       if (savedProfile) {
         try {
           const profileData = JSON.parse(savedProfile);
           setExtendedProfile({
-            username: profileData.username || '',
             bio: profileData.bio || '',
-            genre: profileData.genre || ''
+            genre: profileData.genre || '',
+            avatarColor: profileData.avatarColor || '#7c3aed',
+            avatarEmoji: profileData.avatarEmoji || '👤',
+            lastUpdated: profileData.lastUpdated || ''
           });
         } catch (error) {
           console.error('Error loading from localStorage:', error);
         }
       }
+
+      // Load avatar fallback
+      const savedAvatar = localStorage.getItem('userAvatar');
+      if (savedAvatar) {
+        setAvatarImage(savedAvatar);
+      }
       
-      // Use context as fallback
+      // Use context as absolute fallback
       setProfileData({
         firstName: user.name.split(' ')[0] || '',
         lastName: user.name.split(' ').slice(1).join(' ') || '',
@@ -114,25 +144,47 @@ const Profile: React.FC<ProfileProps> = ({ movies, onLogout }) => {
 
   const displayName = `${profileData.firstName} ${profileData.lastName}`.trim() || user.name;
   
+  // Calculate dynamic stats
+  const totalMovies = movies.length;
+  const reviewCount = movies.filter(movie => movie.rating).length; // Movies with ratings
+  const favoriteGenres = movies.reduce((acc, movie) => {
+    acc[movie.genre] = (acc[movie.genre] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  const topGenreCount = Math.max(...Object.values(favoriteGenres), 0);
+  
   const stats = [
-    { value: movies.length, label: 'Movies Watched' },
-    { value: user.points, label: 'Points Earned' },
-    { value: 8, label: 'Reviews Written' },
-    { value: 3, label: 'Favorites' }
+    { value: totalMovies, label: 'Movies Watched', icon: '🎬' },
+    { value: user.points, label: 'Points Earned', icon: '⭐' },
+    { value: reviewCount, label: 'Reviews Written', icon: '✍️' },
+    { value: topGenreCount, label: 'Top Genre Views', icon: '❤️' }
   ];
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    setUser({ id: '', name: '', email: '', points: 0 });
     onLogout();
     navigate('/login');
   };
+
+  // Create avatar style based on whether we have an image or use color/emoji
+  const avatarStyle = avatarImage 
+    ? { 
+        backgroundImage: `url(${avatarImage})`, 
+        backgroundSize: 'cover', 
+        backgroundPosition: 'center',
+        fontSize: '0' // Hide emoji when showing image
+      }
+    : { 
+        backgroundColor: extendedProfile.avatarColor,
+        fontSize: '3rem'
+      };
 
   if (loading) {
     return (
       <div className="profile-container">
         <div className="profile-card">
-          <p style={{ textAlign: 'center', color: '#9ab0c9' }}>Loading profile from database...</p>
+          <p style={{ textAlign: 'center', color: '#9ab0c9', padding: '2rem' }}>
+            Loading profile...
+          </p>
         </div>
       </div>
     );
@@ -144,35 +196,82 @@ const Profile: React.FC<ProfileProps> = ({ movies, onLogout }) => {
         <div className="profile-header"></div>
         
         <div className="profile-info">
-          <div className="profile-avatar">
-            👤
+          <div 
+            className="profile-avatar"
+            style={avatarStyle}
+            title={avatarImage ? "Custom Avatar" : `${extendedProfile.avatarEmoji} - ${extendedProfile.avatarColor}`}
+          >
+            {!avatarImage && extendedProfile.avatarEmoji}
           </div>
           <div className="profile-name">{displayName}</div>
-          {extendedProfile.username && (
-            <div className="profile-username">@{extendedProfile.username}</div>
-          )}
           <div className="profile-email">{profileData.email}</div>
-          {user.id && (
-            <div style={{ fontSize: '0.75rem', color: '#666', marginBottom: '8px' }}>
-              ID: {user.id}
-            </div>
-          )}
           {extendedProfile.bio && (
-            <div className="profile-bio">{extendedProfile.bio}</div>
+            <div className="profile-bio">"{extendedProfile.bio}"</div>
           )}
           {extendedProfile.genre && (
             <div className="profile-genre">
               ❤️ Favorite Genre: {extendedProfile.genre.charAt(0).toUpperCase() + extendedProfile.genre.slice(1)}
             </div>
           )}
+          {extendedProfile.phoneNumber && extendedProfile.countryCode && (
+            <div className="profile-detail">
+              📱 {extendedProfile.countryCode} {extendedProfile.phoneNumber}
+            </div>
+          )}
+          {extendedProfile.dateOfBirth && (
+            <div className="profile-detail">
+              🎂 {new Date(extendedProfile.dateOfBirth).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}
+              {(() => {
+                const today = new Date();
+                const birthDate = new Date(extendedProfile.dateOfBirth);
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                  age--;
+                }
+                return ` (${age} years old)`;
+              })()}
+            </div>
+          )}
+          {extendedProfile.gender && (
+            <div className="profile-detail">
+              {extendedProfile.gender === 'male' && '👨 Male'}
+              {extendedProfile.gender === 'female' && '👩 Female'}
+              {extendedProfile.gender === 'non-binary' && '🧑 Non-binary'}
+              {extendedProfile.gender === 'other' && '👤 Other'}
+            </div>
+          )}
+          {(extendedProfile.city || extendedProfile.country) && (
+            <div className="profile-detail">
+              📍 {extendedProfile.city && `${extendedProfile.city}, `}{extendedProfile.country}
+            </div>
+          )}
+        </div>
+
+        <div className="profile-badges">
           <div className="profile-badge">
             ⭐ Premium Member
           </div>
+          {movies.length >= 10 && (
+            <div className="profile-badge badge-gold">
+              🎬 Movie Buff
+            </div>
+          )}
+          {user.points >= 100 && (
+            <div className="profile-badge badge-blue">
+              💎 Top Reviewer
+            </div>
+          )}
         </div>
 
         <div className="stats-grid">
           {stats.map((stat, i) => (
             <div key={i} className="stat-card">
+              <div className="stat-icon">{stat.icon}</div>
               <span className="stat-value">{stat.value}</span>
               <div className="stat-label">{stat.label}</div>
             </div>
