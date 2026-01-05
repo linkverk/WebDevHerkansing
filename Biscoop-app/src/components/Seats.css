@@ -56,6 +56,18 @@
   outline: none;
 }
 
+.box.backend-reserved {
+  background: linear-gradient(120deg, #ff6b6b 55%, #ee5a52 100%) !important;
+  color: #fff;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.box.user-selected {
+  background: linear-gradient(120deg, #9ea7b1 40%, #546170 100%);
+  color: #dcebf7;
+}
+
 .seat-grid {
   display: grid;
   grid-template-columns: repeat(10, 1fr);

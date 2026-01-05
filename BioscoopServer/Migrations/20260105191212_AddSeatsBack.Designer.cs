@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BioscoopServer.Migrations
 {
     [DbContext(typeof(CinemaContext))]
-    [Migration("20251216113945_RoleToevoegenAanUser")]
-    partial class RoleToevoegenAanUser
+    [Migration("20260105191212_AddSeatsBack")]
+    partial class AddSeatsBack
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -122,13 +122,17 @@ namespace BioscoopServer.Migrations
                     b.Property<Guid>("ReservationId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Stoelnummer")
-                        .IsRequired()
+                    b.Property<Guid>("RoomId")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Stoelnummer")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ReservationId");
+
+                    b.HasIndex("RoomId");
 
                     b.ToTable("Seats");
                 });
@@ -234,7 +238,15 @@ namespace BioscoopServer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BioscoopServer.models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Reservation");
+
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("BioscoopServer.models.Show", b =>

@@ -23,7 +23,7 @@ namespace BioscoopServer.DBServices
                 .ToListAsync();
         }
 
-        // Create reservation with seats
+        //create reservation with seats
         public async Task<Reservation?> CreateReservationAsync(Guid userId, Guid showId, List<int> seatNumbers)
         {
             var alreadyReserved = await _context.Reservations
@@ -62,7 +62,7 @@ namespace BioscoopServer.DBServices
         }
         public async Task<Reservation?> UpdateReservationSeatsAsync(Guid reservationId, Guid userId, List<int> newSeatNumbers)
         {
-            // load reservation including seats
+            //load reservation including seats
             var reservation = await _context.Reservations
                 .Include(r => r.Seats)
                 .Include(r => r.Show)
@@ -70,22 +70,22 @@ namespace BioscoopServer.DBServices
 
             if (reservation == null)
             {
-                return null; // not found or not user's reservation
+                return null; //not found or not user's reservation
             }
 
             if (newSeatNumbers == null || !newSeatNumbers.Any())
             {
-                // optionally: clear all seats, or treat as invalid
+                //optionally: clear all seats, or treat as invalid
 
                 return null;
             }
 
-            // find conflicts: seats in this show reserved by OTHERS
+            //find conflicts: seats in this show reserved by OTHERS
             var conflicts = await _context.Seats
                 .AsNoTracking()
                 .Where(s =>
                     s.Reservation.ShowId == reservation.ShowId &&
-                    s.Reservation.Id != reservation.Id &&          // other reservations
+                    s.Reservation.Id != reservation.Id &&          //other reservations
                     newSeatNumbers.Contains(s.Stoelnummer))
                 .Select(s => s.Stoelnummer)
                 .ToListAsync();
@@ -101,10 +101,10 @@ namespace BioscoopServer.DBServices
             .ToListAsync();
 
 
-            // remove old seats
+            //remove old seats
             _context.Seats.RemoveRange(reservation.Seats);
 
-            // add new seats
+            //add new seats
             reservation.Seats = newSeatNumbers.Select(sn => new Seat
             {
                 Id = Guid.NewGuid(),
@@ -127,7 +127,7 @@ namespace BioscoopServer.DBServices
                 return false;
             }
 
-            // EF will cascade if configured; otherwise explicitly remove seats
+            //explicitly remove seats
             _context.Seats.RemoveRange(reservation.Seats);
             _context.Reservations.Remove(reservation);
 

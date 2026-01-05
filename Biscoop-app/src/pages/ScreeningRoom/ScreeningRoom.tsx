@@ -5,14 +5,16 @@ import { useParams } from "react-router-dom";
 
 const ScreeningRoom: React.FC = () => {
   const { fakeZalen } = getAppData();
-  const { zaalId } = useParams();
+  const { zaalId, showId } = useParams();
   const zaal = fakeZalen.find((z) => z.id === zaalId) ?? fakeZalen[0];
   return (
-    <div>
-      <h1 style={{ textAlign: 'center', color: '#fff', marginBottom: '16px' }}>{zaal.naam}</h1>
-       <Seats zaal={zaal} button={true}/>
-    </div>
+    <Seats 
+      zaal={zaal} 
+      button={true} 
+      showId={showId!} // 👈 pass showId down for reservation API
+    />
   );
 };
+
 
 export default ScreeningRoom;
