@@ -3,19 +3,22 @@ import { useState, useEffect } from "react";
 import ShowInfo from "./showInfo";
 import "./movie-list.css"
 import MovieInfo from "../movie-detail/MovieInfo";
-import { type MoviePropFull, type Review} from "../../props/props";
+import { type MoviePropFull, type Review } from "../../props/props";
+import { getAuthToken } from "../../api/users";
 
 
 function MovieList() {
     useEffect(() => {
-        fetchAllMoviesFull();
+        setToken(getAuthToken());
+        fetchAllMoviesFull(getAuthToken());
     }, []);
 
+    const [token, setToken] = useState<string | null>(null);
     const [moviesFull, setMoviesFull] = useState<MoviePropFull[]>([]);
 
-    const fetchAllMoviesFull = async () => {
+    const fetchAllMoviesFull = async (Token: string|null) => {
         try {
-            const response = await fetch("http://localhost:5275/api/Films", {method: "GET"})
+            const response = await fetch("http://localhost:5275/api/Films", { method: "GET", headers: { "Authorization": `Bearer ${Token ?? token}` } })
             const data: MoviePropFull[] = await response.json();
             setMoviesFull(data);
         } catch (error) {

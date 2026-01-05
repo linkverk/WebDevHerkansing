@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using BioscoopServer.models;
 using BioscoopServer.DBServices;
 using BioscoopServer.Models.ModelsDTOs;
+using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+
 
 namespace Controllers
 {
@@ -16,6 +19,7 @@ namespace Controllers
             _DBRoomService = DBRoomService;
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRoomById(string id)
         {
@@ -27,6 +31,7 @@ namespace Controllers
             return Ok(Room);
         }
 
+        [Authorize]
         [HttpGet()]
         public async Task<IActionResult> GetAllRoomsFull()
         {
@@ -34,6 +39,8 @@ namespace Controllers
             return Ok(Rooms);
         }
 
+        [Authorize]
+        [AdminCheck]
         [HttpPost()]
         public async Task<IActionResult> AddRoom([FromBody] RoomDTO RoomModel)
         {
@@ -55,6 +62,8 @@ namespace Controllers
             return Ok(addedRoom);
         }
 
+        [Authorize]
+        [AdminCheck]
         [HttpPatch()]
         public async Task<IActionResult> UpdateRoom([FromBody] RoomDTO RoomModel)
         {
@@ -63,6 +72,7 @@ namespace Controllers
 
             Guid RoomId;
             Guid.TryParse(RoomModel.Id, out RoomId);
+            var email = HttpContext.User.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
 
             var Room = new Room
             {
@@ -76,6 +86,8 @@ namespace Controllers
             return Ok(addedRoom);
         }
 
+        [Authorize]
+        [AdminCheck]
         [HttpDelete("")]
         public async Task<IActionResult> DeleteRoom([FromQuery] string id)
         {

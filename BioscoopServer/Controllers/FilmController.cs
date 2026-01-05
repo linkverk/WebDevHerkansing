@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using BioscoopServer.models;
 using BioscoopServer.DBServices;
 using BioscoopServer.Models.ModelsDTOs;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace Controllers
 {
@@ -16,6 +18,7 @@ namespace Controllers
             _DBFilmService = DBFilmService;
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFilmByIdFull(string id)
         {
@@ -27,6 +30,7 @@ namespace Controllers
             return Ok(film);
         }
 
+        [Authorize]
         [HttpGet()]
         public async Task<IActionResult> GetAllFilmsFull()
         {
@@ -34,6 +38,8 @@ namespace Controllers
             return Ok(films);
         }
 
+        [Authorize]
+        [AdminCheck]
         [HttpPost()]
         public async Task<IActionResult> AddFilm([FromBody] FilmDTO filmModel)
         {
@@ -61,6 +67,8 @@ namespace Controllers
             return Ok(addedFilm);
         }
 
+        [Authorize]
+        [AdminCheck]
         [HttpPatch()]
         public async Task<IActionResult> UpdateFilm([FromBody] FilmDTO filmModel)
         {
@@ -88,14 +96,17 @@ namespace Controllers
             return Ok(addedFilm);
         }
 
-        [HttpDelete("")]
+        [Authorize]
+        [AdminCheck]
+        [HttpDelete]
         public async Task<IActionResult> DeleteFilm([FromQuery] string id)
         {
             var film = await _DBFilmService.GetByIdAsync(Guid.Parse(id));
             if (film == null)
             {
-                return BadRequest($"Film with id {id} was not found");
+                return NotFound($"Film with ID {id} not found.");
             }
+
             await _DBFilmService.DeleteAsync(film);
             return NoContent();
         }

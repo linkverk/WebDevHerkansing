@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using BioscoopServer.models;
 using BioscoopServer.DBServices;
 using BioscoopServer.Models.ModelsDTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers
 {
@@ -16,6 +17,7 @@ namespace Controllers
             _DBShowService = DBShowService;
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetShowById(string id)
         {
@@ -27,6 +29,7 @@ namespace Controllers
             return Ok(Show);
         }
 
+        [Authorize]
         [HttpGet()]
         public async Task<IActionResult> GetAllShows()
         {
@@ -34,6 +37,8 @@ namespace Controllers
             return Ok(Shows);
         }
 
+        [Authorize]
+        [AdminCheck]
         [HttpPost()]
         public async Task<IActionResult> AddShow([FromBody] ShowDTO ShowModel)
         {
@@ -70,6 +75,8 @@ namespace Controllers
             }
         }
 
+        [Authorize]
+        [AdminCheck]
         [HttpPatch()]
         public async Task<IActionResult> UpdateShow([FromBody] ShowDTO ShowModel)
         {
@@ -106,6 +113,8 @@ namespace Controllers
             }
         }
 
+        [Authorize]
+        [AdminCheck]
         [HttpDelete("")]
         public async Task<IActionResult> DeleteShow([FromQuery] string id)
         {

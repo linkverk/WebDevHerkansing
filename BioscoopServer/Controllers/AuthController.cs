@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using BioscoopServer.models;
+using BioscoopServer.Models.Enums;
 using BioscoopServer.DBServices;
 using BioscoopServer.Models.ModelsDTOs;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +54,8 @@ namespace Controllers
                 Email = registerModel.Email,
                 Password = hashedPassword,
                 FirstName = registerModel.FirstName ?? "",
-                LastName = registerModel.LastName ?? ""
+                LastName = registerModel.LastName ?? "",
+                Role = Roles.User
             };
 
             try
@@ -64,7 +66,7 @@ namespace Controllers
                 Console.WriteLine($"✅ User registered: {user.Email} (ID: {user.Id})");
                 Console.WriteLine($"🔒 Password hashed and salted");
 
-                var token = _DBJwtService.GenerateToken(user.Id.ToString(), user.Email);
+                var token = _DBJwtService.GenerateToken(user.Id.ToString(), user.Email, user.Role);
 
                 var responseDto = new AuthResponseDTO
                 {
@@ -125,7 +127,7 @@ namespace Controllers
 
             Console.WriteLine($"✅ User logged in: {user.Email} (ID: {user.Id})");
 
-            var token = _DBJwtService.GenerateToken(user.Id.ToString(), user.Email);
+            var token = _DBJwtService.GenerateToken(user.Id.ToString(), user.Email, user.Role);
 
             var responseDto = new AuthResponseDTO
             {
